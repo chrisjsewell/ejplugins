@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from fnmatch import fnmatch
 import logging
 import numpy as np
