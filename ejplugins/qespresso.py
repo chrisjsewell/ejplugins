@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 adapted from: https://github.com/lmmentel/ase-espresso
 
