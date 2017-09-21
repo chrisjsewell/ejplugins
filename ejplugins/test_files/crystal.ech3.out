@@ -1,0 +1,452 @@
+date:               Wed 28 Jun 13:16:30 BST 2017
+hostname:           cx1-106-10-3
+system:             Linux cx1-106-10-3 3.10.0-327.36.3.el7.x86_64 #1 SMP Mon Oct 24 16:09:20 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+user:               cjs14
+input:              /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.ech3.d3
+output:             /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.ech3.out
+executable script:  /home/gmallia/CRYSTAL14_cx1/runprop14P.v4
+executable dir:     /home/cjs14/../gmallia/CRYSTAL14_cx1/v4/bin/Linux-mpiifort/Xeon___mpi__intel-5.1___intel-suite__2016.3
+executables:     
+                    -rwxr-xr-x 1 gmallia hpc-users    24001 Nov 10  2016 INFO
+                    -rwxr-xr-x 1 gmallia hpc-users       57 Nov 10  2016 INFO.module.bash
+                    -rwxr-xr-x 1 gmallia hpc-users      101 Nov 10  2016 INFO.module.csh
+                    -rwxr-xr-x 1 gmallia hpc-users 26051333 Nov 10  2016 Pcrystal
+                    -rwxr-xr-x 1 gmallia hpc-users 10122217 Nov 10  2016 Pproperties 
+
+Command:            mpiexec  /home/cjs14/../gmallia/CRYSTAL14_cx1/v4/bin/Linux-mpiifort/Xeon___mpi__intel-5.1___intel-suite__2016.3/Pproperties
+temporary directory:/var/tmp/pbs.4807375.cx1b/iron_pbe_hi_tzvp.ech3_10953      
+<qstat -f 4807375.cx1b>
+Job Id: 4807375.cx1b
+    Job_Name = iron_pbe_hi_tzv
+    Job_Owner = cjs14@login-2-internal.cx1.hpc.ic.ac.uk
+    resources_used.cpupercent = 0
+    resources_used.cput = 00:00:00
+    resources_used.mem = 21816kb
+    resources_used.ncpus = 16
+    resources_used.vmem = 666424kb
+    resources_used.walltime = 00:10:00
+    job_state = R
+    queue = singlenode
+    server = cx1b
+    Checkpoint = u
+    ctime = Wed Jun 28 13:05:16 2017
+    Error_Path = login-2-internal.cx1.hpc.ic.ac.uk:/work/cjs14/staging_area/iro
+	n_pbe_hi_tzv.e4807375
+    exec_host = cx1-106-10-3/0*16
+    exec_vnode = (cx1-106-10-3:ncpus=16)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = n
+    Mail_Points = bea
+    mtime = Wed Jun 28 13:06:13 2017
+    Output_Path = login-2-internal.cx1.hpc.ic.ac.uk:/work/cjs14/staging_area/ir
+	on_pbe_hi_tzv.o4807375
+    Priority = 0
+    qtime = Wed Jun 28 13:05:16 2017
+    Rerunable = True
+    Resource_List.mem = 600mb
+    Resource_List.ncpus = 16
+    Resource_List.nodect = 1
+    Resource_List.place = free
+    Resource_List.select = 1:ncpus=16
+    Resource_List.tmpspace = 10gb
+    Resource_List.walltime = 01:00:00
+    stime = Wed Jun 28 13:06:13 2017
+    session_id = 9485
+    jobdir = /home/cjs14
+    substate = 42
+    Variable_List = PBS_O_SYSTEM=Linux,PBS_O_SHELL=/bin/bash,
+	PBS_O_HOME=/home/cjs14,PBS_O_LOGNAME=cjs14,
+	PBS_O_WORKDIR=/work/cjs14/staging_area,PBS_O_LANG=en_GB.UTF-8,
+	PBS_O_PATH=/apps/intel/impi/5.1.1.109/compilers_and_libraries_2016.0.1
+	09/linux/mpi/intel64/bin:/usr/lib64/qt-3.3/bin:/home/cjs14/perl5/bin:/u
+	sr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/default/bin:/h
+	ome/cjs14/bin:/apps/box-linux-sync/2015-11-02//bin:/apps/box-linux-sync
+	/2015-11-02//:/apps/intel/2016.3/compilers_and_libraries_2016.3.210/lin
+	ux/bin/intel64:/apps/intel/2016.3/debugger_2016/gdb/intel64_mic/bin:/ap
+	ps/fftw/3.3.3/bin:/apps/lammps/07Dec15/:/apps/lammps/07Dec15/bin,
+	PBS_O_MAIL=/var/spool/mail/cjs14,PBS_O_QUEUE=submit,
+	PBS_O_HOST=login-2-internal.cx1.hpc.ic.ac.uk
+    comment = Job run at Wed Jun 28 at 13:06 on (cx1-106-10-3:ncpus=16)
+    etime = Wed Jun 28 13:05:16 2017
+    run_count = 1
+    Submit_arguments = iron_pbe_hi_tzvp.qsub
+    pset = switchgroup=eswitch29
+    project = _pbs_project_default
+
+</qstat -f 4807375.cx1b>
+wavefunction from /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.f9
+wavefunction from /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.f98
+file /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.OPTINFO copied in /var/tmp/pbs.4807375.cx1b/iron_pbe_hi_tzvp.ech3_10953/OPTINFO.DAT
+input data /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.ech3.d3
+NEWK
+18 36
+1 0
+ECH3
+65
+END
+Defaulting to ethernet
+No MPI process pinning
+No OMP Thread Affinity
+Starting MPD ring...
+/opt/pbs/default/bin/pbs_tmrsh cx1-106-10-3.cx1.hpc.ic.ac.uk -n /opt/pbs/default/bin/pbs_attach -j 4807375.cx1b /apps/intel/impi/5.1.1.109/compilers_and_libraries_2016.0.109/linux/mpi/bin/mpd -n -h cx1-106-10-3 -p 37434 --ncpus=1 -e -d
+PBS has allocated the following nodes:
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+cx1-106-10-3
+---
+mpiexec.intel -genv I_MPI_DEVICE ssm -genv I_MPI_DEBUG 0 -genv I_MPI_FALLBACK_DEVICE disable -genv DAPL_MAX_CM_RETRIES 500 -genv DAPL_MAX_CM_RESPONSE_TIME 300 -genv I_MPI_DAPL_CONNECTION_TIMEOUT 300 -genv I_MPI_PIN no -genv I_MPI_PIN_MODE none -machinefile /var/tmp/pbs.4807375.cx1b/tmp.jdb5DRm5mT -n 16 -wdir /var/tmp/pbs.4807375.cx1b/iron_pbe_hi_tzvp.ech3_10953 /home/cjs14/../gmallia/CRYSTAL14_cx1/v4/bin/Linux-mpiifort/Xeon___mpi__intel-5.1___intel-suite__2016.3/Pproperties
+
+Job output begins below
+-----------------------
+          16 PROCESSORS WORKING
+
+         
+ *******************************************************************************
+ *                                                                             *
+ *                               CRYSTAL14                                     *
+ *                      public : 1.0.4 - Feb 23rd, 2016                        *
+ *                       HTTP://WWW.CRYSTAL.UNITO.IT                           *
+ *                                                                             *
+ *                              MAIN AUTHORS                                   *
+ *                                                                             *
+ *  R. DOVESI(1,11), V.R. SAUNDERS(2), C. ROETTI(1,11), R. ORLANDO(1,11),      *
+ *  C.M. ZICOVICH-WILSON(1,3), F. PASCALE(4), B. CIVALLERI(1,11),              *
+ *  K. DOLL(5), N.M. HARRISON(2,6), I. J. BUSH(7), Ph. D'ARCO(8),              *
+ *  M. LLUNELL(9), M. CAUSA'(10), Y. NOEL(8)                                   *
+ *                                                                             *
+ *        CONTRIBUTIONS TO THE CURRENT RELEASE HAVE BEEN GIVEN BY              *
+ *                                                                             *
+ *  L. MASCHIO(1,11), S. CASASSA(1,11), A. ERBA(1,11), M. FERRABONE(1,11),     *
+ *  M. DE LA PIERRE(1,11), M. FERRERO(1,11), V. LACIVITA(1,11),                *
+ *  J. BAIMA(1,11), E. ALBANESE(1,11), M.F. PEINTINGER(12), R. BAST(13),       *
+ *  M. RERAT(14), B. KIRTMAN(15), R. DEMICHELIS(1,16)                          *
+ *                                                                             *
+ * (1) THEORETICAL CHEMISTRY GROUP - UNIVERSITA' DI TORINO - TORINO (ITALY)    *
+ *     http://www.crystal.unito.it                                             *
+ * (2) COMPUTATIONAL SCIENCE & ENGINEERING DEPARTMENT - STFC DARESBURY (UK)    *
+ *     http://www.stfc.ac.uk/CSE/randd/cmg/CRYSTAL/25806.aspx                  *
+ * (3) UNIVERSIDAD AUTONOMA DEL ESTADO DE MORELOS - CUERNAVACA (MEXICO)        *
+ * (4) UNIVERSITE' DE LORRAINE - NANCY (FRANCE)                                *
+ * (5) UNIVERSITAET ULM - ULM (GERMANY); (6) IMPERIAL COLLEGE - LONDON (UK)    *
+ * (7) NAG - OXFORD (UK); (8) UPMC - SORBONNE UNIVERSITES - PARIS (FRANCE)     *
+ * (9) UNIVERSIDAD DE BARCELONA - BARCELONA (SPAIN)                            *
+ *(10) UNIVERSITA' DI NAPOLI "FEDERICO II" - NAPOLI (ITALY)                    *
+ *(11) NIS - NANOSTRUCTURED INTERFACES AND SURFACES - TORINO (ITALY)           *
+ *(12) MPI FUER CHEMISCHE ENERGIEKONVERSION - MUELHEIM AN DER RUHR (GERMANY)   *
+ *(13) UNIVERSITY OF STOCKHOLM - STOCKHOLM (SWEDEN)                            *
+ *(14) UNIVERSITE' DE PAU ET DES PAYS DE L'ADOUR - PAU (FRANCE)                *
+ *(15) UNIVERSITY OF CALIFORNIA SANTA BARBARA - SANTA BARBARA (USA)            *
+ *(16) CURTIN UNIVERSITY - PERTH (AUSTRALIA)                                   *
+ *                                                                             *
+ ********************************************************************************
+ EEEEEEEEEE STARTING  DATE 28 06 2017 TIME 13:16:32.6
+
+ *******************************************************************************
+ Bulk BCC Fe CJS 27Jun2017                                                       
+ CRYSTAL - PROPERTIES - TYPE OF CALCULATION :  UNRESTRICTED OPEN SHELL
+ *******************************************************************************
+ SPIN POLARIZED SYSTEM: SUMMED SPIN DENSITY    2.11349278
+
+ KOHN-SHAM HAMILTONIAN
+
+ (EXCHANGE)[CORRELATION] FUNCTIONAL:(PERDEW-BURKE-ERNZERHOF)[PERDEW-BURKE-ERNZERHOF]
+
+
+ SPIN POLARIZED DFT SELECTED
+
+ DIRECT LATTICE VECTOR COMPONENTS (ANGSTROM)
+        -1.39633    1.39633    1.39633
+         1.39633   -1.39633    1.39633
+         1.39633    1.39633   -1.39633
+
+ LATTICE PARAMETERS  (ANGSTROM AND DEGREES) - PRIMITIVE CELL
+       A          B          C         ALPHA      BETA     GAMMA        VOLUME
+    2.41852    2.41852    2.41852    109.4712  109.4712  109.4712      10.88997
+ *******************************************************************************
+ N. OF ATOMS PER CELL         1 COULOMB OVERLAP TOL          (T1) 10**   -8
+ NUMBER OF SHELLS            14 COULOMB PENETRATION TOL      (T2) 10**   -8
+ NUMBER OF AO                40 EXCHANGE OVERLAP TOL         (T3) 10**   20
+ N. OF ELECTRONS PER CELL    26 EXCHANGE PSEUDO OVP (F(G))   (T4) 10**   20
+ CORE ELECTRONS PER CELL     18 EXCHANGE PSEUDO OVP (P(G))   (T5) 10**   20
+ N. OF SYMMETRY OPERATORS    48 POLE ORDER IN MONO ZONE                   4
+ *******************************************************************************
+   ATOM N.AT.  SHELL    X(A)      Y(A)      Z(A)      EXAD       N.ELECT.
+ *******************************************************************************
+    1   26 FE   14     0.000     0.000     0.000   1.598E+00      26.000
+ *******************************************************************************
+ DE(K)                   0.000E+00  ENERGY LEVEL SHIFTING        0.00000
+ TOTAL ENERGY -1.2635690956435E+03  CONVERGENCE ON ENER        1.692E-08
+ KIN. ENERGY   1.2612114354310E+03  VIR. COEFF.           1.02151480E+00
+ N. OF SCF CYCLES               27  FERMI ENERGY              -0.136E+00
+ WEIGHT OF F(I) IN F(I+1)      80
+ SHRINK. FACT.(MONKH.)    16 16 16  SHRINKING FACTOR(GILAT NET)       32
+ NUMBER OF K POINTS IN THE IBZ 145  CELL VOLUME (A.U.)         79.431940
+ *******************************************************************************
+
+ GCALCO - MAX INDICES DIRECT LATTICE VECTOR    14    14    14
+ NO.OF VECTORS CREATED 6999 STARS  122 RMAX    49.78663 BOHR
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT gordsh1     TELAPSE        0.07 TCPU        0.01
+
+ MATRIX SIZE: P(G)   53004, F(G)   27286, P(G) IRR    3335, F(G) IRR    3335
+ MAX G-VECTOR INDEX FOR 1- AND 2-ELECTRON INTEGRALS 339
+
+
+ CAPPA:IS1 16;IS2 16;IS3 16; K PTS MONK NET 145; SYMMOPS:K SPACE  48;G SPACE  48
+
+
+ CAPPA:IS1 18;IS2 18;IS3 18; K PTS MONK NET 195; SYMMOPS:K SPACE  48;G SPACE  48
+
+ *******************************************************************************
+ RESTART WITH NEW K POINTS NET
+ *******************************************************************************
+ POINTS IN THE IBZ                 195 POINTS(GILAT NET)              1240
+ SHRINK FACTORS(MONK.)        18 18 18 SHRINK FACTOR(GILAT)             36
+ *******************************************************************************
+ *** K POINTS COORDINATES (OBLIQUE COORDINATES IN UNITS OF IS = 18)
+   1-R(  0  0  0)   2-C(  1  0  0)   3-C(  2  0  0)   4-C(  3  0  0)
+   5-C(  4  0  0)   6-C(  5  0  0)   7-C(  6  0  0)   8-C(  7  0  0)
+   9-C(  8  0  0)  10-R(  9  0  0)  11-C(  1  1  0)  12-C(  2  1  0)
+  13-C(  3  1  0)  14-C(  4  1  0)  15-C(  5  1  0)  16-C(  6  1  0)
+  17-C(  7  1  0)  18-C(  8  1  0)  19-C(  2  2  0)  20-C(  3  2  0)
+  21-C(  4  2  0)  22-C(  5  2  0)  23-C(  6  2  0)  24-C(  7  2  0)
+  25-C(  8  2  0)  26-C(  3  3  0)  27-C(  4  3  0)  28-C(  5  3  0)
+  29-C(  6  3  0)  30-C(  7  3  0)  31-C(  4  4  0)  32-C(  5  4  0)
+  33-C(  6  4  0)  34-C(  7  4  0)  35-C(  5  5  0)  36-C(  6  5  0)
+  37-C(  6  6  0)  38-C(  1  1  1)  39-C(  2  1  1)  40-C(  3  1  1)
+  41-C(  4  1  1)  42-C(  5  1  1)  43-C(  6  1  1)  44-C(  7  1  1)
+  45-C(  8  1  1)  46-C( 17  1  1)  47-C(  2  2  1)  48-C(  3  2  1)
+  49-C(  4  2  1)  50-C(  5  2  1)  51-C(  6  2  1)  52-C(  7  2  1)
+  53-C( 16  2  1)  54-C(  3  3  1)  55-C(  4  3  1)  56-C(  5  3  1)
+  57-C(  6  3  1)  58-C(  7  3  1)  59-C( 15  3  1)  60-C( 16  3  1)
+  61-C(  4  4  1)  62-C(  5  4  1)  63-C(  6  4  1)  64-C( 14  4  1)
+  65-C( 15  4  1)  66-C(  5  5  1)  67-C(  6  5  1)  68-C( 13  5  1)
+  69-C( 14  5  1)  70-C( 15  5  1)  71-C( 12  6  1)  72-C( 13  6  1)
+  73-C( 14  6  1)  74-C( 11  7  1)  75-C( 12  7  1)  76-C( 13  7  1)
+  77-C( 14  7  1)  78-C( 10  8  1)  79-C( 11  8  1)  80-C( 12  8  1)
+  81-C( 13  8  1)  82-C(  9  9  1)  83-C( 10  9  1)  84-C( 11  9  1)
+  85-C( 12  9  1)  86-C( 13  9  1)  87-C( 10 10  1)  88-C( 11 10  1)
+  89-C( 12 10  1)  90-C( 11 11  1)  91-C( 12 11  1)  92-C(  2  2  2)
+  93-C(  3  2  2)  94-C(  4  2  2)  95-C(  5  2  2)  96-C(  6  2  2)
+  97-C(  7  2  2)  98-C( 16  2  2)  99-C(  3  3  2) 100-C(  4  3  2)
+ 101-C(  5  3  2) 102-C(  6  3  2) 103-C( 15  3  2) 104-C(  4  4  2)
+ 105-C(  5  4  2) 106-C(  6  4  2) 107-C( 14  4  2) 108-C( 15  4  2)
+ 109-C(  5  5  2) 110-C( 13  5  2) 111-C( 14  5  2) 112-C( 12  6  2)
+ 113-C( 13  6  2) 114-C( 14  6  2) 115-C( 11  7  2) 116-C( 12  7  2)
+ 117-C( 13  7  2) 118-C( 10  8  2) 119-C( 11  8  2) 120-C( 12  8  2)
+ 121-C( 13  8  2) 122-C(  9  9  2) 123-C( 10  9  2) 124-C( 11  9  2)
+ 125-C( 12  9  2) 126-C( 10 10  2) 127-C( 11 10  2) 128-C( 12 10  2)
+ 129-C( 11 11  2) 130-C(  3  3  3) 131-C(  4  3  3) 132-C(  5  3  3)
+ 133-C(  6  3  3) 134-C( 15  3  3) 135-C(  4  4  3) 136-C(  5  4  3)
+ 137-C( 14  4  3) 138-C(  5  5  3) 139-C( 13  5  3) 140-C( 14  5  3)
+ 141-C( 12  6  3) 142-C( 13  6  3) 143-C( 11  7  3) 144-C( 12  7  3)
+ 145-C( 13  7  3) 146-C( 10  8  3) 147-C( 11  8  3) 148-C( 12  8  3)
+ 149-C(  9  9  3) 150-C( 10  9  3) 151-C( 11  9  3) 152-C( 12  9  3)
+ 153-C( 10 10  3) 154-C( 11 10  3) 155-C( 11 11  3) 156-C(  4  4  4)
+ 157-C(  5  4  4) 158-C( 14  4  4) 159-C( 13  5  4) 160-C( 12  6  4)
+ 161-C( 13  6  4) 162-C( 11  7  4) 163-C( 12  7  4) 164-C( 10  8  4)
+ 165-C( 11  8  4) 166-C( 12  8  4) 167-C(  9  9  4) 168-C( 10  9  4)
+ 169-C( 11  9  4) 170-C( 10 10  4) 171-C( 11 10  4) 172-C( 13  5  5)
+ 173-C( 12  6  5) 174-C( 11  7  5) 175-C( 12  7  5) 176-C( 10  8  5)
+ 177-C( 11  8  5) 178-C(  9  9  5) 179-C( 10  9  5) 180-C( 11  9  5)
+ 181-C( 10 10  5) 182-C( 12  6  6) 183-C( 11  7  6) 184-C( 10  8  6)
+ 185-C( 11  8  6) 186-C(  9  9  6) 187-C( 10  9  6) 188-C( 10 10  6)
+ 189-C( 11  7  7) 190-C( 10  8  7) 191-C(  9  9  7) 192-C( 10  9  7)
+ 193-C( 10  8  8) 194-C(  9  9  8) 195-R(  9  9  9)
+
+ FERMI ENERGY AND DENSITY MATRIX CALCULATION ON COMPUTED EIGENVECTORS
+ DENSITY MATRIX AT SCF CYCLE ( 27+1)
+
+ POSSIBLY CONDUCTING STATE - EFERMI(AU) -1.3612199E-01 (RES. CHARGE  2.62E-09;IT.  4)
+
+ CORE DENSITY MATRIX CALCULATION
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT NEWK        TELAPSE        0.60 TCPU        0.46
+
+ 3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D
+ 3D DENSITY, GRID IS  65* 65* 65
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT CHARGE      TELAPSE        4.78 TCPU        4.64
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ECH3        TELAPSE        4.78 TCPU        4.64
+ ENDPROP   
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT END         TELAPSE        4.78 TCPU        4.64
+ EEEEEEEEEE TERMINATION  DATE 28 06 2017 TIME 13:16:37.3
+NODE    0 CPU TIME =         4.643
+NODE    1 CPU TIME =         4.327
+NODE    2 CPU TIME =         4.321
+NODE    3 CPU TIME =         4.321
+NODE    4 CPU TIME =         4.382
+NODE    5 CPU TIME =         4.344
+NODE    6 CPU TIME =         4.388
+NODE    7 CPU TIME =         4.338
+NODE    8 CPU TIME =         4.371
+NODE    9 CPU TIME =         4.340
+NODE   10 CPU TIME =         4.298
+NODE   11 CPU TIME =         4.382
+NODE   12 CPU TIME =         4.374
+NODE   13 CPU TIME =         4.372
+NODE   14 CPU TIME =         4.354
+NODE   15 CPU TIME =         4.333
+    TOTAL CPU TIME =        69.888
+Wed 28 Jun 13:16:37 BST 2017
+Disk usage:total 86228
+-rw------- 1 cjs14 hpc-users  3616983 Jun 28 13:16 DENS_CUBE.DAT
+-rw------- 1 cjs14 hpc-users   391344 Jun 28 13:16 fort.10.pe00
+-rw------- 1 cjs14 hpc-users   466320 Jun 28 13:16 fort.10.pe01
+-rw------- 1 cjs14 hpc-users   376200 Jun 28 13:16 fort.10.pe02
+-rw------- 1 cjs14 hpc-users   400416 Jun 28 13:16 fort.10.pe03
+-rw------- 1 cjs14 hpc-users   362744 Jun 28 13:16 fort.10.pe04
+-rw------- 1 cjs14 hpc-users   434616 Jun 28 13:16 fort.10.pe05
+-rw------- 1 cjs14 hpc-users   437064 Jun 28 13:16 fort.10.pe06
+-rw------- 1 cjs14 hpc-users   351256 Jun 28 13:16 fort.10.pe07
+-rw------- 1 cjs14 hpc-users   382616 Jun 28 13:16 fort.10.pe08
+-rw------- 1 cjs14 hpc-users   401696 Jun 28 13:16 fort.10.pe09
+-rw------- 1 cjs14 hpc-users   423424 Jun 28 13:16 fort.10.pe10
+-rw------- 1 cjs14 hpc-users   462352 Jun 28 13:16 fort.10.pe11
+-rw------- 1 cjs14 hpc-users   411216 Jun 28 13:16 fort.10.pe12
+-rw------- 1 cjs14 hpc-users   433400 Jun 28 13:16 fort.10.pe13
+-rw------- 1 cjs14 hpc-users   362560 Jun 28 13:16 fort.10.pe14
+-rw------- 1 cjs14 hpc-users   511512 Jun 28 13:16 fort.10.pe15
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe00
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe01
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe02
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe03
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe04
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe05
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe06
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe07
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe08
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe09
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe10
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe11
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe12
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe13
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe14
+-rw------- 1 cjs14 hpc-users   436592 Jun 28 13:16 fort.11.pe15
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe00
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe01
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe02
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe03
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe04
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe05
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe06
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe07
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe08
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe09
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe10
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe11
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe12
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe13
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe14
+-rw------- 1 cjs14 hpc-users  2544216 Jun 28 13:16 fort.13.pe15
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe00
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe01
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe02
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe03
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe04
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe05
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe06
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe07
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe08
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe09
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe10
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe11
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe12
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe13
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe14
+-rw------- 1 cjs14 hpc-users        0 Jun 28 13:16 fort.15.pe15
+-rw------- 1 cjs14 hpc-users 11095078 Jun 28 13:16 fort.31
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe00
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe01
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe02
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe03
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe04
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe05
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe06
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe07
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe08
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe09
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe10
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe11
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe12
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe13
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe14
+-rw------- 1 cjs14 hpc-users   218296 Jun 28 13:16 fort.3.pe15
+-rw------- 1 cjs14 hpc-users    21680 Jun 28 13:16 fort.61.pe00
+-rw------- 1 cjs14 hpc-users    24832 Jun 28 13:16 fort.61.pe01
+-rw------- 1 cjs14 hpc-users    19424 Jun 28 13:16 fort.61.pe02
+-rw------- 1 cjs14 hpc-users    24208 Jun 28 13:16 fort.61.pe03
+-rw------- 1 cjs14 hpc-users    22464 Jun 28 13:16 fort.61.pe04
+-rw------- 1 cjs14 hpc-users    23632 Jun 28 13:16 fort.61.pe05
+-rw------- 1 cjs14 hpc-users    19520 Jun 28 13:16 fort.61.pe06
+-rw------- 1 cjs14 hpc-users    23872 Jun 28 13:16 fort.61.pe07
+-rw------- 1 cjs14 hpc-users    25136 Jun 28 13:16 fort.61.pe08
+-rw------- 1 cjs14 hpc-users    23632 Jun 28 13:16 fort.61.pe09
+-rw------- 1 cjs14 hpc-users    22000 Jun 28 13:16 fort.61.pe10
+-rw------- 1 cjs14 hpc-users    22128 Jun 28 13:16 fort.61.pe11
+-rw------- 1 cjs14 hpc-users    24352 Jun 28 13:16 fort.61.pe12
+-rw------- 1 cjs14 hpc-users    24832 Jun 28 13:16 fort.61.pe13
+-rw------- 1 cjs14 hpc-users    21904 Jun 28 13:16 fort.61.pe14
+-rw------- 1 cjs14 hpc-users    22464 Jun 28 13:16 fort.61.pe15
+-rw------- 1 cjs14 hpc-users    10736 Jun 28 13:16 fort.62.pe00
+-rw------- 1 cjs14 hpc-users    13008 Jun 28 13:16 fort.62.pe01
+-rw------- 1 cjs14 hpc-users     8928 Jun 28 13:16 fort.62.pe02
+-rw------- 1 cjs14 hpc-users    11456 Jun 28 13:16 fort.62.pe03
+-rw------- 1 cjs14 hpc-users    11728 Jun 28 13:16 fort.62.pe04
+-rw------- 1 cjs14 hpc-users    10624 Jun 28 13:16 fort.62.pe05
+-rw------- 1 cjs14 hpc-users    10592 Jun 28 13:16 fort.62.pe06
+-rw------- 1 cjs14 hpc-users    12416 Jun 28 13:16 fort.62.pe07
+-rw------- 1 cjs14 hpc-users    13408 Jun 28 13:16 fort.62.pe08
+-rw------- 1 cjs14 hpc-users    13008 Jun 28 13:16 fort.62.pe09
+-rw------- 1 cjs14 hpc-users    11408 Jun 28 13:16 fort.62.pe10
+-rw------- 1 cjs14 hpc-users     9712 Jun 28 13:16 fort.62.pe11
+-rw------- 1 cjs14 hpc-users    10944 Jun 28 13:16 fort.62.pe12
+-rw------- 1 cjs14 hpc-users    11824 Jun 28 13:16 fort.62.pe13
+-rw------- 1 cjs14 hpc-users    10496 Jun 28 13:16 fort.62.pe14
+-rw------- 1 cjs14 hpc-users    12752 Jun 28 13:16 fort.62.pe15
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe00
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe01
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe02
+-rw------- 1 cjs14 hpc-users   601792 Jun 28 13:16 fort.8.pe03
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe04
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe05
+-rw------- 1 cjs14 hpc-users   601792 Jun 28 13:16 fort.8.pe06
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe07
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe08
+-rw------- 1 cjs14 hpc-users   614592 Jun 28 13:16 fort.8.pe09
+-rw------- 1 cjs14 hpc-users   627400 Jun 28 13:16 fort.8.pe10
+-rw------- 1 cjs14 hpc-users   640200 Jun 28 13:16 fort.8.pe11
+-rw------- 1 cjs14 hpc-users   627400 Jun 28 13:16 fort.8.pe12
+-rw------- 1 cjs14 hpc-users   627400 Jun 28 13:16 fort.8.pe13
+-rw------- 1 cjs14 hpc-users   640200 Jun 28 13:16 fort.8.pe14
+-rw------- 1 cjs14 hpc-users   627400 Jun 28 13:16 fort.8.pe15
+-rw------- 1 cjs14 hpc-users   388424 Jun 28 13:16 fort.9
+-rw------- 1 cjs14 hpc-users   986573 Jun 28 13:16 fort.98
+-rw------- 1 cjs14 hpc-users       27 Jun 28 13:16 INPUT
+-rw------- 1 cjs14 hpc-users    52190 Jun 28 13:16 OPTINFO.DAT
+-rw------- 1 cjs14 hpc-users  3616982 Jun 28 13:16 SPIN_CUBE.DAT
+85	/var/tmp/pbs.4807375.cx1b/iron_pbe_hi_tzvp.ech3_10953/
+Filesystem      1K-blocks     Used  Available Use% Mounted on
+/dev/sda3      1940062976 10665784 1929397192   1% /tmp
+/dev/sda3      1940062976 10665784 1929397192   1% /tmp
+Wed 28 Jun 13:16:37 BST 2017
+cx1-106-10-3.cx1.hpc.ic.ac.uk
+ 
+TEMPORARY          SAVED (in /export101/work/cjs14/staging_area)
+fort.9             iron_pbe_hi_tzvp.ech3.f9388424   Jun 28 2017
+fort.98            iron_pbe_hi_tzvp.ech3.f98986573   Jun 28 2017
+OPTINFO.DAT        iron_pbe_hi_tzvp.ech3.OPTINFO52190    Jun 28 2017
+ 
+file fort.31 saved as /export101/work/cjs14/staging_area/iron_pbe_hi_tzvp.ech3_dat.prop3d
+/var/tmp/pbs.4807375.cx1b/iron_pbe_hi_tzvp.ech3_10953 removed

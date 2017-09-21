@@ -1,0 +1,322 @@
+{
+  "warnings": null,
+  "errors": null,
+  "initial": {
+    "ids": [
+      1,
+      2
+    ],
+    "symbols": [
+      "Si",
+      "Si"
+    ],
+    "fcoords": null,
+    "ccoords": {
+      "magnitude": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -1.3494018869377948,
+          1.3494018869377948,
+          1.3494018869377948
+        ]
+      ],
+      "units": "angstrom"
+    },
+    "cell_vectors": {
+      "a": {
+        "units": "angstrom",
+        "magnitude": [
+          -2.6988037738755897,
+          0.0,
+          2.6988037738755897
+        ]
+      },
+      "b": {
+        "units": "angstrom",
+        "magnitude": [
+          0.0,
+          2.6988037738755897,
+          2.6988037738755897
+        ]
+      },
+      "c": {
+        "units": "angstrom",
+        "magnitude": [
+          -2.6988037738755897,
+          2.6988037738755897,
+          0.0
+        ]
+      }
+    },
+    "energy": null,
+    "scf": null,
+    "forces": null,
+    "stress": null,
+    "bands": null
+  },
+  "optimisation": [
+    {
+      "ids": null,
+      "symbols": null,
+      "fcoords": null,
+      "ccoords": null,
+      "cell_vectors": null,
+      "energy": null,
+      "scf": [
+        {
+          "energy": {
+            "total": {
+              "units": "eV",
+              "magnitude": -215.52770395692434
+            }
+          }
+        },
+        {
+          "energy": {
+            "total": {
+              "units": "eV",
+              "magnitude": -215.56955289171893
+            }
+          }
+        },
+        {
+          "energy": {
+            "total": {
+              "units": "eV",
+              "magnitude": -215.57553790001808
+            }
+          }
+        },
+        {
+          "energy": {
+            "total": {
+              "units": "eV",
+              "magnitude": -215.57575994492805
+            }
+          }
+        },
+        {
+          "energy": {
+            "total": {
+              "units": "eV",
+              "magnitude": -215.57577355062105
+            }
+          }
+        }
+      ],
+      "forces": null,
+      "stress": null,
+      "bands": null
+    }
+  ],
+  "final": {
+    "ids": null,
+    "symbols": null,
+    "fcoords": null,
+    "ccoords": null,
+    "cell_vectors": null,
+    "energy": {
+      "total": {
+        "magnitude": -215.5757738227349,
+        "units": "eV"
+      },
+      "components": {
+        "one-electron": {
+          "units": "eV",
+          "magnitude": 65.21925122927938
+        },
+        "hartree": {
+          "units": "eV",
+          "magnitude": 14.648459039397169
+        },
+        "xc": {
+          "units": "eV",
+          "magnitude": -65.51055564740288
+        },
+        "ewald": {
+          "units": "eV",
+          "magnitude": -229.93292844400858
+        }
+      }
+    },
+    "scf": null,
+    "forces": {
+      "peratom": [
+        {
+          "units": "eV/angstrom",
+          "magnitude": [
+            0.0,
+            -0.0,
+            -0.0
+          ]
+        },
+        {
+          "units": "eV/angstrom",
+          "magnitude": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "stress": {
+      "magnitude": [
+        [
+          0.00638945927101409,
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.00638945927101409,
+          0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          0.00638945927101409
+        ]
+      ],
+      "units": "eV/angstrom^3"
+    },
+    "bands": {
+      "coord_type": "cartesian*2pi/alat",
+      "all": {
+        "kpoints": [
+          [
+            0.125,
+            0.125,
+            0.125
+          ],
+          [
+            0.125,
+            0.125,
+            0.375
+          ],
+          [
+            0.125,
+            0.125,
+            0.625
+          ],
+          [
+            0.125,
+            0.125,
+            0.875
+          ],
+          [
+            0.125,
+            0.375,
+            0.375
+          ],
+          [
+            0.125,
+            0.375,
+            0.625
+          ],
+          [
+            0.125,
+            0.375,
+            0.875
+          ],
+          [
+            0.125,
+            0.625,
+            0.625
+          ],
+          [
+            0.375,
+            0.375,
+            0.375
+          ],
+          [
+            0.375,
+            0.375,
+            0.625
+          ]
+        ],
+        "pws": [
+          335,
+          338,
+          337,
+          343,
+          341,
+          340,
+          347,
+          344,
+          350,
+          343
+        ],
+        "energies_per_band": [
+          {
+            "units": "eV",
+            "magnitude": [
+              -5.6039,
+              -5.0584,
+              -3.9883,
+              -2.4616,
+              -4.5395,
+              -3.5491,
+              -2.2719,
+              -2.822,
+              -4.0849,
+              -3.3347
+            ]
+          },
+          {
+            "units": "eV",
+            "magnitude": [
+              4.6467,
+              3.0175,
+              1.3106,
+              -0.5936,
+              1.5909,
+              0.375,
+              -0.7033,
+              -0.439,
+              0.2304,
+              -0.5842
+            ]
+          },
+          {
+            "units": "eV",
+            "magnitude": [
+              5.9568,
+              4.9012,
+              3.5165,
+              2.7226,
+              3.8905,
+              2.8565,
+              2.0783,
+              2.1614,
+              5.1432,
+              3.934
+            ]
+          },
+          {
+            "units": "eV",
+            "magnitude": [
+              5.9568,
+              4.9909,
+              3.9919,
+              3.5069,
+              5.4636,
+              4.2745,
+              3.2106,
+              4.323,
+              5.1432,
+              4.6556
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "creator": {
+    "program": "Quantum Espresso"
+  }
+}

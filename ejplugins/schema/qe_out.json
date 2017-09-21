@@ -1,0 +1,1537 @@
+{
+  "type": "object",
+  "properties": {
+    "warnings": {
+      "type": "null"
+    },
+    "initial": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "symbols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fcoords": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "ccoords": {
+          "type": "object",
+          "properties": {
+            "magnitude": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "magnitude",
+            "units"
+          ]
+        },
+        "cell_vectors": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "b": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "c": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "energy": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "total": {
+              "type": "object",
+              "properties": {
+                "magnitude": {
+                  "type": "number"
+                },
+                "units": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "components": {
+              "type": "object",
+              "properties": {
+                "one-electron": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "hartree": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "xc": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "ewald": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "one-center paw": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "smearing (-TS)": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                }
+              },
+              "required": [
+                "ewald",
+                "hartree",
+                "one-center paw",
+                "one-electron",
+                "smearing (-TS)",
+                "xc"
+              ]
+            },
+            "fermi": {
+              "type": "object",
+              "properties": {
+                "magnitude": {
+                  "type": "number"
+                },
+                "units": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          },
+          "required": [
+            "components",
+            "fermi",
+            "total"
+          ]
+        },
+        "scf": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "energy": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                },
+                "required": [
+                  "total"
+                ]
+              },
+              "spin_density_total": {
+                "type": "number"
+              },
+              "spin_density_absolute": {
+                "type": "number"
+              },
+              "atomic_charges_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "spin_density_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "forces": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "peratom": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "units": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              }
+            }
+          },
+          "required": [
+            "peratom"
+          ]
+        },
+        "stress": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "magnitude": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "magnitude",
+            "units"
+          ]
+        },
+        "bands": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "coord_type": {
+              "type": "string"
+            },
+            "spinup": {
+              "type": "object",
+              "properties": {
+                "kpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "pws": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "energies_per_band": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "energies_per_band",
+                "kpoints",
+                "pws"
+              ]
+            },
+            "spindown": {
+              "type": "object",
+              "properties": {
+                "kpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "pws": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "energies_per_band": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "energies_per_band",
+                "kpoints",
+                "pws"
+              ]
+            }
+          },
+          "required": [
+            "coord_type",
+            "spindown",
+            "spinup"
+          ]
+        }
+      },
+      "required": [
+        "bands",
+        "ccoords",
+        "cell_vectors",
+        "energy",
+        "fcoords",
+        "forces",
+        "ids",
+        "scf",
+        "stress",
+        "symbols"
+      ]
+    },
+    "optimisation": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "symbols": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "fcoords": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "ccoords": {
+            "type": "null"
+          },
+          "cell_vectors": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "a": {
+                "type": "object",
+                "properties": {
+                  "units": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              },
+              "b": {
+                "type": "object",
+                "properties": {
+                  "units": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              },
+              "c": {
+                "type": "object",
+                "properties": {
+                  "units": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              }
+            },
+            "required": [
+              "a",
+              "b",
+              "c"
+            ]
+          },
+          "energy": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "total": {
+                "type": "object",
+                "properties": {
+                  "magnitude": {
+                    "type": "number"
+                  },
+                  "units": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              },
+              "components": {
+                "type": "object",
+                "properties": {
+                  "one-electron": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  },
+                  "hartree": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  },
+                  "xc": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  },
+                  "ewald": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  },
+                  "one-center paw": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  },
+                  "smearing (-TS)": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                },
+                "required": [
+                  "ewald",
+                  "hartree",
+                  "one-center paw",
+                  "one-electron",
+                  "smearing (-TS)",
+                  "xc"
+                ]
+              },
+              "fermi": {
+                "type": "object",
+                "properties": {
+                  "magnitude": {
+                    "type": "number"
+                  },
+                  "units": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              }
+            },
+            "required": [
+              "components",
+              "fermi",
+              "total"
+            ]
+          },
+          "scf": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "energy": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "object",
+                      "properties": {
+                        "units": {
+                          "type": "string"
+                        },
+                        "magnitude": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "magnitude",
+                        "units"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "total"
+                  ]
+                },
+                "spin_density_total": {
+                  "type": "number"
+                },
+                "spin_density_absolute": {
+                  "type": "number"
+                },
+                "atomic_charges_peratom": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "spin_density_peratom": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "forces": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "peratom": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "peratom"
+            ]
+          },
+          "stress": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "magnitude": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "units": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "magnitude",
+              "units"
+            ]
+          },
+          "bands": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "coord_type": {
+                "type": "string"
+              },
+              "spinup": {
+                "type": "object",
+                "properties": {
+                  "kpoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "pws": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "energies_per_band": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "units": {
+                          "type": "string"
+                        },
+                        "magnitude": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "required": [
+                        "magnitude",
+                        "units"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "energies_per_band",
+                  "kpoints",
+                  "pws"
+                ]
+              },
+              "spindown": {
+                "type": "object",
+                "properties": {
+                  "kpoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "pws": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "energies_per_band": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "units": {
+                          "type": "string"
+                        },
+                        "magnitude": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "required": [
+                        "magnitude",
+                        "units"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "energies_per_band",
+                  "kpoints",
+                  "pws"
+                ]
+              }
+            },
+            "required": [
+              "coord_type",
+              "spindown",
+              "spinup"
+            ]
+          }
+        },
+        "required": [
+          "bands",
+          "ccoords",
+          "cell_vectors",
+          "energy",
+          "fcoords",
+          "forces",
+          "ids",
+          "scf",
+          "stress",
+          "symbols"
+        ]
+      }
+    },
+    "final": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer"
+          }
+        },
+        "symbols": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "fcoords": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "ccoords": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "magnitude": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "magnitude",
+            "units"
+          ]
+        },
+        "cell_vectors": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "a": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "b": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "c": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "energy": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "total": {
+              "type": "object",
+              "properties": {
+                "magnitude": {
+                  "type": "number"
+                },
+                "units": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            },
+            "components": {
+              "type": "object",
+              "properties": {
+                "one-electron": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "hartree": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "xc": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "ewald": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "smearing (-TS)": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                },
+                "one-center paw": {
+                  "type": "object",
+                  "properties": {
+                    "units": {
+                      "type": "string"
+                    },
+                    "magnitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "magnitude",
+                    "units"
+                  ]
+                }
+              },
+              "required": [
+                "ewald",
+                "hartree",
+                "one-electron",
+                "xc"
+              ]
+            },
+            "fermi": {
+              "type": "object",
+              "properties": {
+                "magnitude": {
+                  "type": "number"
+                },
+                "units": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          },
+          "required": [
+            "components",
+            "total"
+          ]
+        },
+        "scf": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "energy": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                },
+                "required": [
+                  "total"
+                ]
+              },
+              "spin_density_total": {
+                "type": "number"
+              },
+              "spin_density_absolute": {
+                "type": "number"
+              },
+              "atomic_charges_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "spin_density_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "forces": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "peratom": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "units": {
+                    "type": "string"
+                  },
+                  "magnitude": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "magnitude",
+                  "units"
+                ]
+              }
+            }
+          },
+          "required": [
+            "peratom"
+          ]
+        },
+        "stress": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "magnitude": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "magnitude",
+            "units"
+          ]
+        },
+        "bands": {
+          "type": "object",
+          "properties": {
+            "coord_type": {
+              "type": "string"
+            },
+            "spinup": {
+              "type": "object",
+              "properties": {
+                "kpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "pws": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "energies_per_band": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "energies_per_band",
+                "kpoints",
+                "pws"
+              ]
+            },
+            "spindown": {
+              "type": "object",
+              "properties": {
+                "kpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "pws": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "energies_per_band": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "energies_per_band",
+                "kpoints",
+                "pws"
+              ]
+            },
+            "all": {
+              "type": "object",
+              "properties": {
+                "kpoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "pws": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "energies_per_band": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "units": {
+                        "type": "string"
+                      },
+                      "magnitude": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "energies_per_band",
+                "kpoints",
+                "pws"
+              ]
+            }
+          },
+          "required": [
+            "coord_type"
+          ]
+        }
+      },
+      "required": [
+        "bands",
+        "ccoords",
+        "cell_vectors",
+        "energy",
+        "fcoords",
+        "forces",
+        "ids",
+        "scf",
+        "stress",
+        "symbols"
+      ]
+    },
+    "creator": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "program"
+      ]
+    }
+  },
+  "required": [
+    "creator",
+    "final",
+    "initial",
+    "optimisation",
+    "warnings"
+  ]
+}

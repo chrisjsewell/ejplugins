@@ -1,0 +1,258 @@
+{
+  "type": "object",
+  "properties": {
+    "chemical_name_mineral": {
+      "type": "string"
+    },
+    "publ_author_name": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "journal_name_full": {
+      "type": "string"
+    },
+    "journal_volume": {
+      "type": "string"
+    },
+    "journal_year": {
+      "type": "string"
+    },
+    "journal_page_first": {
+      "type": "string"
+    },
+    "journal_page_last": {
+      "type": "string"
+    },
+    "publ_section_title": {
+      "type": "string"
+    },
+    "database_code_amcsd": {
+      "type": "string"
+    },
+    "chemical_formula_sum": {
+      "type": "string"
+    },
+    "cell_length_a": {
+      "type": "string"
+    },
+    "cell_length_b": {
+      "type": "string"
+    },
+    "cell_length_c": {
+      "type": "string"
+    },
+    "cell_angle_alpha": {
+      "type": "string"
+    },
+    "cell_angle_beta": {
+      "type": "string"
+    },
+    "cell_angle_gamma": {
+      "type": "string"
+    },
+    "cell_volume": {
+      "type": "string"
+    },
+    "exptl_crystal_density_diffrn": {
+      "type": "string"
+    },
+    "symmetry_space_group_name_H-M": {
+      "type": "string"
+    },
+    "space_group_symop_operation_xyz": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_label": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_fract_x": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_fract_y": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_fract_z": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_U_iso_or_equiv": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_label": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_11": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_22": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_33": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_12": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_13": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atom_site_aniso_U_23": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "structures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "@module": {
+            "type": "string"
+          },
+          "@class": {
+            "type": "string"
+          },
+          "lattice": {
+            "type": "object",
+            "properties": {
+              "matrix": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "a": {
+                "type": "number"
+              },
+              "b": {
+                "type": "number"
+              },
+              "c": {
+                "type": "number"
+              },
+              "alpha": {
+                "type": "number"
+              },
+              "beta": {
+                "type": "number"
+              },
+              "gamma": {
+                "type": "number"
+              },
+              "volume": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "a",
+              "alpha",
+              "b",
+              "beta",
+              "c",
+              "gamma",
+              "matrix",
+              "volume"
+            ]
+          },
+          "sites": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "species": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "element": {
+                        "type": "string"
+                      },
+                      "occu": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "element",
+                      "occu"
+                    ]
+                  }
+                },
+                "abc": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "xyz": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "abc",
+                "label",
+                "species",
+                "xyz"
+              ]
+            }
+          }
+        },
+        "required": [
+          "@class",
+          "@module",
+          "lattice",
+          "sites"
+        ]
+      }
+    }
+  },
+  "required": [
+    "structures"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string"
+          },
+          "calc_type": {
+            "type": "string"
+          },
+          "coord_type": {
+            "type": "string"
+          },
+          "nkpts_per_band": {
+            "type": "integer"
+          },
+          "fermi": {
+            "type": "object",
+            "properties": {
+              "units": {
+                "type": "string"
+              },
+              "magnitude": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "magnitude",
+              "units"
+            ]
+          },
+          "erange": {
+            "type": "object",
+            "properties": {
+              "units": {
+                "type": "string"
+              },
+              "magnitude": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "magnitude",
+              "units"
+            ]
+          },
+          "krange": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "kdist": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "kpoints": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "energies_per_band": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "units": {
+                  "type": "string"
+                },
+                "magnitude": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          }
+        },
+        "required": [
+          "calc_type",
+          "coord_type",
+          "energies_per_band",
+          "erange",
+          "fermi",
+          "kdist",
+          "kpoints",
+          "krange",
+          "nkpts_per_band",
+          "system"
+        ]
+      }
+    },
+    "creator": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "program"
+      ]
+    }
+  },
+  "required": [
+    "creator",
+    "segments"
+  ]
+}

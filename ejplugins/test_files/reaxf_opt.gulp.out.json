@@ -1,0 +1,24 @@
+{
+  "formula": "Fe12S12",
+  "natoms": 24,
+  "initial": {
+    "lattice_energy": {
+      "primitive": {
+        "magnitude": -96.94588727,
+        "units": "eV"
+      }
+    }
+  },
+  "optimised": true,
+  "final": {
+    "lattice_energy": {
+      "primitive": {
+        "magnitude": -98.23975286,
+        "units": "eV"
+      }
+    }
+  },
+  "creator": {
+    "program": "GULP"
+  }
+}

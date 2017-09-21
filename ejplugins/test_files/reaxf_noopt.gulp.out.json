@@ -1,0 +1,70 @@
+{
+  "formula": "Fe12S12",
+  "natoms": 24,
+  "reaxff_ebreakdown": {
+    "Bond": {
+      "magnitude": -181.37358419,
+      "units": "eV"
+    },
+    "Double-Bond Valence Angle Penalty": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "Lone-Pair": {
+      "magnitude": 2.67955961,
+      "units": "eV"
+    },
+    "Coordination (over)": {
+      "magnitude": 34.87975471,
+      "units": "eV"
+    },
+    "Coordination (under)": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "Valence Angle": {
+      "magnitude": 48.57349994,
+      "units": "eV"
+    },
+    "Valence Angle Conjugation": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "Torsion": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "Conjugation": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "Hydrogen Bond": {
+      "magnitude": 0.0,
+      "units": "eV"
+    },
+    "van der Waals": {
+      "magnitude": 5.95158965,
+      "units": "eV"
+    },
+    "Coulomb": {
+      "magnitude": -7.32174748,
+      "units": "eV"
+    },
+    "Charge Equilibration": {
+      "magnitude": -0.3349595,
+      "units": "eV"
+    }
+  },
+  "initial": {
+    "lattice_energy": {
+      "primitive": {
+        "magnitude": -96.94588727,
+        "units": "eV"
+      }
+    }
+  },
+  "optimised": false,
+  "creator": {
+    "program": "GULP"
+  }
+}

@@ -1,0 +1,324 @@
+********************************************************************************
+*                       GENERAL UTILITY LATTICE PROGRAM                        *
+*                                 Julian Gale                                  *
+*                      Nanochemistry Research Institute                        *
+*                           Department of Chemistry                            *
+*                    Curtin University, Western Australia                      *
+********************************************************************************
+* Version = 4.0.3 * Last modified =  20th April 2012                           *
+********************************************************************************
+*  optimise     - perform optimisation run                                     *
+*  conv         - constant volume calculation                                  *
+*  compare      - compare initial and final structures                         *
+*  conjugate    - use conjugate gradients minimiser                            *
+********************************************************************************
+* Troilite optimisation                                                        *
+********************************************************************************
+
+
+  Job Started  at 19:10.41 29th April      2017                               
+
+  Number of CPUs =     1
+
+
+  Total number of configurations input =   1
+
+********************************************************************************
+*  Input for Configuration =   1 : troilite                                    *
+********************************************************************************
+
+  Formula = Fe12S12                                                     
+
+  Number of irreducible atoms/shells =       4
+
+
+  Total number atoms/shells =      24
+
+  Dimensionality = 3               :  Bulk   
+
+
+  Symmetry :
+
+  Crystal family                   :  Hexagonal   
+  Crystal class  (Groth - 1921)    :  Ditrigonal Dipyramidal               
+
+  Space group (noncentrosymmetric) :  P -6 2 C        
+
+  Patterson group                  :  P 6/m m m
+
+  Cartesian lattice vectors (Angstroms) :
+
+        5.965000    0.000000    0.000000
+       -2.982500    5.165842    0.000000
+        0.000000    0.000000   11.757000
+
+  Cell parameters (Angstroms/Degrees):
+
+  a =       5.9650    alpha =  90.0000
+  b =       5.9650    beta  =  90.0000
+  c =      11.7570    gamma = 120.0000
+
+  Initial cell volume =         362.283075 Angs**3
+
+  Temperature of configuration =  0.000     K 
+
+  Pressure of configuration =         0.000 GPa 
+
+  Fractional coordinates of asymmetric unit :
+
+--------------------------------------------------------------------------------
+   No.  Atomic       x           y          z         Charge      Occupancy
+        Label      (Frac)      (Frac)     (Frac)        (e)         (Frac)  
+--------------------------------------------------------------------------------
+      1 Fe    c    0.379100 *  0.054900 *  0.623030 *   0.00000    1.000000    
+      2 S     c    0.000000    0.000000    0.000000     0.00000    1.000000    
+      3 S     c    0.333333    0.666667    0.519800 *   0.00000    1.000000    
+      4 S     c    0.668800 *  0.003500 *  0.250000     0.00000    1.000000    
+--------------------------------------------------------------------------------
+
+
+  Constraints : 
+
+--------------------------------------------------------------------------------
+  Constraint no.      Unconstrained     Constrained    Coefficient    Offset
+                         Variable         Variable
+--------------------------------------------------------------------------------
+           1              Strain 1        Strain 2       1.00000      0.0000
+--------------------------------------------------------------------------------
+
+
+********************************************************************************
+*  General input information                                                   *
+********************************************************************************
+
+  Species output for all configurations : 
+
+--------------------------------------------------------------------------------
+  Species    Type    Atomic    Atomic    Charge       Radii (Angs)     Library
+                     Number     Mass       (e)     Cova   Ionic  VDW   Symbol
+--------------------------------------------------------------------------------
+    S        Core       16      32.07   0.000000   1.020  0.000  1.700          
+    Fe       Core       26      55.85   0.000000   1.340  0.000  2.000          
+--------------------------------------------------------------------------------
+
+
+  Lattice summation method               =    Ewald          (3-D)
+                                         =    Parry          (2-D)
+                                         =    Saunders et al (1-D)
+  Accuracy factor for lattice sums       =   12.000
+
+
+  Time limit = Infinity
+
+  Maximum range for interatomic potentials =    100000.000000 Angstroms
+
+  ReaxFF forcefield to be used
+
+  ReaxFF Coulomb cutoff =  10.0000 Ang
+  ReaxFF VDW     cutoff =  10.0000 Ang
+  ReaxFF H-bond  cutoff =   7.5000 Ang
+
+  ReaxFF pairwise bond order       threshold = 0.00100000000000
+  ReaxFF angle/torsion bond order  threshold = 0.00100000000000
+  ReaxFF bond order double product threshold = 0.00000100000000
+  ReaxFF bond order triple product threshold = 0.00100000000000
+  ReaxFF hydrogen-bond bond order  threshold = 0.01000000000000
+
+
+********************************************************************************
+*  Output for configuration   1 : troilite                                     *
+********************************************************************************
+
+
+  Components of energy : 
+
+--------------------------------------------------------------------------------
+  Interatomic potentials     =           0.00000000 eV
+  ReaxFF force field         =         -96.94588727 eV
+  Monopole - monopole (real) =           0.00000000 eV
+  Monopole - monopole (recip)=           0.00000000 eV
+  Monopole - monopole (total)=           0.00000000 eV
+--------------------------------------------------------------------------------
+  Total lattice energy       =         -96.94588727 eV
+--------------------------------------------------------------------------------
+  Total lattice energy       =           -9353.7962 kJ/(mole unit cells)
+--------------------------------------------------------------------------------
+
+
+  Number of variables =        6
+
+  Maximum number of calculations  =          1000
+  Maximum Hessian update interval =            10
+  Maximum step size               =   1.000000000
+  Maximum parameter tolerance     =   0.000010000
+  Maximum function  tolerance     =   0.000010000
+  Maximum gradient  tolerance     =   0.001000000
+  Maximum gradient  component     =   0.010000000
+
+  Symmetry constrained optimisation
+
+  Conjugate gradient optimiser to be used
+
+  Start of bulk optimisation :
+
+  Cycle:      0 Energy:       -96.945887  Gnorm:      7.704931  CPU:    0.032
+  Cycle:      1 Energy:       -97.275104  Gnorm:      4.244237  CPU:    0.082
+  Cycle:      2 Energy:       -97.364120  Gnorm:      2.421003  CPU:    0.129
+  Cycle:      3 Energy:       -97.497106  Gnorm:      6.035397  CPU:    0.173
+  Cycle:      4 Energy:       -97.811001  Gnorm:      7.965152  CPU:    0.215
+  Cycle:      5 Energy:       -98.068279  Gnorm:      4.307315  CPU:    0.256
+  Cycle:      6 Energy:       -98.160762  Gnorm:      1.974868  CPU:    0.293
+  Cycle:      7 Energy:       -98.183794  Gnorm:      0.983053  CPU:    0.334
+  Cycle:      8 Energy:       -98.186994  Gnorm:      0.706890  CPU:    0.373
+  Cycle:      9 Energy:       -98.190172  Gnorm:      0.555116  CPU:    0.415
+  Cycle:     10 Energy:       -98.192385  Gnorm:      0.483819  CPU:    0.461
+  Cycle:     11 Energy:       -98.193616  Gnorm:      0.570633  CPU:    0.500
+  Cycle:     12 Energy:       -98.198128  Gnorm:      0.830542  CPU:    0.547
+  Cycle:     13 Energy:       -98.214427  Gnorm:      0.987238  CPU:    0.594
+  Cycle:     14 Energy:       -98.219863  Gnorm:      1.132071  CPU:    0.638
+  Cycle:     15 Energy:       -98.233533  Gnorm:      0.799741  CPU:    0.684
+  Cycle:     16 Energy:       -98.236748  Gnorm:      0.357621  CPU:    0.722
+  Cycle:     17 Energy:       -98.237358  Gnorm:      0.238396  CPU:    0.769
+  Cycle:     18 Energy:       -98.238176  Gnorm:      0.234301  CPU:    0.815
+  Cycle:     19 Energy:       -98.238401  Gnorm:      0.152962  CPU:    0.860
+  Cycle:     20 Energy:       -98.238542  Gnorm:      0.191112  CPU:    0.906
+  Cycle:     21 Energy:       -98.239136  Gnorm:      0.125880  CPU:    0.952
+  Cycle:     22 Energy:       -98.239418  Gnorm:      0.109807  CPU:    0.991
+  Cycle:     23 Energy:       -98.239626  Gnorm:      0.104318  CPU:    1.038
+  Cycle:     24 Energy:       -98.239704  Gnorm:      0.041634  CPU:    1.076
+  Cycle:     25 Energy:       -98.239713  Gnorm:      0.042770  CPU:    1.116
+  Cycle:     26 Energy:       -98.239750  Gnorm:      0.010655  CPU:    1.165
+  Cycle:     27 Energy:       -98.239751  Gnorm:      0.010632  CPU:    1.207
+  Cycle:     28 Energy:       -98.239752  Gnorm:      0.009310  CPU:    1.258
+  Cycle:     29 Energy:       -98.239752  Gnorm:      0.003377  CPU:    1.295
+  Cycle:     30 Energy:       -98.239752  Gnorm:      0.003552  CPU:    1.339
+  Cycle:     31 Energy:       -98.239752  Gnorm:      0.003040  CPU:    1.381
+  Cycle:     32 Energy:       -98.239753  Gnorm:      0.003715  CPU:    1.425
+  Cycle:     33 Energy:       -98.239753  Gnorm:      0.001796  CPU:    1.467
+  Cycle:     34 Energy:       -98.239753  Gnorm:      0.002956  CPU:    1.503
+
+
+  **** Optimisation achieved ****
+
+
+  Final energy =     -98.23975286 eV
+  Final Gnorm  =       0.00040801
+
+  Components of energy : 
+
+--------------------------------------------------------------------------------
+  Interatomic potentials     =           0.00000000 eV
+  ReaxFF force field         =         -98.23975286 eV
+  Monopole - monopole (real) =           0.00000000 eV
+  Monopole - monopole (recip)=           0.00000000 eV
+  Monopole - monopole (total)=           0.00000000 eV
+--------------------------------------------------------------------------------
+  Total lattice energy       =         -98.23975286 eV
+--------------------------------------------------------------------------------
+  Total lattice energy       =           -9478.6344 kJ/(mole unit cells)
+--------------------------------------------------------------------------------
+
+  Final asymmetric unit coordinates :
+
+--------------------------------------------------------------------------------
+   No.  Atomic        x           y           z         Radius
+        Label       (Frac)      (Frac)      (Frac)       (Angs) 
+--------------------------------------------------------------------------------
+     1  Fe    c     0.333333    0.000000    0.615490    0.000000
+     2  S     c     0.000000    0.000000    0.000000    0.000000
+     3  S     c     0.333333    0.666667    0.500001    0.000000
+     4  S     c     0.666666    0.000005    0.250000    0.000000
+--------------------------------------------------------------------------------
+
+  Final internal derivatives :
+
+--------------------------------------------------------------------------------
+   No.  Atomic          a             b             c           Radius
+        Label          (eV)          (eV)          (eV)        (eV/Angs)
+--------------------------------------------------------------------------------
+      1 Fe    c      -0.000097     -0.000352      0.000079      0.000000
+      2 S     c       0.000000      0.000000      0.000000      0.000000
+      3 S     c       0.000000      0.000000      0.001798      0.000000
+      4 S     c      -0.000848      0.001380      0.000000      0.000000
+--------------------------------------------------------------------------------
+  Maximum abs         0.000848      0.001380      0.001798      0.000000
+--------------------------------------------------------------------------------
+
+  Comparison of initial and final structures : 
+
+--------------------------------------------------------------------------------
+  Parameter   Initial value   Final value   Difference    Units      Percent
+--------------------------------------------------------------------------------
+      1 x          0.379100      0.333333     0.045767    Fractional  12.07
+      1 y          0.054900      0.000000     0.054900    Fractional 100.00
+      1 z          0.623030      0.615490     0.007540    Fractional   1.21
+      2 x          0.000000      0.000000     0.000000    Fractional   0.00
+      2 y          0.000000      0.000000     0.000000    Fractional   0.00
+      2 z          0.000000      0.000000     0.000000    Fractional   0.00
+      3 x          0.333333      0.333333     0.000000    Fractional   0.00
+      3 y          0.666667      0.666667     0.000000    Fractional   0.00
+      3 z          0.519800      0.500001     0.019799    Fractional   3.81
+      4 x          0.668800      0.666666     0.002134    Fractional   0.32
+      4 y          0.003500      0.000005     0.003495    Fractional   0.35
+      4 z          0.250000      0.250000     0.000000    Fractional   0.00
+--------------------------------------------------------------------------------
+
+
+
+  Final charges from ReaxFF :
+
+--------------------------------------------------------------------------------
+    Atom no.            Atomic No.             Charge
+--------------------------------------------------------------------------------
+         1                  26                 0.2687381
+         2                  26                 0.2687381
+         3                  26                 0.2687381
+         4                  26                 0.2687381
+         5                  26                 0.2687381
+         6                  26                 0.2687381
+         7                  26                 0.2687381
+         8                  26                 0.2687381
+         9                  26                 0.2687381
+        10                  26                 0.2687381
+        11                  26                 0.2687381
+        12                  26                 0.2687381
+        13                  16                -0.2768544
+        14                  16                -0.2768544
+        15                  16                -0.2768537
+        16                  16                -0.2768537
+        17                  16                -0.2768537
+        18                  16                -0.2768537
+        19                  16                -0.2606222
+        20                  16                -0.2606222
+        21                  16                -0.2606222
+        22                  16                -0.2606222
+        23                  16                -0.2606222
+        24                  16                -0.2606222
+--------------------------------------------------------------------------------
+
+
+  Time to end of optimisation =       1.5423 seconds
+
+
+  Peak dynamic memory used =       0.53 MB 
+
+
+  Timing analysis for GULP :
+
+--------------------------------------------------------------------------------
+  Task / Subroutine                                          Time (Seconds)
+--------------------------------------------------------------------------------
+  Calculation of reaxFF energy and derivatives                    1.2030
+  Electronegativity equalisation                                  0.3281
+  Symmetry generation of equivalent positions                     0.0018
+--------------------------------------------------------------------------------
+  Total CPU time                                                  1.5423
+--------------------------------------------------------------------------------
+
+
+  CIF file written as optimised.cif                                           
+  STR file written as optimitsed.str                
+
+
+  Job Finished at 19:10.42 29th April      2017                               
+

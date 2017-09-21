@@ -1,0 +1,32 @@
+#language: c
+#env:
+# matrix:
+#  - PYTHON_VERSION=2.7
+#  - PYTHON_VERSION=3.6
+
+language: python
+
+os:
+ - linux
+
+python:
+  - "2.7"
+  - "3.6"
+
+
+before_install:
+  - pip install -U pip setuptools wheel
+
+install:
+    - travis_wait pip install -r requirements.txt
+    - pip install -r test_requirements.txt
+    - pip install .
+    - pip install --quiet coverage
+    - pip install --quiet coveralls
+
+script:
+    - pytest -v --doctest-modules --ignore=setup.py --cov=. --cov-report=  
+
+after_success:
+    - coveralls
+
