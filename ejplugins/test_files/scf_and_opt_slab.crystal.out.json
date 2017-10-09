@@ -136,7 +136,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103115.07501887072,
+          "magnitude": -103074.47736720579,
           "units": "eV"
         }
       },
@@ -157,7 +157,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103074.47736720579,
+          "magnitude": -103088.18374612645,
           "units": "eV"
         }
       },
@@ -178,7 +178,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103088.18374612645,
+          "magnitude": -102820.29752092791,
           "units": "eV"
         }
       },
@@ -199,7 +199,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -102820.29752092791,
+          "magnitude": -103100.42553521616,
           "units": "eV"
         }
       },
@@ -220,7 +220,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103100.42553521616,
+          "magnitude": -103120.87929523831,
           "units": "eV"
         }
       },
@@ -241,7 +241,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103120.87929523831,
+          "magnitude": -103142.62091552031,
           "units": "eV"
         }
       },
@@ -262,7 +262,7 @@
     {
       "energy": {
         "total": {
-          "magnitude": -103142.62091552031,
+          "magnitude": -103143.70323566432,
           "units": "eV"
         }
       },
@@ -888,14 +888,6 @@
         2.9857537
       ],
       "spin_density_absolute": 8.1934815
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -103144.08038441332,
-          "units": "eV"
-        }
-      }
     }
   ],
   "optimisation": [

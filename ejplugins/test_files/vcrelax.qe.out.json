@@ -187,8 +187,8 @@
         },
         "spin_density_total": 2.19,
         "spin_density_absolute": 2.32
-      },
-      {
+      }],
+      "sphere_integration": {
         "atomic_charges_peratom": [
           14.4205
         ],
@@ -196,7 +196,7 @@
           2.2439
         ]
       }
-    ],
+    ,
     "forces": {
       "peratom": [
         {
@@ -10007,8 +10007,8 @@
           },
           "spin_density_total": 2.15,
           "spin_density_absolute": 2.27
-        },
-        {
+        }],
+        "sphere_integration": {
           "atomic_charges_peratom": [
             14.391
           ],
@@ -10016,7 +10016,7 @@
             2.2005
           ]
         }
-      ],
+      ,
       "forces": {
         "peratom": [
           {
@@ -19836,8 +19836,8 @@
           },
           "spin_density_total": 2.15,
           "spin_density_absolute": 2.27
-        },
-        {
+        }],
+        "sphere_integration": {
           "atomic_charges_peratom": [
             14.3899
           ],
@@ -19845,7 +19845,7 @@
             2.1994
           ]
         }
-      ],
+      ,
       "forces": {
         "peratom": [
           {
@@ -29735,8 +29735,8 @@
           },
           "spin_density_total": 2.15,
           "spin_density_absolute": 2.27
-        },
-        {
+        }],
+        "sphere_integration": {
           "atomic_charges_peratom": [
             14.3902
           ],
@@ -29744,7 +29744,7 @@
             2.1997
           ]
         }
-      ],
+      ,
       "forces": {
         "peratom": [
           {
@@ -39564,8 +39564,8 @@
           },
           "spin_density_total": 2.15,
           "spin_density_absolute": 2.27
-        },
-        {
+        }],
+        "sphere_integration": {
           "atomic_charges_peratom": [
             14.3903
           ],
@@ -39573,7 +39573,7 @@
             2.1998
           ]
         }
-      ],
+      ,
       "forces": {
         "peratom": [
           {
@@ -49179,11 +49179,6 @@
         0.0,
         0.0,
         0.0
-      ],
-      [
-        0.0,
-        0.0,
-        0.0
       ]
     ],
     "ccoords": {
@@ -49388,16 +49383,15 @@
         },
         "spin_density_total": 2.15,
         "spin_density_absolute": 2.27
-      },
-      {
+      }],
+      "sphere_integration": {
         "atomic_charges_peratom": [
           14.3903
         ],
         "spin_density_peratom": [
           2.1998
         ]
-      }
-    ],
+      },
     "forces": {
       "peratom": [
         {

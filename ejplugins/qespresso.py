@@ -163,6 +163,9 @@ def read_scf(lines, start_line):
     scf_cyc = None
     in_scf = False
     last_cyc_num = None
+    atomic_charges_peratom = None
+    spin_density_peratom = None
+
     for i, line in enumerate(lines):
         line = line.strip()
         if "Self-consistent Calculation" in line:
@@ -207,24 +210,33 @@ def read_scf(lines, start_line):
         if line.startswith("absolute magnetization"):
             scf_cyc["spin_density_absolute"] = split_numbers(line)[0]
 
+        # TODO make note that the sum of these spins/charges will not exactly equal final total_spin_density
+        # see; https://www.mail-archive.com/pw_forum@pwscf.org/msg24862.html
         if "Magnetic moment per site:" in line:
-            scf_cyc["atomic_charges_peratom"] = []
-            scf_cyc["spin_density_peratom"] = []
+            if atomic_charges_peratom or spin_density_peratom:
+                raise_error("found multiple magnetic moments per site in same scf run", line, i, start_line)
+            atomic_charges_peratom = []
+            spin_density_peratom = []
             nxtline = i+1
             while lines[nxtline].strip():
                 if not fnmatch(lines[nxtline].strip(), "atom:*charge:*magn:*constr:*"):
                     raise_error("was expecting magnetic moment fields; atom:, charge:, magn:, constr:",
                                 lines[nxtline], nxtline, start_line)
                 atom, charge, magn, constr = split_numbers(lines[nxtline])
-                scf_cyc["atomic_charges_peratom"].append(charge)
-                scf_cyc["spin_density_peratom"].append(magn)
+                atomic_charges_peratom.append(charge)
+                spin_density_peratom.append(magn)
                 nxtline += 1
 
     # add last scf cycle
     if scf_cyc is not None:
         scf.append(scf_cyc)
 
-    return scf
+    if atomic_charges_peratom is None:
+        magmom = None
+    else:
+        magmom = {"atomic_charges_peratom": atomic_charges_peratom, "spin_density_peratom": spin_density_peratom}
+
+    return scf, magmom
 
 
 def read_cell(lines, start_line):
@@ -332,6 +344,7 @@ def read_atoms(lines, start_line):
                             lines[i + 2], i+2, start_line)
             symbols = []
             ids = []
+            fcoords = []
             j = 3
             while lines[i+j].strip():
                 symbols.append(lines[i+j].strip().split()[1].strip('0123456789'))
@@ -361,6 +374,7 @@ def read_atoms(lines, start_line):
                             "headers: site, atom and positions (in alat units)", lines[i+2], i+2, start_line)
             symbols = []
             ids = []
+            ccoords = []
             j = 3
             while split_numbers(lines[i+j]):
                 symbols.append(lines[i+j].strip().split()[1].strip('0123456789'))
@@ -656,7 +670,7 @@ def get_data_section(lines, start_line, crystal_coord_map=None):
     out['ccoords'] = ccoords
     out['cell_vectors'] = read_cell(lines, start_line)
     out['energy'] = read_energies(lines, start_line)
-    out["scf"] = read_scf(lines, start_line)
+    out["scf"], out["sphere_integration"] = read_scf(lines, start_line)
     out['forces'] = read_forces(lines, start_line)
     out['stress'] = read_stress(lines, start_line)
     out["bands"] = read_bands(lines, start_line, crystal_coord_map)

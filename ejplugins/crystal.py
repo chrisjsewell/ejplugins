@@ -501,9 +501,11 @@ def read_scf(lines, startline):
                 if not fnmatch(line, "*ETOT(AU)*"):
                     raise IOError("was expecting units in a.u. on line:"
                                   " {0}, got: {1}".format(startline + i, line))
-                scf_cyc["energy"] = scf_cyc.get("energy", {})
-                scf_cyc["energy"]["total"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
-                                              "units": "eV"}
+                # this is the initial energy of the configuration and so actually the energy of the previous run
+                if scf:
+                    scf[-1]["energy"] = scf[-1].get("energy", {})
+                    scf[-1]["energy"]["total"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
+                                                  "units": "eV"}
         elif scf_cyc is None:
             continue
 
@@ -591,7 +593,7 @@ def read_opt(lines, startline):
 
 
 def read_final(lines, startline):
-    """ read initial setup data
+    """ read final setup data
 
     Parameters
     ----------

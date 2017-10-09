@@ -53,6 +53,7 @@
     },
     "energy": null,
     "scf": null,
+    "sphere_integration": null,
     "forces": null,
     "stress": null,
     "bands": null
@@ -155,8 +156,8 @@
           },
           "spin_density_total": 2.33,
           "spin_density_absolute": 2.43
-        },
-        {
+        }],
+        "sphere_integration": {
           "atomic_charges_peratom": [
             6.4884
           ],
@@ -164,7 +165,7 @@
             2.3708
           ]
         }
-      ],
+      ,
       "forces": null,
       "stress": null,
       "bands": null
@@ -209,6 +210,7 @@
       }
     },
     "scf": null,
+    "sphere_integration": null,
     "forces": null,
     "stress": null,
     "bands": {

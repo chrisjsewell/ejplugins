@@ -55,6 +55,7 @@
     },
     "energy": null,
     "scf": null,
+    "sphere_integration": null,
     "forces": null,
     "stress": null,
     "bands": {
