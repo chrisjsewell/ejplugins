@@ -7,7 +7,7 @@ from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 
 def load_all_parsers():

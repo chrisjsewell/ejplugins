@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Setup for jsonextended."""
+"""Setup for ejplugins."""
 
 import io
 from importlib import import_module
@@ -43,7 +43,7 @@ with io.open('README.rst') as readme:
             'Topic :: Software Development :: Libraries :: Python Modules',
             'Topic :: Utilities',
         ],
-        keywords='python',
+        keywords='python, parser, quantum-espresso, crystal, lammps, gulp',
         zip_safe=True,
         packages=find_packages(),
         package_data={'': ['*.json', '*.csv'],
