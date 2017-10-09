@@ -47,6 +47,7 @@ with io.open('README.rst') as readme:
         zip_safe=True,
         packages=find_packages(),
         package_data={'': ['*.json', '*.csv'],
-                      'test_files': ["*"]},
+                      'test_files': ["*"],
+                      'schema': ["*"]},
         scripts=['bin/ejplugin_convert']
     )
