@@ -1,7 +1,7 @@
 {
   "warnings": [
-    " WARNING **** INT_SCREEN **** CELL PARAMETERS OPTIMIZATION ONLY",
-    " WARNING **** SCF **** GRADIENT NOT FULLY IMPLEMENTED FOR CONDUCTING SYSTEMS"
+    "WARNING **** INT_SCREEN **** CELL PARAMETERS OPTIMIZATION ONLY",
+    "WARNING **** SCF **** GRADIENT NOT FULLY IMPLEMENTED FOR CONDUCTING SYSTEMS"
   ],
   "errors": [],
   "meta": {
@@ -153,401 +153,401 @@
           ]
         }
       }
-    }
+    },
+    "scf": [
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34369.852699244264,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 0.99948586,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 3.9907455,
+        "spin_density_peratom": [
+          3.9907455
+        ],
+        "spin_density_absolute": 3.9907455
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34370.613588673295,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 0.99948586,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 3.9907455,
+        "spin_density_peratom": [
+          3.9907455
+        ],
+        "spin_density_absolute": 3.9907455
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34370.613588673295,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 0.99948586,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 3.9907455,
+        "spin_density_peratom": [
+          3.9907455
+        ],
+        "spin_density_absolute": 3.9907455
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34370.71149096801,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 0.99948586,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 3.9907455,
+        "spin_density_peratom": [
+          3.9907455
+        ],
+        "spin_density_absolute": 3.9907455
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34370.72700262813,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 0.99948586,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 3.9907455,
+        "spin_density_peratom": [
+          3.9907455
+        ],
+        "spin_density_absolute": 3.9907455
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.25714201342,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.7921668,
+        "spin_density_peratom": [
+          2.7921668
+        ],
+        "spin_density_absolute": 2.7921668
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.25714201342,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.6318526,
+        "spin_density_peratom": [
+          2.6318526
+        ],
+        "spin_density_absolute": 2.6318526
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.33994710463,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.28021433,
+        "spin_density_peratom": [
+          2.2802143
+        ],
+        "spin_density_absolute": 2.2802143
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.38516070008,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.33822697,
+        "spin_density_peratom": [
+          2.338227
+        ],
+        "spin_density_absolute": 2.338227
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.395235770186,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.29981756,
+        "spin_density_peratom": [
+          2.2998176
+        ],
+        "spin_density_absolute": 2.2998176
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.39883172764,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.12775139,
+        "spin_density_peratom": [
+          2.1277514
+        ],
+        "spin_density_absolute": 2.1277514
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.401780162945,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.3801907,
+        "spin_density_peratom": [
+          2.3801907
+        ],
+        "spin_density_absolute": 2.3801907
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.392569135984,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.41368649,
+        "spin_density_peratom": [
+          2.4136865
+        ],
+        "spin_density_absolute": 2.4136865
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.391176538884,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.45445334,
+        "spin_density_peratom": [
+          2.4544533
+        ],
+        "spin_density_absolute": 2.4544533
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.392053861186,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.42549467,
+        "spin_density_peratom": [
+          2.4254947
+        ],
+        "spin_density_absolute": 2.4254947
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.39673528082,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.26445471,
+        "spin_density_peratom": [
+          2.2644547
+        ],
+        "spin_density_absolute": 2.2644547
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41250338105,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.26111339,
+        "spin_density_peratom": [
+          2.2611134
+        ],
+        "spin_density_absolute": 2.2611134
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41264398227,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.25666035,
+        "spin_density_peratom": [
+          2.2566604
+        ],
+        "spin_density_absolute": 2.2566604
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41276643352,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.25049776,
+        "spin_density_peratom": [
+          2.2504978
+        ],
+        "spin_density_absolute": 2.2504978
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.412930001155,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.24896727,
+        "spin_density_peratom": [
+          2.2489673
+        ],
+        "spin_density_absolute": 2.2489673
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41296200175,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.24741605,
+        "spin_density_peratom": [
+          2.247416
+        ],
+        "spin_density_absolute": 2.247416
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41297011074,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.24567837,
+        "spin_density_peratom": [
+          2.2456784
+        ],
+        "spin_density_absolute": 2.2456784
+      },
+      {
+        "energy": {
+          "total": {
+            "magnitude": -34383.41296981141,
+            "units": "eV"
+          }
+        },
+        "charge_normalization_factor": 1.0,
+        "atomic_charges_peratom": [
+          26.0
+        ],
+        "spin_density_total": 2.24518405,
+        "spin_density_peratom": [
+          2.2451841
+        ],
+        "spin_density_absolute": 2.2451841
+      }
+    ]
   },
-  "scf": [
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34369.852699244264,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 0.99948586,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 3.9907455,
-      "spin_density_peratom": [
-        3.9907455
-      ],
-      "spin_density_absolute": 3.9907455
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34370.613588673295,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 0.99948586,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 3.9907455,
-      "spin_density_peratom": [
-        3.9907455
-      ],
-      "spin_density_absolute": 3.9907455
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34370.613588673295,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 0.99948586,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 3.9907455,
-      "spin_density_peratom": [
-        3.9907455
-      ],
-      "spin_density_absolute": 3.9907455
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34370.71149096801,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 0.99948586,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 3.9907455,
-      "spin_density_peratom": [
-        3.9907455
-      ],
-      "spin_density_absolute": 3.9907455
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34370.72700262813,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 0.99948586,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 3.9907455,
-      "spin_density_peratom": [
-        3.9907455
-      ],
-      "spin_density_absolute": 3.9907455
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.25714201342,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.7921668,
-      "spin_density_peratom": [
-        2.7921668
-      ],
-      "spin_density_absolute": 2.7921668
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.25714201342,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.6318526,
-      "spin_density_peratom": [
-        2.6318526
-      ],
-      "spin_density_absolute": 2.6318526
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.33994710463,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.28021433,
-      "spin_density_peratom": [
-        2.2802143
-      ],
-      "spin_density_absolute": 2.2802143
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.38516070008,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.33822697,
-      "spin_density_peratom": [
-        2.338227
-      ],
-      "spin_density_absolute": 2.338227
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.395235770186,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.29981756,
-      "spin_density_peratom": [
-        2.2998176
-      ],
-      "spin_density_absolute": 2.2998176
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.39883172764,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.12775139,
-      "spin_density_peratom": [
-        2.1277514
-      ],
-      "spin_density_absolute": 2.1277514
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.401780162945,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.3801907,
-      "spin_density_peratom": [
-        2.3801907
-      ],
-      "spin_density_absolute": 2.3801907
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.392569135984,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.41368649,
-      "spin_density_peratom": [
-        2.4136865
-      ],
-      "spin_density_absolute": 2.4136865
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.391176538884,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.45445334,
-      "spin_density_peratom": [
-        2.4544533
-      ],
-      "spin_density_absolute": 2.4544533
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.392053861186,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.42549467,
-      "spin_density_peratom": [
-        2.4254947
-      ],
-      "spin_density_absolute": 2.4254947
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.39673528082,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.26445471,
-      "spin_density_peratom": [
-        2.2644547
-      ],
-      "spin_density_absolute": 2.2644547
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41250338105,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.26111339,
-      "spin_density_peratom": [
-        2.2611134
-      ],
-      "spin_density_absolute": 2.2611134
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41264398227,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.25666035,
-      "spin_density_peratom": [
-        2.2566604
-      ],
-      "spin_density_absolute": 2.2566604
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41276643352,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.25049776,
-      "spin_density_peratom": [
-        2.2504978
-      ],
-      "spin_density_absolute": 2.2504978
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.412930001155,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.24896727,
-      "spin_density_peratom": [
-        2.2489673
-      ],
-      "spin_density_absolute": 2.2489673
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41296200175,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.24741605,
-      "spin_density_peratom": [
-        2.247416
-      ],
-      "spin_density_absolute": 2.247416
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41297011074,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.24567837,
-      "spin_density_peratom": [
-        2.2456784
-      ],
-      "spin_density_absolute": 2.2456784
-    },
-    {
-      "energy": {
-        "total": {
-          "magnitude": -34383.41296981141,
-          "units": "eV"
-        }
-      },
-      "charge_normalization_factor": 1.0,
-      "atomic_charges_peratom": [
-        26.0
-      ],
-      "spin_density_total": 2.24518405,
-      "spin_density_peratom": [
-        2.2451841
-      ],
-      "spin_density_absolute": 2.2451841
-    }
-  ],
   "optimisation": [
     {
       "primitive_cell": {

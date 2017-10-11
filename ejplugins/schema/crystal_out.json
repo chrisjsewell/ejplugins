@@ -7,13 +7,11 @@
         "type": "string"
       }
     },
-     "errors": {
+    "errors": {
       "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "items": {}
     },
-   "meta": {
+    "meta": {
       "type": "object",
       "properties": {
         "date": {
@@ -441,71 +439,91 @@
           "required": [
             "cell_vectors"
           ]
+        },
+        "scf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "charge_normalization_factor": {
+                "type": "number"
+              },
+              "atomic_charges_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "spin_density_total": {
+                "type": "number"
+              },
+              "spin_density_peratom": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "spin_density_absolute": {
+                "type": "number"
+              },
+              "energy": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "object",
+                    "properties": {
+                      "magnitude": {
+                        "type": "number"
+                      },
+                      "units": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "magnitude",
+                      "units"
+                    ]
+                  }
+                },
+                "required": [
+                  "total"
+                ]
+              }
+            },
+            "required": [
+              "atomic_charges_peratom",
+              "charge_normalization_factor",
+              "energy",
+              "spin_density_absolute",
+              "spin_density_peratom",
+              "spin_density_total"
+            ]
+          }
         }
       },
       "required": [
         "calculation",
         "crystallographic_cell",
-        "primitive_cell"
+        "primitive_cell",
+        "scf"
       ]
     },
-    "scf": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "energy": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "object",
-                "properties": {
-                  "magnitude": {
-                    "type": "number"
-                  },
-                  "units": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "magnitude",
-                  "units"
-                ]
-              }
-            },
-            "required": [
-              "total"
-            ]
-          },
-          "charge_normalization_factor": {
-            "type": "number"
-          },
-          "atomic_charges_peratom": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          },
-          "spin_density_total": {
-            "type": "number"
-          },
-          "spin_density_peratom": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          },
-          "spin_density_absolute": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "energy"
-        ]
-      }
+    "creator": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "program"
+      ]
     },
     "optimisation": {
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "type": "object",
         "properties": {
@@ -876,7 +894,10 @@
       }
     },
     "final": {
-      "type": "object",
+      "type": [
+        "null",
+        "object"
+      ],
       "properties": {
         "primitive_cell": {
           "type": "object",
@@ -1354,28 +1375,16 @@
         "alpha+beta_electrons",
         "alpha-beta_electrons"
       ]
-    },
-    "creator": {
-      "type": "object",
-      "properties": {
-        "program": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "program"
-      ]
     }
   },
   "required": [
     "creator",
+    "errors",
     "final",
     "initial",
     "meta",
     "mulliken",
     "optimisation",
-    "scf",
-    "warnings",
-    "errors"
+    "warnings"
   ]
 }

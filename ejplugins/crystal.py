@@ -227,8 +227,8 @@ def split_output(lines):
 
     """
     start_line_no = None
-    scf_start_no = None
-    scf_end_no = None
+    scf_init_start_no = None
+    scf_init_end_no = None
     opt_start_no = None
     opt_end_no = None
     mulliken_starts = None
@@ -236,27 +236,37 @@ def split_output(lines):
     run_warnings = []
     non_terminating_errors = []
     errors = []
+    mpi_abort = False
     for i, line in enumerate(lines):
         if "************************" in line and start_line_no is None:
             start_line_no = i
         elif "WARNING" in line.upper():
-            run_warnings.append(line)
+            run_warnings.append(line.strip())
         elif "ERROR" in line:
-            errors.append(line)
+            errors.append(line.strip())
         elif "MPI_Abort" in line:
-            errors.append(line)
+            # only record one mpi_abort event (to not clutter output)
+            if not mpi_abort:
+                errors.append(line.strip())
+                mpi_abort = True
         elif "CRYSTAL - SCF - TYPE OF CALCULATION :" in line:
-            if scf_start_no is not None:
+            # TODO SCF per optimisation start (when using ONELOG keyword )
+            if opt_start_no is not None:
+                continue
+            if scf_init_start_no is not None:
                 raise IOError("found two lines starting scf ('CRYSTAL - SCF - '):"
-                              " {0} and {1}".format(scf_start_no, i))
-            scf_start_no = i
+                              " {0} and {1}".format(scf_init_start_no, i))
+            scf_init_start_no = i
         elif "SCF ENDED" in line:
+            # TODO SCF per optimisation start (when using ONELOG keyword )
+            if opt_start_no is not None:
+                continue
             if "CONVERGE" not in line:
                 non_terminating_errors.append(line.strip())
-            if scf_end_no is not None:
+            if scf_init_end_no is not None:
                 raise IOError("found two lines ending scf ('SCF ENDED'):"
-                              " {0} and {1}".format(scf_end_no, i))
-            scf_end_no = i
+                              " {0} and {1}".format(scf_init_end_no, i))
+            scf_init_end_no = i
         elif "STARTING GEOMETRY OPTIMIZATION" in line:
             if opt_start_no is not None:
                 raise IOError("found two lines starting opt ('STARTING GEOMETRY OPTIMIZATION'):"
@@ -267,6 +277,8 @@ def split_output(lines):
                 raise IOError("found two lines ending opt ('OPT END -'):"
                               " {0} and {1}".format(opt_end_no, i))
             opt_end_no = i
+        elif "CONVERGENCE TESTS UNSATISFIED" in line.upper():
+            non_terminating_errors.append(line.strip())
         elif line.strip().startswith("MULLIKEN POPULATION ANALYSIS"):
             # can have ALPHA+BETA ELECTRONS and ALPHA-BETA ELECTRONS (denoted in line above mulliken_starts)
             if mulliken_starts is None:
@@ -279,28 +291,24 @@ def split_output(lines):
                               " {0} and {1}".format(final_opt, i))
             final_opt = i
 
-    if run_warnings:
-        logger.warning("the following warnings were noted:\n{}".format("\n".join(run_warnings)))
-
     if errors:
-        logger.warning("the following run terminating errors were found:\n{}".format("\n".join(errors)))
-        return (start_line_no, scf_start_no, scf_end_no, opt_start_no, opt_end_no,
+        return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
                 mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors)
 
     if start_line_no is None:
         raise IOError("couldn't find start of program run (denoted *****)")
-    if scf_start_no is None:
+    if scf_init_start_no is None:
         raise IOError("didn't find an SCF (as expected)")
-    if scf_start_no is not None and scf_end_no is None:
+    if scf_init_start_no is not None and scf_init_end_no is None:
         raise IOError("found start of scf but not end")
-    if scf_end_no is not None and scf_start_no is None:
+    if scf_init_end_no is not None and scf_init_start_no is None:
         raise IOError("found end of scf but not start")
     if opt_start_no is not None and opt_end_no is None:
         raise IOError("found start of optimisation but not end")
     if opt_end_no is not None and opt_start_no is None:
         raise IOError("found end of optimisation but not start")
 
-    return (start_line_no, scf_start_no, scf_end_no, opt_start_no, opt_end_no,
+    return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
             mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors)
 
 
@@ -673,25 +681,41 @@ class CrystalOutputPlugin(object):
 
         lines = file.read().splitlines()
 
-        (start_line_no, scf_start_no, scf_end_no, opt_start_no, opt_end_no,
+        (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
          mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors) = split_output(lines)
+
+        if run_warnings:
+            logger.warning("the following warnings were noted:\n  {}".format("\n  ".join(run_warnings)))
+
+        errors_all = errors + non_terminating_errors
+        if errors or non_terminating_errors:
+            ## MPI aborts should be the result of another error, so remove them if this is the case
+            errors_noabort = [e for e in errors_all if "MPI_Abort" not in e]
+            errors_all = errors_noabort if errors_noabort else errors_all
+            logger.warning("the following errors were found:\n  {}".format("\n  ".join(errors_all)))
+
+        if start_line_no is None or start_line_no is None:
+            initial = None
+        else:
+            initial = read_init(lines[start_line_no:scf_init_start_no], start_line_no)
+            if scf_init_start_no is None or scf_init_end_no is None:
+                initial["scf"] = None
+            else:
+                #  initial["scf_type"] = lines[scf_start_no].replace("CRYSTAL - SCF - TYPE OF CALCULATION :", "").strip(),
+                initial["scf"] = read_scf(lines[scf_init_start_no + 1:scf_init_end_no + 1], scf_init_start_no + 1)
 
         if errors:
             return {"warnings": run_warnings,
-                    "errors": non_terminating_errors + errors,
+                    "errors": errors_all,
                     "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
-                    "initial": None if start_line_no is None or start_line_no is None else
-                    read_init(lines[start_line_no:scf_start_no], start_line_no),
-                    "scf": None,
+                    "initial": initial,
                     "creator": {"program": "Crystal14"}
                     }
 
         output = {"warnings": run_warnings,
                   "errors": non_terminating_errors,
                   "meta": read_meta(lines[:start_line_no]),
-                  "initial": read_init(lines[start_line_no:scf_start_no], start_line_no),
-                  #  "scf_type": lines[scf_start_no].replace("CRYSTAL - SCF - TYPE OF CALCULATION :", "").strip(),
-                  "scf": read_scf(lines[scf_start_no + 1:scf_end_no + 1], scf_start_no + 1),
+                  "initial": initial,
                   "creator": {"program": "Crystal14"}
                   }
 

@@ -1,6 +1,6 @@
 {
   "warnings": [
-    " WARNING **** SCF **** GRADIENT NOT FULLY IMPLEMENTED FOR CONDUCTING SYSTEMS"
+    "WARNING **** SCF **** GRADIENT NOT FULLY IMPLEMENTED FOR CONDUCTING SYSTEMS"
   ],
   "errors": [],
   "meta": {
@@ -130,9 +130,8 @@
           ]
         }
       }
-    }
-  },
-  "scf": [
+    },
+    "scf": [
     {
       "energy": {
         "total": {
@@ -889,7 +888,8 @@
       ],
       "spin_density_absolute": 8.1934815
     }
-  ],
+  ]
+  },
   "optimisation": [
     {
       "primitive_cell": {

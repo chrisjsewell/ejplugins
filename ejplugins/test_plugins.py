@@ -17,6 +17,7 @@ schema_folder = os.path.join(os.path.dirname(__file__), "schema")
 
 
 @pytest.mark.parametrize("testplugin,filename", [
+    (CrystalOutputPlugin, "scf_only.crystal.out"),
     (CrystalOutputPlugin, "scf_and_opt.crystal.out"),
     (CrystalOutputPlugin, "scf_and_opt_slab.crystal.out"),
     (DOSSPlugin, "crystal.doss.f25"),
@@ -51,6 +52,7 @@ def test_plugins(testplugin, filename):
 
 @pytest.mark.parametrize(
     "fname,sname", [
+        ("scf_only.crystal.out.json", "crystal_out.json"),
         ("scf_and_opt.crystal.out.json", "crystal_out.json"),
         ("scf_and_opt_slab.crystal.out.json", "crystal_out.json"),
         ("crystal.band.f25.json", "crystal_band.json"),
