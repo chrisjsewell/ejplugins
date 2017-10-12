@@ -67,7 +67,7 @@ def validate_against_schema(data, sname):
     """get a validation schema by name (not including extension) and validate the data against it"""
     schemas = _get_all_schema_name()
     if sname not in schemas:
-        raise ValueError("{} not in available schema: {}".format(sname, schemas))
+        raise ValueError("{0} not in available schema: {1}\nschema folder: {2}".format(sname, schemas, _schema_folder))
 
     with open(os.path.join(_schema_folder, "{}.json".format(sname))) as f:
         schema = json.load(f)
