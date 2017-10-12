@@ -9,6 +9,7 @@ from ejplugins.qespresso import QEmainPlugin
 from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
+from ejplugins.utils import _get_all_schema_name
 
 import jsonschema
 
@@ -71,6 +72,10 @@ def test_against_schema(fname, sname):
         schema = json.load(f)
 
     jsonschema.validate(injson, schema)
+
+
+def test_get_schema():
+    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_out', 'qe_out']
 
 # import json
 # print(json.dumps(out, indent=2))
