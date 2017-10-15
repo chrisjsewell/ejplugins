@@ -546,7 +546,13 @@
         ],
         "spin_density_absolute": 2.2451841
       }
-    ]
+    ],
+    "energy": {
+      "total_corrected": {
+        "magnitude": -34383.41783159084,
+        "units": "eV"
+      }
+    }
   },
   "optimisation": [
     {
@@ -655,7 +661,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.43401762802,
           "units": "eV"
         }
@@ -773,7 +779,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46125140085,
           "units": "eV"
         }
@@ -891,7 +897,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46057609316,
           "units": "eV"
         }
@@ -1009,7 +1015,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.461479081234,
           "units": "eV"
         }
@@ -1127,7 +1133,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46180953358,
           "units": "eV"
         }
@@ -1245,7 +1251,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.461830396554,
           "units": "eV"
         }
@@ -1363,7 +1369,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.466592936056,
           "units": "eV"
         }
@@ -1481,7 +1487,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46658878904,
           "units": "eV"
         }
@@ -1599,7 +1605,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46657810857,
           "units": "eV"
         }
@@ -1717,7 +1723,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.466594103425,
           "units": "eV"
         }
@@ -1835,7 +1841,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.466594699355,
           "units": "eV"
         }
@@ -1953,7 +1959,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46657942832,
           "units": "eV"
         }
@@ -2071,7 +2077,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46659493337,
           "units": "eV"
         }
@@ -2189,7 +2195,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46659286531,
           "units": "eV"
         }
@@ -2307,7 +2313,7 @@
         ]
       },
       "energy": {
-        "total": {
+        "total_corrected": {
           "magnitude": -34383.46655742792,
           "units": "eV"
         }

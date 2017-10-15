@@ -499,11 +499,35 @@
               "spin_density_total"
             ]
           }
+        },
+        "energy": {
+          "type": "object",
+          "properties": {
+            "total_corrected": {
+              "type": "object",
+              "properties": {
+                "magnitude": {
+                  "type": "number"
+                },
+                "units": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "magnitude",
+                "units"
+              ]
+            }
+          },
+          "required": [
+            "total_corrected"
+          ]
         }
       },
       "required": [
         "calculation",
         "crystallographic_cell",
+        "energy",
         "primitive_cell",
         "scf"
       ]
@@ -842,7 +866,7 @@
           "energy": {
             "type": "object",
             "properties": {
-              "total": {
+              "total_corrected": {
                 "type": "object",
                 "properties": {
                   "magnitude": {
@@ -859,7 +883,7 @@
               }
             },
             "required": [
-              "total"
+              "total_corrected"
             ]
           },
           "convergence": {
@@ -884,6 +908,66 @@
               "rms_displac",
               "rms_gradient"
             ]
+          },
+          "scf": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "charge_normalization_factor": {
+                  "type": "number"
+                },
+                "atomic_charges_peratom": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "spin_density_total": {
+                  "type": "number"
+                },
+                "spin_density_peratom": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "spin_density_absolute": {
+                  "type": "number"
+                },
+                "energy": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "object",
+                      "properties": {
+                        "magnitude": {
+                          "type": "number"
+                        },
+                        "units": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "magnitude",
+                        "units"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "total"
+                  ]
+                }
+              },
+              "required": [
+                "atomic_charges_peratom",
+                "charge_normalization_factor",
+                "energy",
+                "spin_density_absolute",
+                "spin_density_peratom",
+                "spin_density_total"
+              ]
+            }
           }
         },
         "required": [

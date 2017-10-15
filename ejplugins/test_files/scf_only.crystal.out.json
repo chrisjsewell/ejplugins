@@ -458,7 +458,11 @@
           }
         }
       }
-    ]
+    ],
+    "energy": {
+      "total_corrected": {
+        "magnitude": -34382.95981576187,
+        "units": "eV"}}
   },
   "creator": {
     "program": "Crystal14"

@@ -250,21 +250,19 @@ def split_output(lines):
                 errors.append(line.strip())
                 mpi_abort = True
         elif "CRYSTAL - SCF - TYPE OF CALCULATION :" in line:
-            # TODO SCF per optimisation start (when using ONELOG keyword )
             if opt_start_no is not None:
                 continue
             if scf_init_start_no is not None:
-                raise IOError("found two lines starting scf ('CRYSTAL - SCF - '):"
+                raise IOError("found two lines starting scf ('CRYSTAL - SCF - ') in initial data:"
                               " {0} and {1}".format(scf_init_start_no, i))
             scf_init_start_no = i
         elif "SCF ENDED" in line:
-            # TODO SCF per optimisation start (when using ONELOG keyword )
             if opt_start_no is not None:
                 continue
             if "CONVERGE" not in line:
                 non_terminating_errors.append(line.strip())
             if scf_init_end_no is not None:
-                raise IOError("found two lines ending scf ('SCF ENDED'):"
+                raise IOError("found two lines ending scf ('SCF ENDED') in initial data:"
                               " {0} and {1}".format(scf_init_end_no, i))
             scf_init_end_no = i
         elif "STARTING GEOMETRY OPTIMIZATION" in line:
@@ -552,6 +550,34 @@ def read_scf(lines, startline):
     return scf
 
 
+def read_post_scf(lines, startline):
+    """ read post scf data
+
+    Parameters
+    ----------
+    lines: list of str
+    startline: int
+
+    Returns
+    -------
+
+    """
+    post_scf = {}
+    for i, line in enumerate(lines):
+        if fnmatch(line.strip(), "TOTAL ENERGY*DE*"):
+            if not fnmatch(line.strip(), "TOTAL ENERGY*AU*DE*"):
+                raise IOError("was expecting units in a.u. on line:"
+                              " {0}, got: {1}".format(startline + i, line))
+            post_scf["energy"] = post_scf.get("energy", {})
+            if "total_corrected" in post_scf["energy"]:
+                raise IOError("total corrected energy found twice, on line:"
+                              " {0}, got: {1}".format(startline + i, line))
+            post_scf["energy"]["total_corrected"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
+                                                     "units": "eV"}
+
+    return post_scf
+
+
 def read_opt(lines, startline):
     """ read geometric optimisation
 
@@ -566,6 +592,7 @@ def read_opt(lines, startline):
     """
     opt = []
     opt_cyc = None
+    scf_start_no = None
 
     for i, line in enumerate(lines):
         if i == 0:
@@ -575,17 +602,30 @@ def read_opt(lines, startline):
             if opt_cyc is not None:
                 opt.append(opt_cyc)
             opt_cyc = {}
+            scf_start_no = None
         elif opt_cyc is None:
             continue
 
+        # when using ONELOG optimisation key word
+        if "CRYSTAL - SCF - TYPE OF CALCULATION :" in line:
+            if scf_start_no is not None:
+                raise IOError("found two lines starting scf ('CRYSTAL - SCF - ') in opt step {0}:".format(len(opt))
+                              + " {0} and {1}".format(scf_start_no, i))
+            scf_start_no = i
+        elif "SCF ENDED" in line:
+            if "CONVERGE" not in line:
+                pass#errors.append(line.strip())
+            opt_cyc["scf"] = read_scf(lines[scf_start_no + 1:i + 1], startline + i + 1)
+
         get_geometry(opt_cyc, i, line, lines, startline)
 
+        # TODO move to read_post_scf?
         if fnmatch(line, "TOTAL ENERGY*DE*"):
             if not fnmatch(line, "TOTAL ENERGY*AU*DE*AU*"):
                 raise IOError("was expecting units in a.u. on line:"
                               " {0}, got: {1}".format(startline + i, line))
             opt_cyc["energy"] = opt_cyc.get("energy", {})
-            opt_cyc["energy"]["total"] = {"magnitude": split_numbers(line)[-2] * codata[("Hartree", "eV")],
+            opt_cyc["energy"]["total_corrected"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
                                           "units": "eV"}
 
         for param in ["MAX GRADIENT", "RMS GRADIENT", "MAX DISPLAC", "RMS DISPLAC"]:
@@ -700,9 +740,21 @@ class CrystalOutputPlugin(object):
             initial = read_init(lines[start_line_no:scf_init_start_no], start_line_no)
             if scf_init_start_no is None or scf_init_end_no is None:
                 initial["scf"] = None
+
             else:
                 #  initial["scf_type"] = lines[scf_start_no].replace("CRYSTAL - SCF - TYPE OF CALCULATION :", "").strip(),
                 initial["scf"] = read_scf(lines[scf_init_start_no + 1:scf_init_end_no + 1], scf_init_start_no + 1)
+                if opt_start_no is not None:
+                    initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:opt_start_no],
+                                                        scf_init_start_no + 1)])
+                elif final_opt is not None:
+                    initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:final_opt],
+                                                        scf_init_start_no + 1)])
+                elif mulliken_starts is not None:
+                    initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:mulliken_starts[0]],
+                                                        scf_init_start_no + 1)])
+                else:
+                    initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:], scf_init_start_no + 1)])
 
         if errors:
             return {"warnings": run_warnings,
@@ -733,4 +785,33 @@ class CrystalOutputPlugin(object):
             output["mulliken"] = read_mulliken(lines, mulliken_starts)
 
         return output
+
+
+class CrystalSCFLogPlugin(object):
+    """ a class for parsing Crystal DFT Simulation Data
+
+    """
+
+    plugin_name = 'crystal.scflog'
+    plugin_descript = 'read crystal .SCFLOG file, created when running an optimisation'
+    file_regex = '*crystal.scflog'
+
+    def read_file(self, file, *args, **kwargs):
+
+        lines = file.read().splitlines()
+        opt = []
+        scf_start_no = None
+        for i, line in enumerate(lines):
+            if "CRYSTAL - SCF - TYPE OF CALCULATION :" in line:
+                if scf_start_no is not None:
+                    raise IOError("found two lines starting scf ('CRYSTAL - SCF - ') in opt step {0}:".format(len(opt))
+                                  + " {0} and {1}".format(scf_start_no, i))
+                scf_start_no = i
+            elif "SCF ENDED" in line:
+                if "CONVERGE" not in line:
+                    pass  # errors.append(line.strip())
+                opt.append({"scf": read_scf(lines[scf_start_no + 1:i + 1], i + 1)})
+                scf_start_no = None
+
+        return {"optimisation": opt}
 
