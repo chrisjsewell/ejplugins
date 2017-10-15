@@ -5,6 +5,7 @@ import glob
 from decimal import Decimal
 
 import jsonschema
+from jsonextended import ejson
 
 
 def split_numbers(string, as_decimal=False):
@@ -51,6 +52,25 @@ codata = {
     ("Hartree", "eV"): 27.21138602,
     ("Bohr", "Angstrom"): 0.5291772105638411,
 }
+
+
+_test_file_folder = os.path.join(os.path.dirname(__file__), "test_files")
+
+
+def load_test_file(fname):
+    """ load a test json file
+
+    Parameters
+    ----------
+    fname: str
+
+    Returns
+    -------
+
+    """
+    if not fname.endswith(".json"):
+        fname += ".json"
+    return ejson.to_dict(os.path.join(_test_file_folder, fname))
 
 _schema_folder = os.path.join(os.path.dirname(__file__), "schema")
 
