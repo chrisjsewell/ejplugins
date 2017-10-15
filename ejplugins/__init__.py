@@ -7,8 +7,8 @@ from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
 
-from ejplugins.pymatgen import Encode_Pymatgen
-from ejplugins.ase import Encode_ASE
+from ejplugins.pymatgen_decode import Encode_Pymatgen
+from ejplugins.ase_decode import Encode_ASE
 
 from ejplugins.utils import load_test_file, validate_against_schema
 
