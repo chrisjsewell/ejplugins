@@ -1,5 +1,6 @@
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.core.structure import Structure
+# from pymatgen.core.structure import Structure
+import pymatgen as pym
 from ase import Atoms
 
 
@@ -29,7 +30,7 @@ class Encode_ASE(object):
         return dct
 
     def from_json(self, obj):
-        struct = Structure.from_dict(obj)
+        struct = pym.Structure.from_dict(obj)
         return AseAtomsAdaptor.get_atoms(struct)
 
 
