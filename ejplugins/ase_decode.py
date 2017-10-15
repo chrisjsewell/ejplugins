@@ -15,7 +15,7 @@ class Encode_ASE(object):
     >>> from ase.build import bulk
     >>> struct_ase = bulk("Fe", a=1, orthorhombic=True)
     >>> struct_dict = Encode_ASE().to_json(struct_ase)
-    >>> print(sorted(struct_dict.keys()))
+    >>> print(sorted([str(s) for s in struct_dict.keys()]))
     ['@ase', '@class', '@module', 'lattice', 'sites']
     >>> isinstance(Encode_ASE().from_json(struct_dict), Atoms)
     True
