@@ -127,7 +127,6 @@ class DOSSPlugin(object):
                 "creator": {"program": "Crystal14"}}
 
 
-# TODO add units (then add easy way to convert back to pymatgen)
 class ECH3OutPlugin(object):
     """ parser plugin for jsonextended
     """
@@ -165,6 +164,8 @@ class ECH3OutPlugin(object):
                     coords.append(np.array(atom[4:7], dtype=float))
                     line = file_obj.readline()
             line = file_obj.readline()
+
+        # TODO add units adn don't use pymatgen, to remove dependancy (can use it in post processing)
 
         lattice = pym.Lattice([a, b, c])
         struct = pym.Structure(lattice, sites, coords,

@@ -1,6 +1,9 @@
+import warnings
 from pymatgen.io.ase import AseAtomsAdaptor
 # from pymatgen.core.structure import Structure
-import pymatgen as pym
+with warnings.catch_warnings(record=True):
+    warnings.filterwarnings("ignore", category=ImportWarning)
+    import pymatgen as pym
 from ase import Atoms
 
 

@@ -1,6 +1,9 @@
+import warnings
 # from pymatgen.core.structure import Structure
 # from pymatgen.core.lattice import Lattice
-import pymatgen as pym
+with warnings.catch_warnings(record=True):
+    warnings.filterwarnings("ignore", category=ImportWarning)
+    import pymatgen as pym
 
 
 class Encode_Pymatgen(object):
@@ -12,7 +15,7 @@ class Encode_Pymatgen(object):
     >>> struct_dict = Encode_Pymatgen().to_json(struct)
     >>> print(sorted(struct_dict.keys()))
     ['@class', '@module', 'lattice', 'sites']
-    >>> isinstance(Encode_Pymatgen().from_json(struct_dict), Structure)
+    >>> isinstance(Encode_Pymatgen().from_json(struct_dict), pym.Structure)
     True
 
     """
