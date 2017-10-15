@@ -1,4 +1,5 @@
-from pymatgen import Structure, Lattice
+from pymatgen.core.structure import Structure
+from pymatgen.core.lattice import Lattice
 
 
 class Encode_Pymatgen(object):

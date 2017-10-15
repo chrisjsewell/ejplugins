@@ -1,5 +1,5 @@
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen import Structure
+from pymatgen.core.structure import Structure
 from ase import Atoms
 
 
