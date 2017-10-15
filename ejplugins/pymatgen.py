@@ -4,6 +4,7 @@ import warnings
 with warnings.catch_warnings(record=True):
     warnings.filterwarnings("ignore", category=ImportWarning)
     import pymatgen as pym
+    print(dir(pym))
 
 
 class Encode_Pymatgen(object):
