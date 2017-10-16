@@ -757,33 +757,52 @@ class CrystalOutputPlugin(object):
                 else:
                     initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:], scf_init_start_no + 1)])
 
-        if errors:
-            return {"warnings": run_warnings,
-                    "errors": errors_all,
-                    "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
-                    "initial": initial,
-                    "creator": {"program": "Crystal14"}
-                    }
+        # if errors:
+        #     return {"warnings": run_warnings,
+        #             "errors": errors_all,
+        #             "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
+        #             "initial": initial,
+        #             "creator": {"program": "Crystal14"}
+        #             }
 
         output = {"warnings": run_warnings,
-                  "errors": non_terminating_errors,
-                  "meta": read_meta(lines[:start_line_no]),
+                  "errors": errors_all,
+                  "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
                   "initial": initial,
                   "creator": {"program": "Crystal14"}
                   }
 
-        if opt_start_no is not None:
-            output["optimisation"] = read_opt(lines[opt_start_no:opt_end_no + 1], opt_start_no)
+        if opt_start_no is not None and opt_end_no is not None:
+            if errors:
+                try:
+                    output["optimisation"] = read_opt(lines[opt_start_no:opt_end_no + 1], opt_start_no)
+                except:
+                    pass
+            else:
+                output["optimisation"] = read_opt(lines[opt_start_no:opt_end_no + 1], opt_start_no)
         else:
             output["optimisation"] = None
 
         if final_opt is not None:
-            output["final"] = read_final(lines[final_opt:], final_opt)
+            if errors:
+                try:
+                    output["final"] = read_final(lines[final_opt:], final_opt)
+                except:
+                    pass
+            else:
+                output["final"] = read_final(lines[final_opt:], final_opt)
         else:
             output["final"] = None
 
         if mulliken_starts is not None:
-            output["mulliken"] = read_mulliken(lines, mulliken_starts)
+            if errors:
+                try:
+                    output["mulliken"] = read_mulliken(lines, mulliken_starts)
+                except:
+                    pass
+            else:
+                output["mulliken"] = read_mulliken(lines, mulliken_starts)
+
 
         return output
 
