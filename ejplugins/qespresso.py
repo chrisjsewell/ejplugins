@@ -400,13 +400,24 @@ def read_atoms(lines, start_line):
         # optimization step
         if "ATOMIC_POSITIONS" in line:
             coords = []
+            # TODO add fixed positions to output
+            fixed_pos = []
             symbols = []
             ids = []
             j = 1
             while split_numbers(lines[i + j]):
                 symbols.append(lines[i + j].strip().split()[0].strip('0123456789'))
                 ids.append(j)
-                coords.append(split_numbers(lines[i + j])[-3:])
+                nvalues = split_numbers(lines[i + j])
+                coords.append(nvalues[0:3])
+                if len(nvalues) == 3:
+                    fixed_pos.append((False, False, False))
+                elif len(nvalues) == 6:
+                    fixed_pos.append(tuple([not bool(i) for i in nvalues[3:6]]))
+                else:
+                    raise_error("ATOMIC_POSITIONS: expecting either 'symbol x y z' or 'symbol x y z fx fy fz'",
+                                line, i, start_line)
+
                 j += 1
 
             if not final_symbols:
