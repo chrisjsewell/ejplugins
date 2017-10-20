@@ -6,7 +6,7 @@ from jsonextended.encoders.ndarray import Encode_NDArray
 
 from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin,
                                DOSSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin)
-from ejplugins.qespresso import QEmainPlugin
+from ejplugins.qespresso import QEmainPlugin, QEChargeDensityPlugin
 from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
@@ -31,6 +31,7 @@ schema_folder = os.path.join(os.path.dirname(__file__), "schema")
     (QEmainPlugin, "scf_with_fermi.qe.out"),
     (QEmainPlugin, "vcrelax.qe.out"),
     (QEmainPlugin, "band.qe.out"),
+    (QEChargeDensityPlugin, "scf.qe.charge"),
     (CIFPlugin, "FeS_troilite.cif"),
     (GULPOutPlugin, "reaxf_noopt.gulp.out"),
     (GULPOutPlugin, "reaxf_opt.gulp.out")
@@ -45,9 +46,10 @@ def test_plugins(testplugin, filename):
     # print(json.dumps(output, indent=2, default=plugins.encode))
     outpath = os.path.join(file_folder, filename + ".json")
 
-    # if "scf_and_opt.crystal.scflog" in filename:
+    # if "scf.qe.charge" in filename:
     #     with open(outpath, "w") as f:
     #         json.dump(output, f, indent=2, default=plugins.encode)
+
     expected = ejson.to_dict(outpath)
 
     assert edict.diff(output, expected, np_allclose=True) == {}

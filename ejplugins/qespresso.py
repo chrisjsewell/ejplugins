@@ -748,3 +748,97 @@ class QEbandPlugin(QEmainPlugin):
     plugin_name = 'quantum_espresso_band_output'
     plugin_descript = 'read quantum espresso output (identical to main)'
     file_regex = '*.qe.band.out'
+
+
+class QEChargeDensityPlugin(object):
+    """quantum espresso output parser plugin for jsonextended
+
+    """
+    plugin_name = 'quantum_espresso_charge_density_output'
+    plugin_descript = 'read quantum espresso charge density output, in Gaussian Cube Format (output_format=6)'
+    file_regex = '*.qe.charge'
+
+
+    def read_file(self, f, **kwargs):
+        dic = {}
+        f.readline() # first line blank
+        line = f.readline().strip()
+        try:
+            na, nb, nc, _, _, _, natoms, ntyp  = [int(i) for i in line.split()]
+        except:
+            raise IOError("file format incorrect, expected 8 fields; na, nb, nc, _, _, _, natoms, ntyp: {0}".format(line))
+        dic['na'], dic['nb'], dic['nc'] = na, nb, nc
+
+        line = f.readline().strip()
+        try:
+            bravais_lattice_index, alat, blat, clat, alpha, beta, gamma = [float(i) for i in line.split()]
+            alat *= codata[("Bohr", "Angstrom")]
+            blat *= codata[("Bohr", "Angstrom")]
+            clat *= codata[("Bohr", "Angstrom")]
+            bravais_lattice_index = int(bravais_lattice_index)
+        except:
+            raise IOError("file format incorrect, expected ibrav, a, b, c, alpha, beta, gamma: {0}".format(line))
+
+        cell = {}
+        if bravais_lattice_index == 0: # free
+            for key in ["a", "b", "c"]:
+                line = f.readline().strip()
+                try:
+                    x, y, z = [float(i) for i in line.split()]
+                    cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
+                except:
+                    raise IOError("file format incorrect, expected fields; x, y, z: {0}".format(line))
+        elif bravais_lattice_index == 1: # cubic P (sc)
+            cell["a"] = {"units": "angstrom", "magnitude": (alat, 0., 0.)}
+            cell["b"] = {"units": "angstrom", "magnitude": (0., alat, 0.)}
+            cell["c"] = {"units": "angstrom", "magnitude": (0., 0., alat)}
+        elif bravais_lattice_index == 2: # cubic F (fcc)
+            cell["a"] = {"units": "angstrom", "magnitude": (-alat/2., 0., alat/2)}
+            cell["b"] = {"units": "angstrom", "magnitude": (0., alat/2., alat/2.)}
+            cell["c"] = {"units": "angstrom", "magnitude": (-alat/2., alat/2., 0.)}
+        elif bravais_lattice_index == 3:  # cubic I (bcc)
+            cell["a"] = {"units": "angstrom", "magnitude": (alat / 2., alat / 2., alat / 2)}
+            cell["b"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
+            cell["c"] = {"units": "angstrom", "magnitude": (-alat / 2., -alat / 2., alat / 2)}
+        else:
+            # TODO implemented ibrav > 3
+            raise NotImplementedError("haven't yet implemented ibrav > 3")
+
+        dic["cell_vectors"] = cell
+
+        f.readline() # TODO find out what numbers in this line are (third is Ecutoff?)
+
+        typ_lookup = {}
+        for _ in range(ntyp):
+            line = f.readline().strip()
+            try:
+                i, symbol, valence_electrons = line.split()
+                typ_lookup[i] = symbol
+            except:
+                raise IOError("file format incorrect, expected fields; i, symbol, valence_electrons: {0}".format(line))
+
+        fcoords = []
+        symbols = []
+        for _ in range(natoms):
+            line = f.readline().strip()
+            try:
+                i, a, b, c, atyp = line.split()
+                fcoords.append([float(a), float(b), float(c)])
+                symbols.append(typ_lookup[atyp])
+            except:
+                raise IOError("file format incorrect, expected fields; i, a, b, c, atyp: {0}".format(line))
+
+        dic["fcoords"] = fcoords
+        dic["symbols"] = symbols
+
+        charge_density = []
+        line = f.readline().strip().split()
+        while line:
+            charge_density += [float(s) for s in line]
+            line = f.readline().strip().split()
+        dense = np.array(charge_density).reshape((na, nb, nc))
+        dic['charge_density'] = dense
+
+        dic["creator"] = {"program": "Quantum Espresso"}
+        return dic
+

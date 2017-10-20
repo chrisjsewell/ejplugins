@@ -2,7 +2,7 @@ from jsonextended import plugins
 
 from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin, DOSSPlugin, BANDPlugin,
                                ECH3CubePlugin, ECH3OutPlugin)
-from ejplugins.qespresso import QEmainPlugin, QEbandPlugin
+from ejplugins.qespresso import QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin
 from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
@@ -22,7 +22,7 @@ def load_all_parsers():
 
     """
     parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, DOSSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
-               QEmainPlugin, QEbandPlugin, CIFPlugin, GULPOutPlugin, LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin]
+               QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, CIFPlugin, GULPOutPlugin, LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin]
 
     return plugins.load_plugin_classes(parsers, "parsers")
 
@@ -31,4 +31,4 @@ def load_all_encoders():
     return plugins.load_plugin_classes([Encode_Pymatgen, Encode_ASE])
 
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
