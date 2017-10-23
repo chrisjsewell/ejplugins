@@ -13,7 +13,7 @@ from fnmatch import fnmatch
 import warnings
 
 import numpy as np
-# from jsonextended import edict
+from jsonextended import edict
 
 from ejplugins.utils import codata, split_numbers
 
@@ -32,7 +32,7 @@ def raise_error(msg, line, i, start_line):
     -------
 
     """
-    raise IOError("{0}, for line #{1}: {2}".format(msg, i+start_line, line.strip()))
+    raise IOError("{0}, for line #{1}: {2}".format(msg, i+1+start_line, line.strip()))
 
 
 # TODO separate contributions
@@ -214,9 +214,14 @@ def read_scf(lines, start_line):
         # see; https://www.mail-archive.com/pw_forum@pwscf.org/msg24862.html
         if "Magnetic moment per site:" in line:
             if atomic_charges_peratom or spin_density_peratom:
-                raise_error("found multiple magnetic moments per site in same scf run", line, i, start_line)
+                if last_magmom_num % 100 == 0.:
+                    pass  # it appears that the magnetic moment is printed every 100 iterations
+                else:
+                    raise_error("found multiple magnetic moments per site in same scf run", line, i, start_line)
+            last_magmom_num = cur_cyc_num
             atomic_charges_peratom = []
             spin_density_peratom = []
+
             nxtline = i+1
             while lines[nxtline].strip():
                 if not fnmatch(lines[nxtline].strip(), "atom:*charge:*magn:*constr:*"):
@@ -287,23 +292,35 @@ def read_cell(lines, start_line):
 
         # optimisation step
         if fnmatch(line, "CELL_PARAMETERS*(*alat*=*)"):
-            if cell:
-                raise_error("found multiple cell coordinates", line, i, start_line)
             alat = split_numbers(line)[0] * codata[("Bohr", "Angstrom")]
-            for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
-                x, y, z = split_numbers(newline)
-                cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
+            if cell and final_coords:
+                # there can be a 'Begin/End final coordinates' in the final opt step
+                new_cell = {}
+                for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
+                    x, y, z = split_numbers(newline)
+                    new_cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
+                if edict.diff(cell, new_cell, np_allclose=True):
+                    raise_error("normal and final cell coordinates are different", line, i, start_line)
+            elif cell:
+                raise_error("found multiple cell coordinates", line, i, start_line)
+            else:
+
+                for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
+                    x, y, z = split_numbers(newline)
+                    cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
 
     return cell if cell else None
 
 
-def read_atoms(lines, start_line):
+def read_atoms(lines, start_line, section="n/a"):
     """
     Read ion positions from the PWSCF output file
 
     Parameters
     ----------
     lines: List
+    start_line: int
+    section: str
 
     Returns
     -------
@@ -335,7 +352,8 @@ def read_atoms(lines, start_line):
         # initial and final
         if 'Crystallographic axes' in line:
             if fcoords and not final_coords:
-                raise_error("already found fractional atomic positions in section", line, i, start_line)
+                raise_error("already found fractional atomic positions in section ({})".format(section),
+                            line, i, start_line)
             if lines[i+1].strip():
                 raise_error("Expecting blank line after initial Crystallographic axes line",
                             lines[i + 1], i+1, start_line)
@@ -365,7 +383,8 @@ def read_atoms(lines, start_line):
 
         if line == 'Cartesian axes':
             if ccoords and not final_coords:
-                raise_error("already found cartesian atomic positions in section", line, i, start_line)
+                raise_error("already found cartesian atomic positions in section ({})".format(section),
+                            line, i, start_line)
             if lines[i+1].strip():
                 raise_error("Expecting blank line after initial Cartesian axes line",
                             lines[i + 1], i+1, start_line)
@@ -408,7 +427,7 @@ def read_atoms(lines, start_line):
             while split_numbers(lines[i + j]):
                 symbols.append(lines[i + j].strip().split()[0].strip('0123456789'))
                 ids.append(j)
-                nvalues = split_numbers(lines[i + j])
+                nvalues = [float(f) for f in lines[i + j].split()[1:]]
                 coords.append(nvalues[0:3])
                 if len(nvalues) == 3:
                     fixed_pos.append((False, False, False))
@@ -434,21 +453,27 @@ def read_atoms(lines, start_line):
                 warnings.warn("haven't yet implemented reading crystal_sg")
                 continue
             if "crystal" in line:
-                if fcoords:
-                    raise_error("fractional coordinates already set for this section", line, i, start_line)
+                if fcoords and fcoords != coords:
+                    raise_error("fractional coordinates already set for this section ({})".format(section),
+                                line, i, start_line)
                 fcoords = coords
             if "alat" in line:
-                if ccoords:
-                    raise_error("cartesian coordinates already set for this section", line, i, start_line)
-                ccoords = [(x*alat, y*alat, z*alat) for x, y, z in coords]
+                coords = [(x*alat, y*alat, z*alat) for x, y, z in coords]
+                if ccoords and ccoords != coords:
+                    raise_error("cartesian coordinates already set for this section ({})".format(section),
+                                line, i, start_line)
+                ccoords = coords
             if "bohr" in line:
-                if ccoords:
-                    raise_error("cartesian coordinates already set for this section", line, i, start_line)
-                ccoords = [(x*codata[("Bohr", "Angstrom")], y*codata[("Bohr", "Angstrom")],
-                            z*codata[("Bohr", "Angstrom")]) for x, y, z in coords]
+                coords = [(x * codata[("Bohr", "Angstrom")], y * codata[("Bohr", "Angstrom")],
+                            z * codata[("Bohr", "Angstrom")]) for x, y, z in coords]
+                if ccoords and ccoords != coords:
+                    raise_error("cartesian coordinates already set for this section ({})".format(section),
+                                line, i, start_line)
+                ccoords = coords
             if "angstrom" in line:
-                if ccoords:
-                    raise_error("cartesian coordinates already set for this section", line, i, start_line)
+                if ccoords and ccoords != coords:
+                    raise_error("cartesian coordinates already set for this section ({})".format(section),
+                                line, i, start_line)
                 ccoords = coords
 
     return (final_ids, final_symbols,
@@ -642,10 +667,24 @@ def first_parse(lines):
             # steps_num = new_step
             steps.append((i, None))
 
+        # Can get:
+         # lsda relaxation :  a final configuration with zero
+         #                    absolute magnetization has been found
+         #
+         # the program is checking if it is really the minimum energy structure
+         # by performing a new scf iteration without any "electronic" history
+         #
+        # TODO should this be a separate step?
+        if fnmatch(line, '*performing a new scf iteration without any "electronic" history'):
+            steps[-1] = (steps[-1][0], i)
+            steps_num += 1
+            steps.append((i, None))
+
         if "Self-consistent Calculation" in line and not scf_start_first:
             scf_start_first = i
         if "End of self-consistent calculation" in line:
             scf_end_last = i
+
 
     if opt_end and steps:
         steps[-1] = (steps[-1][0], opt_end)
@@ -659,7 +698,7 @@ def first_parse(lines):
     return opt_start, opt_end, steps, scf_start_first, scf_end_last, warnings
 
 
-def get_data_section(lines, start_line, crystal_coord_map=None):
+def get_data_section(lines, start_line, crystal_coord_map=None, section="n/a"):
     """ get data for a particular section
 
     Parameters
@@ -674,7 +713,7 @@ def get_data_section(lines, start_line, crystal_coord_map=None):
     """
     out = {}
 
-    ids, symbols, fcoords, ccoords = read_atoms(lines, start_line)
+    ids, symbols, fcoords, ccoords = read_atoms(lines, start_line, section)
     out["ids"] = ids
     out['symbols'] = symbols
     out['fcoords'] = fcoords
@@ -693,7 +732,7 @@ class QEmainPlugin(object):
     """ quantum espresso scf output parser plugin for jsonextended
     """
     plugin_name = 'quantum_espresso_scf_output'
-    plugin_descript = 'read quantum espresso scf output'
+    plugin_descript = 'read quantum espresso main output (from pw.x)'
     file_regex = '*.qe.out'
 
     def read_file(self, file_obj, **kwargs):
@@ -719,20 +758,21 @@ class QEmainPlugin(object):
         all["errors"] = None  # TODO check for non terminating errors (e.g. reaching max scf steps)
         if opt_start:
             crystal_coord_map = get_band_mapping(lines[0:opt_start])
-            all["initial"] = get_data_section(lines[0:opt_start], 0, crystal_coord_map)
-            all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map) for i, j in opt_steps]
-            all["final"] = get_data_section(lines[opt_end:], opt_end, crystal_coord_map)
+            all["initial"] = get_data_section(lines[0:opt_start], 0, crystal_coord_map, "initial")
+            all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map, "opt{}".format(step+1))
+                                   for step, (i, j) in enumerate(opt_steps)]
+            all["final"] = get_data_section(lines[opt_end:], opt_end, crystal_coord_map, "final")
         elif scf_start_first:
             crystal_coord_map = get_band_mapping(lines[0:scf_start_first])
-            all["initial"] = get_data_section(lines[0:scf_start_first], 0, crystal_coord_map)
+            all["initial"] = get_data_section(lines[0:scf_start_first], 0, crystal_coord_map, "initial")
             all["optimisation"] = [get_data_section(lines[scf_start_first:scf_end_last+1],
-                                                    scf_start_first, crystal_coord_map)]
-            all["final"] = get_data_section(lines[scf_end_last:], scf_end_last, crystal_coord_map)
+                                                    scf_start_first, crystal_coord_map, "opt1")]
+            all["final"] = get_data_section(lines[scf_end_last:], scf_end_last, crystal_coord_map, "final")
         else:
             crystal_coord_map = get_band_mapping(lines)
             all["initial"] = None
             all["optimisation"] = None
-            all["final"] = get_data_section(lines, 0, crystal_coord_map)
+            all["final"] = get_data_section(lines, 0, crystal_coord_map, "final")
 
         # TODO copy data from initial or final optimisation to final section (if not already present)?
         # (for instance if the geometry does not change) or leave for user to deal with?
@@ -755,7 +795,8 @@ class QEChargeDensityPlugin(object):
 
     """
     plugin_name = 'quantum_espresso_charge_density_output'
-    plugin_descript = 'read quantum espresso charge density output, in Gaussian Cube Format (output_format=6)'
+    plugin_descript = 'read quantum espresso charge density output (from pp.x), ' \
+                      'in Gaussian Cube Format (output_format=6)'
     file_regex = '*.qe.charge'
 
 
