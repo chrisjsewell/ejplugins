@@ -799,7 +799,6 @@ class QEChargeDensityPlugin(object):
                       'in Gaussian Cube Format (output_format=6)'
     file_regex = '*.qe.charge'
 
-
     def read_file(self, f, **kwargs):
         dic = {}
         f.readline() # first line blank
@@ -881,5 +880,50 @@ class QEChargeDensityPlugin(object):
         dic['charge_density'] = dense
 
         dic["creator"] = {"program": "Quantum Espresso"}
+        return dic
+
+
+class QELowdinPlugin(object):
+    """quantum espresso output parser plugin for jsonextended
+
+    https://www.researchgate.net/post/What_is_the_origin_of_difference_between_Lowdin_charge_when_calculated_with_plane_wave_code_and_gaussian
+
+    """
+    plugin_name = 'quantum_espresso_pdos_output'
+    plugin_descript = 'read quantum espresso charge density output (from pw.x), mainly for Lodwin charges partitioning'
+    file_regex = '*.qe.pdos.out'
+
+    def read_file(self, f, **kwargs):
+        dic = {"final": {"lowdin": {"charge": [], "spin": []}}, "creator": {"program": "Quantum Espresso"}}
+        in_lowdin = False
+        natoms = 0
+        for line in f:
+            if "Lowdin Charges" in line:
+                in_lowdin = True
+                continue
+            if not in_lowdin:
+                continue
+            if "Spilling Parameter" in line:
+                in_lowdin = False
+                dic["final"]["lowdin"]["spilling"] = split_numbers(line)[0]
+                continue
+            if "Atom #" in line:
+                natoms = split_numbers(line)[0]
+            if "total charge" in line:
+                charge = split_numbers(line.split("total charge")[1])[0]
+                dic["final"]["lowdin"]["charge"].append(charge)
+                continue
+            if "polarization" in line:
+                spin = split_numbers(line.split("polarization")[1])[0]
+                dic["final"]["lowdin"]["spin"].append(spin)
+                continue
+
+        if len(dic["final"]["lowdin"]["charge"]) != natoms:
+            raise IOError("number of atoms ({0}) is different to the number of total charge values found ({1})".format(
+                len(dic["final"]["lowdin"]["charge"]), natoms))
+        if len(dic["final"]["lowdin"]["spin"]) != natoms:
+            raise IOError("number of atoms ({0}) is different to the number of total spin values found ({1})".format(
+                len(dic["final"]["lowdin"]["spin"]), natoms))
+
         return dic
 
