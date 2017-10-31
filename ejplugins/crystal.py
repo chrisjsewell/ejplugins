@@ -188,10 +188,18 @@ class ECH3CubePlugin(object):
 
         na, nb, nc = [int(i) for i in f.readline().strip().split()]
         dic['na'], dic['nb'], dic['nc'] = na, nb, nc
-        dic['o_vec'] = [float(i) for i in f.readline().strip().split()]
-        dic['da_vec'] = np.array([float(i) for i in f.readline().strip().split()])
-        dic['db_vec'] = np.array([float(i) for i in f.readline().strip().split()])
-        dic['dc_vec'] = np.array([float(i) for i in f.readline().strip().split()])
+        origin = [float(i) for i in f.readline().strip().split()]
+        da_vec = np.array([float(i) for i in f.readline().strip().split()])
+        db_vec = np.array([float(i) for i in f.readline().strip().split()])
+        dc_vec = np.array([float(i) for i in f.readline().strip().split()])
+        # TODO na - 1 seems to work, but is it right?
+        dic["cell_vectors"] = {"a": {"magnitude": (da_vec * (na - 1) * codata[("Bohr", "Angstrom")]).tolist(),
+                                     "units": "angstrom"},
+                               "b": {"magnitude": (db_vec * (nb - 1) * codata[("Bohr", "Angstrom")]).tolist(),
+                                     "units": "angstrom"},
+                               "c": {"magnitude": (dc_vec * (nc - 1) * codata[("Bohr", "Angstrom")]).tolist(),
+                                     "units": "angstrom"}
+                               }
         name = f.readline().strip()
         assert name == 'Charge density'
         charge_density = []

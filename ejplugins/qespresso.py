@@ -857,18 +857,18 @@ class QEChargeDensityPlugin(object):
             except:
                 raise IOError("file format incorrect, expected fields; i, symbol, valence_electrons: {0}".format(line))
 
-        fcoords = []
+        ccoords = []
         symbols = []
         for _ in range(natoms):
             line = f.readline().strip()
             try:
                 i, a, b, c, atyp = line.split()
-                fcoords.append([float(a), float(b), float(c)])
+                ccoords.append([float(a)*alat, float(b)*alat, float(c)*alat])
                 symbols.append(typ_lookup[atyp])
             except:
                 raise IOError("file format incorrect, expected fields; i, a, b, c, atyp: {0}".format(line))
 
-        dic["fcoords"] = fcoords
+        dic["ccoords"] = ccoords
         dic["symbols"] = symbols
 
         charge_density = []
