@@ -5,8 +5,8 @@ from jsonextended import plugins, edict, ejson
 from jsonextended.encoders.ndarray import Encode_NDArray
 
 from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin,
-                               DOSSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin)
-from ejplugins.qespresso import QEmainPlugin, QEChargeDensityPlugin, QELowdinPlugin
+                               DOSSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin, CrystalDOSPlugin)
+from ejplugins.qespresso import QEmainPlugin, QEChargeDensityPlugin, QELowdinPlugin, QEdosPlugin
 from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
@@ -22,8 +22,11 @@ schema_folder = os.path.join(os.path.dirname(__file__), "schema")
     (CrystalOutputPlugin, "scf_only.crystal.out"),
     (CrystalOutputPlugin, "scf_and_opt.crystal.out"),
     (CrystalOutputPlugin, "scf_and_opt_slab.crystal.out"),
+    (CrystalOutputPlugin, "crystal17_spin_opt.crystal.out"),
     (CrystalSCFLogPlugin, "scf_and_opt.crystal.scflog"),
-    (DOSSPlugin, "crystal.doss.f25"),
+    # (DOSSPlugin, "crystal.doss.f25"),
+    (CrystalDOSPlugin,  "crystal.doss.f25"),
+    (CrystalDOSPlugin,  "crystal_pdos_spin.doss.f25"),
     (BANDPlugin, "crystal.band.f25"),
     (ECH3CubePlugin, "crystal.ech3_dat.prop3d"),
     (ECH3OutPlugin, "crystal.ech3.out"),
@@ -33,6 +36,7 @@ schema_folder = os.path.join(os.path.dirname(__file__), "schema")
     (QEmainPlugin, "band.qe.out"),
     (QELowdinPlugin, "relax.qe.pdos.out"),
     (QEChargeDensityPlugin, "scf.qe.charge"),
+    (QEdosPlugin, "test.qe.dos"),
     (CIFPlugin, "FeS_troilite.cif"),
     (GULPOutPlugin, "reaxf_noopt.gulp.out"),
     (GULPOutPlugin, "reaxf_opt.gulp.out")
@@ -44,10 +48,10 @@ def test_plugins(testplugin, filename):
 
     inpath = os.path.join(file_folder, filename)
     output = plugins.parse(inpath)
-    # print(json.dumps(output, indent=2, default=plugins.encode))
+    #print(json.dumps(output, indent=2, default=plugins.encode))
     outpath = os.path.join(file_folder, filename + ".json")
 
-    # if "relax.qe.pdos.out" in filename:
+    # if "scf.qe.charge" in filename:
     #     with open(outpath, "w") as f:
     #         json.dump(output, f, indent=2, default=plugins.encode)
 
@@ -71,6 +75,8 @@ def test_opt_scflog_merge():
         ("scf_and_opt_slab.crystal.out.json", "crystal_out.json"),
         ("opt_merge_scflog.crystal.out.json", "crystal_out.json"),
         ("crystal.band.f25.json", "crystal_band.json"),
+        ("crystal.doss.f25.json", "crystal_doss.json"),
+        ("crystal_pdos_spin.doss.f25.json", "crystal_doss.json"),
         ("scf.qe.out.json", "qe_out.json"),
         ("scf_with_fermi.qe.out.json", "qe_out.json"),
         ("vcrelax.qe.out.json", "qe_out.json"),
@@ -89,6 +95,6 @@ def test_against_schema(fname, sname):
 
 
 def test_get_schema():
-    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_out', 'qe_out']
+    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_doss', 'crystal_out', 'qe_out']
 
 

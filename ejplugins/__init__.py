@@ -1,8 +1,9 @@
 from jsonextended import plugins
 
-from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin, DOSSPlugin, BANDPlugin,
+from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin, BANDPlugin,
                                ECH3CubePlugin, ECH3OutPlugin)
-from ejplugins.qespresso import QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin
+from ejplugins.qespresso import (QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin,
+                                 QELowdinPlugin, QEnscfPlugin, QEdosPlugin)
 from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
@@ -21,7 +22,7 @@ def load_all_parsers():
     errors: list
 
     """
-    parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, DOSSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
+    parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
                QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin, CIFPlugin, GULPOutPlugin,
                LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin]
 
@@ -32,4 +33,4 @@ def load_all_encoders():
     return plugins.load_plugin_classes([Encode_Pymatgen, Encode_ASE])
 
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"

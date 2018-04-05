@@ -9,6 +9,7 @@ Modified work Copyright 2015-2017 Lukasz Mentel
                        Version 3, 29 June 2007
 
 """
+from datetime import datetime
 from fnmatch import fnmatch
 import warnings
 
@@ -261,7 +262,7 @@ def read_cell(lines, start_line):
     alat = None
     cell = {}
     # TODO you can get a section after the optimisation ("Begin final coordinates") but then a final scf calculation
-    # followed by a recalculated final unit cell
+    # followed by a recalculated final unit cell (see ejplugins/test_files/qe_vc_relax_with_multiple_final_coords.out)
     final_coords = False
 
     # additional unit cell information
@@ -635,8 +636,18 @@ def first_parse(lines):
     steps_num = None
     steps = []
     warnings = []
+    non_terminating_errors = []
+    found_job_done = False
+    start_time, end_time, elapsed_time, nprocs = None, None, None, None
     for i, line in enumerate(lines):
         line = line.strip()
+        if line.startswith("JOB DONE."):
+            found_job_done = True
+        # convergence NOT achieved after *** iterations: stopping
+        if "convergence NOT achieved" in line:
+            non_terminating_errors.append(line)
+        if "Error in routine cdiaghg" in line:
+            non_terminating_errors.append(line)
         if "DEPRECATED" in line:
             warnings.append(line)
         if "Geometry Optimization" in line:
@@ -685,6 +696,33 @@ def first_parse(lines):
         if "End of self-consistent calculation" in line:
             scf_end_last = i
 
+        if fnmatch(line, "Parallel version *, running on * processors"):
+            if nprocs is not None:
+                raise IOError("found second nprocs on line {0}: {1}".format(i, line))
+            nprocs = int(line.split()[-2])
+        elif fnmatch(line, "Parallel version *, running on * processor cores"):
+            if nprocs is not None:
+                raise IOError("found second nprocs on line {0}: {1}".format(i, line))
+            nprocs = int(line.split()[-3])
+
+        # NB: time uses spaces instead of 0, e.g. This run was terminated on:  12:43: 3   6Sep2017
+        if fnmatch(line, "Program*starts on * at *"):
+            if start_time is not None:
+                raise IOError("found second start time on line {0}: {1}".format(i, line))
+            line_segs = line.split("at")
+            atime = line_segs[-1].replace(" ", "")
+            adate = line_segs[-2].split()[-1]
+            start_time = datetime.strptime(atime + ' ' + adate, '%H:%M:%S %d%b%Y')
+        if line.startswith("This run was terminated on:"):
+            if end_time is not None:
+                raise IOError("found second end time on line {0}: {1}".format(i, line))
+            line_segs = line.split()
+            adate = line_segs[-1]
+            atime = ":".join(" ".join(line_segs[:-1]).split(":")[-3:]).replace(" ", "")
+            end_time = datetime.strptime(atime + ' ' + adate, '%H:%M:%S %d%b%Y')
+
+    if not found_job_done:
+        non_terminating_errors.append("Did not find indicator: JOB DONE.")
 
     if opt_end and steps:
         steps[-1] = (steps[-1][0], opt_end)
@@ -695,7 +733,15 @@ def first_parse(lines):
     if scf_start_first and not scf_end_last:
         raise IOError("found start of SCF but no end")
 
-    return opt_start, opt_end, steps, scf_start_first, scf_end_last, warnings
+    if start_time and end_time:
+        delta_time = end_time - start_time
+        m, s = divmod(delta_time.total_seconds(), 60)
+        h, m = divmod(m, 60)
+        elapsed_time = "%d:%02d:%02d" % (h, m, s)
+
+    meta = {"elapsed_time": elapsed_time, "nprocs": nprocs}
+
+    return opt_start, opt_end, steps, scf_start_first, scf_end_last, warnings, non_terminating_errors, meta
 
 
 def get_data_section(lines, start_line, crystal_coord_map=None, section="n/a"):
@@ -735,13 +781,14 @@ class QEmainPlugin(object):
     plugin_descript = 'read quantum espresso main output (from pw.x)'
     file_regex = '*.qe.out'
 
-    def read_file(self, file_obj, **kwargs):
+    def read_file(self, file_obj, skip_opt=False, **kwargs):
         """
 
         Parameters
         ----------
         file_obj: file_object
-        kwargs
+        skip_opt: bool
+            if True, skip retrieval of optimisation step data
 
         Returns
         -------
@@ -752,21 +799,27 @@ class QEmainPlugin(object):
 
         all = {}
 
-        opt_start, opt_end, opt_steps, scf_start_first, scf_end_last, warnings = first_parse(lines)
+        opt_start, opt_end, opt_steps, scf_start_first, scf_end_last, warnings, non_terminating_errors, meta = first_parse(lines)
 
         all["warnings"] = warnings if warnings else None
-        all["errors"] = None  # TODO check for non terminating errors (e.g. reaching max scf steps)
+        all["errors"] = non_terminating_errors  # TODO check for more non terminating errors (e.g. reaching max opt steps)
         if opt_start:
             crystal_coord_map = get_band_mapping(lines[0:opt_start])
             all["initial"] = get_data_section(lines[0:opt_start], 0, crystal_coord_map, "initial")
-            all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map, "opt{}".format(step+1))
-                                   for step, (i, j) in enumerate(opt_steps)]
+            if skip_opt:
+                all["optimisation"] = None
+            else:
+                all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map, "opt{}".format(step+1))
+                                       for step, (i, j) in enumerate(opt_steps)]
             all["final"] = get_data_section(lines[opt_end:], opt_end, crystal_coord_map, "final")
         elif scf_start_first:
             crystal_coord_map = get_band_mapping(lines[0:scf_start_first])
             all["initial"] = get_data_section(lines[0:scf_start_first], 0, crystal_coord_map, "initial")
-            all["optimisation"] = [get_data_section(lines[scf_start_first:scf_end_last+1],
-                                                    scf_start_first, crystal_coord_map, "opt1")]
+            if skip_opt:
+                all["optimisation"] = None
+            else:
+                all["optimisation"] = [get_data_section(lines[scf_start_first:scf_end_last+1],
+                                                        scf_start_first, crystal_coord_map, "opt1")]
             all["final"] = get_data_section(lines[scf_end_last:], scf_end_last, crystal_coord_map, "final")
         else:
             crystal_coord_map = get_band_mapping(lines)
@@ -778,9 +831,17 @@ class QEmainPlugin(object):
         # (for instance if the geometry does not change) or leave for user to deal with?
 
         all["creator"] = {"program": "Quantum Espresso"}
+        all["meta"] = meta
 
         return all
 
+
+class QEnscfPlugin(QEmainPlugin):
+    """ quantum espresso output parser plugin for jsonextended
+    """
+    plugin_name = 'quantum_espresso_nscf_output'
+    plugin_descript = 'read quantum espresso output (identical to main)'
+    file_regex = '*.qe.nscf.out'
 
 class QEbandPlugin(QEmainPlugin):
     """ quantum espresso output parser plugin for jsonextended
@@ -828,18 +889,24 @@ class QEChargeDensityPlugin(object):
                     cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
                 except:
                     raise IOError("file format incorrect, expected fields; x, y, z: {0}".format(line))
-        elif bravais_lattice_index == 1: # cubic P (sc)
+        elif bravais_lattice_index == 1:  # cubic P (sc)
             cell["a"] = {"units": "angstrom", "magnitude": (alat, 0., 0.)}
             cell["b"] = {"units": "angstrom", "magnitude": (0., alat, 0.)}
             cell["c"] = {"units": "angstrom", "magnitude": (0., 0., alat)}
-        elif bravais_lattice_index == 2: # cubic F (fcc)
+        elif bravais_lattice_index == 2:  # cubic F (fcc)
             cell["a"] = {"units": "angstrom", "magnitude": (-alat/2., 0., alat/2)}
             cell["b"] = {"units": "angstrom", "magnitude": (0., alat/2., alat/2.)}
             cell["c"] = {"units": "angstrom", "magnitude": (-alat/2., alat/2., 0.)}
+        # elif bravais_lattice_index == 3:  # cubic I (bcc)
+        #     cell["a"] = {"units": "angstrom", "magnitude": (alat / 2., alat / 2., alat / 2)}
+        #     cell["b"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
+        #     cell["c"] = {"units": "angstrom", "magnitude": (-alat / 2., -alat / 2., alat / 2)}
+        # TODO stated as ibrav=-3 in v6.2 manual, but visually gives a correct answer(ish) answer for scf.qe.charge
+        # (although Fe BCC density appears stretched along some vectors, which isn't the case with Crystal)
         elif bravais_lattice_index == 3:  # cubic I (bcc)
-            cell["a"] = {"units": "angstrom", "magnitude": (alat / 2., alat / 2., alat / 2)}
-            cell["b"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
-            cell["c"] = {"units": "angstrom", "magnitude": (-alat / 2., -alat / 2., alat / 2)}
+            cell["a"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
+            cell["b"] = {"units": "angstrom", "magnitude": (alat / 2., -alat / 2., alat / 2)}
+            cell["c"] = {"units": "angstrom", "magnitude": (alat / 2.,  alat / 2., -alat / 2)}
         else:
             # TODO implemented ibrav > 3
             raise NotImplementedError("haven't yet implemented ibrav > 3")
@@ -926,4 +993,33 @@ class QELowdinPlugin(object):
                 len(dic["final"]["lowdin"]["spin"]), natoms))
 
         return dic
+
+
+class QEdosPlugin(object):
+    """quantum espresso output parser plugin for jsonextended
+
+    https://www.researchgate.net/post/What_is_the_origin_of_difference_between_Lowdin_charge_when_calculated_with_plane_wave_code_and_gaussian
+
+    """
+    plugin_name = 'quantum_espresso_dos'
+    plugin_descript = 'read quantum espresso total density of states output'
+    file_regex = '*.qe.dos'
+
+    def read_file(self, f, **kwargs):
+        first_line = f.readline()
+        # TODO extend to use with no spin polarised calculation output
+        if not fnmatch(first_line, "*E (eV)*dosup(E)*dosdw(E)*Int dos(E)*"):
+            raise IOError("*.qe.dos header does not match; *E (eV)*dosup(E)*dosdw(E)*Int dos(E)*")
+        line = f.readline().strip()
+        es, ups, downs = [], [], []
+        line = f.readline()  # first line has no energy
+        while line:
+            e, up, down, intd = line.split()
+            es.append(float(e))
+            ups.append(float(up))
+            downs.append(float(down))
+            line = f.readline().strip()
+
+        return {"tdos":{"energy": {"units": "eV", "magnitude": es}, "up": ups, "down": downs}}
+
 

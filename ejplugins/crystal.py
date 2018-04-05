@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
+"""
+originally written for CRYSTAL14, but also tested against and extended for CRYSTAL17
+"""
 from fnmatch import fnmatch
 import logging
 import numpy as np
 import warnings
 import math
 from jsonextended import edict
+
 with warnings.catch_warnings(record=True):
     warnings.filterwarnings("ignore", category=ImportWarning)
     import pymatgen as pym
 from ejplugins.utils import codata, split_numbers
+
 try:
     from distutils.util import strtobool
 except ImportError:
     from distutils import strtobool
 
 logger = logging.getLogger(__name__)
-
 
 _ihferm_map = {0: 'closed shell, insulating system',
                1: 'open shell, insulating system',
@@ -65,28 +69,56 @@ class BANDPlugin(object):
                 kend = np.array((j1, j2, j3))
                 segment["kpoints"] = []
                 for i in np.linspace(0, nkpts, nkpts).tolist():
-                    kpoint = kstart + (i/float(nkpts)) * (kend - kstart)
+                    kpoint = kstart + (i / float(nkpts)) * (kend - kstart)
                     segment["kpoints"].append(kpoint.tolist())
 
                 segment["energies_per_band"] = []
                 for energies in allenergies.tolist():
                     segment["energies_per_band"].append({"units": "eV", "magnitude": energies})
 
-                #  segment['kspan'] = kdist * nkpts
+                # segment['kspan'] = kdist * nkpts
 
                 band_segments.append(segment)
             else:
                 line = f.readline().strip()
         return {"segments": band_segments,
-                "creator": {"program": "Crystal14"}}
+                "creator": {"program": "CRYSTAL"}}
 
 
 class DOSSPlugin(object):
     """ doss parser plugin for jsonextended
+
+    Notes
+    -----
+    File Format:
+
+    1ST RECORD : -%-,IHFERM,TYPE,NROW,NCOL,DX,DY,COSXY (format : A3,I1,A4,2I5,1P,(3E12.5))
+    2ND RECORD : X0,Y0 (format : 1P,6E12.5)
+    3RD RECORD : I1,I2,I3,I4,I5,I6 (format : 6I3)
+    4TH RECORD
+    AND FOLLOWING : ((RDAT(I,J),I=1,NROW),J=1,NCOL) (format : 1P,6E12.5)
+
+    Meaning of the variables:
+    1   NROW            1 (DOSS are written one projection at a time)
+        NCOL            number of energy points in which the DOS is calculated
+        DX              energy increment (hartree)
+        DY              not used
+        COSXY           Fermi energy (hartree)
+    2   X0              energy corresponding to the first point
+        Y0              not used
+    3   I1              number of the projection;
+        I2              number of atomic orbitals of the projection;
+        I3,I4,I5,I6     not used
+    4   RO(J),J=1,NCOL  DOS: density of states ro(eps(j)) (atomic units).
+
     """
     plugin_name = 'crystal_doss'
     plugin_descript = 'read CRYSTAL density of states output'
     file_regex = '*.doss.f25'
+
+    def __init__(self):
+        warnings.warn("DOSSPlugin is deprecated in favour of CrystalDOSPlugin", FutureWarning)
+        super(DOSSPlugin, self).__init__()
 
     def read_file(self, f, **kwargs):
         doss_segments = []
@@ -94,37 +126,167 @@ class DOSSPlugin(object):
         line = f.readline().strip()
         while line:
             if line.startswith('-%-'):
-                segment = {}
-                segment['ihferm'] = _ihferm_map[int(line[3])]
-                segment['type'] = line[4:8]
+                projection = {}
+                projection['ihferm'] = _ihferm_map[int(line[3])]
+                projection['type'] = line[4:8]
 
-                nrows, ncols, dummy, denergy, fermi = split_numbers(line[8:])
-                nrows, ncols, segment['denergy'] = (int(nrows), int(ncols),
-                                                    {"units": "eV",
-                                                     "magnitude": float(denergy) * codata[("Hartree", "eV")]})
-                segment['fermi'] = {"units": "eV", "magnitude": float(fermi) * codata[("Hartree", "eV")]}
+                nrows, ncols, _, denergy, fermi = split_numbers(line[8:])
+                nrows, ncols, energy_delta = (int(nrows), int(ncols),
+                                              float(denergy) * codata[("Hartree", "eV")])
+                projection['fermi_energy'] = {"units": "eV", "magnitude": float(fermi) * codata[("Hartree", "eV")]}
+
                 line = f.readline().strip()
-                segment['ienergy'] = {"units": "eV",
-                                      "magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")]}
+                initial_energy = split_numbers(line)[1] * codata[("Hartree", "eV")]
+
                 line = f.readline().strip()
-                segment['iproj'], segment['naos'], dummy, dummy, dummy, dummy = [
-                    int(i) for i in line.split()]
+                projection['projid'], projection['norbitals'], _, _, _, _ = [int(i) for i in line.split()]
                 line = f.readline().strip()
                 dos = []
                 while not line.startswith('-%-') and line:
                     dos += split_numbers(line)
                     line = f.readline().strip()
-                segment['dos'] = np.array(dos)
-                segment['energy'] = {"units": "eV",
-                                     "magnitude": np.linspace(segment['ienergy']["magnitude"],
-                                                              segment['ienergy']["magnitude"]
-                                                              + len(dos) * segment['denergy']["magnitude"],
-                                                              len(dos))}
-                doss_segments.append(segment)
+                projection['dos'] = dos
+                projection['energy'] = {"units": "eV",
+                                        "magnitude": np.linspace(initial_energy,
+                                                                 initial_energy + len(dos) * energy_delta,
+                                                                 len(dos)).tolist()}
+                doss_segments.append(projection)
             else:
                 line = f.readline().strip()
-        return {"segments": doss_segments,
-                "creator": {"program": "Crystal14"}}
+        return {"projections": doss_segments,
+                "creator": {"program": "CRYSTAL"}}
+
+class CrystalDOSPlugin(object):
+    """ doss parser plugin for jsonextended
+
+    Notes
+    -----
+    File Format:
+
+    1ST RECORD : -%-,IHFERM,TYPE,NROW,NCOL,DX,DY,COSXY (format : A3,I1,A4,2I5,1P,(3E12.5))
+    2ND RECORD : X0,Y0 (format : 1P,6E12.5)
+    3RD RECORD : I1,I2,I3,I4,I5,I6 (format : 6I3)
+    4TH RECORD
+    AND FOLLOWING : ((RDAT(I,J),I=1,NROW),J=1,NCOL) (format : 1P,6E12.5)
+
+    Meaning of the variables:
+    1   NROW            1 (DOSS are written one projection at a time)
+        NCOL            number of energy points in which the DOS is calculated
+        DX              energy increment (hartree)
+        DY              not used
+        COSXY           Fermi energy (hartree)
+    2   X0              energy corresponding to the first point
+        Y0              not used
+    3   I1              number of the projection;
+        I2              number of atomic orbitals of the projection;
+        I3,I4,I5,I6     not used
+    4   RO(J),J=1,NCOL  DOS: density of states ro(eps(j)) (atomic units).
+
+    """
+    plugin_name = 'crystal_doss'
+    plugin_descript = 'read CRYSTAL density of states output'
+    file_regex = '*.doss.f25'
+
+    def read_file(self, f, **kwargs):
+
+        system_type = None
+        fermi_energy = None
+        energy_delta = None
+        initial_energy = None
+        len_dos = None
+        alpha_projections = {}
+        beta_projections = {}
+        proj_number = 0
+
+        line = f.readline().strip()
+        while line:
+            if line.startswith('-%-'):
+                proj_number += 1
+
+                if system_type is None:
+                    system_type = line[3]
+                elif not system_type == line[3]:
+                    raise IOError("projection {0} has different system type ({1}) to previous ({2})".format(
+                        proj_number, line[3], system_type
+                    ))
+
+                if not line[4:8] == "DOSS":
+                    raise IOError("projection {0} is not of type DOSS".format(proj_number))
+
+                nrows, ncols, _, denergy, fermi = split_numbers(line[8:])
+                # nrows, ncols = (int(nrows), int(ncols))
+
+                if energy_delta is None:
+                    energy_delta = denergy
+                elif not energy_delta == denergy:
+                    raise IOError("projection {0} has different delta energy ({1}) to previous ({2})".format(
+                        proj_number, denergy, energy_delta
+                    ))
+                if fermi_energy is None:
+                    fermi_energy = fermi
+                elif not fermi_energy == fermi:
+                    raise IOError("projection {0} has different fermi energy ({1}) to previous ({2})".format(
+                        proj_number, fermi, fermi_energy
+                    ))
+
+                line = f.readline().strip()
+                ienergy = split_numbers(line)[1]
+
+                if initial_energy is None:
+                    initial_energy = ienergy
+                elif not initial_energy == ienergy:
+                    raise IOError("projection {0} has different initial energy ({1}) to previous ({2})".format(
+                        proj_number, ienergy, initial_energy
+                    ))
+
+                line = f.readline().strip()
+                projid, norbitals, _, _, _, _ = [int(i) for i in line.split()]
+                line = f.readline().strip()
+                dos = []
+                while not line.startswith('-%-') and line:
+                    dos += split_numbers(line)
+                    line = f.readline().strip()
+
+                if len_dos is None:
+                    len_dos = len(dos)
+                elif not len_dos == len(dos):
+                    raise IOError("projection {0} has different dos value lengths ({1}) to previous ({2})".format(
+                        proj_number, len(dos), len_dos
+                    ))
+
+                if projid not in alpha_projections:
+                    alpha_projections[projid] = {"id": projid, "norbitals": norbitals, "dos": dos}
+                elif projid in beta_projections:
+                    raise IOError("three data sets with same projid ({0}) were found".format(projid))
+                else:
+                    beta_projections[projid] = {"id": projid, "norbitals": norbitals, "dos": dos}
+            else:
+                line = f.readline().strip()
+
+        system_type = _ihferm_map[int(system_type)]
+        fermi_energy = {"units": "eV", "magnitude": float(fermi_energy) * codata[("Hartree", "eV")]}
+
+        energy_delta = float(energy_delta) * codata[("Hartree", "eV")]
+        initial_energy = float(initial_energy) * codata[("Hartree", "eV")]
+        len_dos = int(len_dos)
+        energies = {"units": "eV",
+                    "magnitude": np.linspace(initial_energy, initial_energy + len_dos * energy_delta, len_dos).tolist()}
+
+        total_alpha = None
+        total_beta = None
+        if alpha_projections:
+            total_alpha = alpha_projections.pop(max(alpha_projections.keys()))
+        if beta_projections:
+            total_beta = beta_projections.pop(max(beta_projections.keys()))
+
+        return {"energy": energies,
+                "system_type": system_type,
+                "fermi_energy": fermi_energy,
+                "total_alpha": total_alpha,
+                "total_beta": total_beta,
+                "projections_alpha": list(alpha_projections.values()) if alpha_projections else None,
+                "projections_beta": list(beta_projections.values()) if beta_projections else None,
+                "creator": {"program": "CRYSTAL"}}
 
 
 class ECH3OutPlugin(object):
@@ -172,7 +334,7 @@ class ECH3OutPlugin(object):
                                to_unit_cell=True,
                                coords_are_cartesian=True)
         dct = struct.as_dict()
-        dct["creator"] = {"program": "Crystal14"}
+        dct["creator"] = {"program": "CRYSTAL"}
         return dct
 
 
@@ -220,7 +382,7 @@ class ECH3CubePlugin(object):
             dense = np.array(spin_density).reshape((na, nb, nc))
             dic['spin_density'] = dense
 
-        dic["creator"] = {"program": "Crystal14"}
+        dic["creator"] = {"program": "CRYSTAL"}
         return dic
 
 
@@ -246,12 +408,18 @@ def split_output(lines):
     non_terminating_errors = []
     errors = []
     mpi_abort = False
+    second_opt_line = False
+    telapse_line = False
+    band_gaps = None
+    meta = {}
     for i, line in enumerate(lines):
         if "************************" in line and start_line_no is None:
             start_line_no = i
         elif "WARNING" in line.upper():
             run_warnings.append(line.strip())
         elif "ERROR" in line:
+            errors.append(line.strip())
+        elif "SCF abnormal end" in line:
             errors.append(line.strip())
         elif "MPI_Abort" in line:
             # only record one mpi_abort event (to not clutter output)
@@ -274,16 +442,37 @@ def split_output(lines):
                 raise IOError("found two lines ending scf ('SCF ENDED') in initial data:"
                               " {0} and {1}".format(scf_init_end_no, i))
             scf_init_end_no = i
-        elif "STARTING GEOMETRY OPTIMIZATION" in line:
+        #elif "STARTING GEOMETRY OPTIMIZATION" in line: #not the same in CRYSTAL17
+        elif "OPTOPTOPTOPT" in line:
             if opt_start_no is not None:
-                raise IOError("found two lines starting opt ('STARTING GEOMETRY OPTIMIZATION'):"
-                              " {0} and {1}".format(opt_start_no, i))
+                if second_opt_line:
+                    raise IOError("found two lines starting opt ('STARTING GEOMETRY OPTIMIZATION'):"
+                                  " {0} and {1}".format(opt_start_no, i))
+                else:
+                    second_opt_line = True
             opt_start_no = i
         elif "OPT END -" in line:
             if opt_end_no is not None:
                 raise IOError("found two lines ending opt ('OPT END -'):"
                               " {0} and {1}".format(opt_end_no, i))
             opt_end_no = i
+        elif opt_end_no and "BAND GAP" in line:
+            # NB: this is new for CRYSTAL17
+            band_gaps = {} if band_gaps is None else band_gaps
+            if fnmatch(line.strip(), "ALPHA BAND GAP:*eV"):
+                bgvalue = split_numbers(line)[0]
+                bgtype = "alpha"
+            elif fnmatch(line.strip(), "BETA BAND GAP:*eV"):
+                bgvalue = split_numbers(line)[0]
+                bgtype = "beta"
+            elif fnmatch(line.strip(), "BAND GAP:*eV"):
+                bgvalue = split_numbers(line)[0]
+                bgtype = "all"
+            else:
+                raise IOError("found a band gap of unknown format at line {0}: {1}".format(i, line))
+            if bgtype in band_gaps:
+                raise IOError("band gap data already contains {0} value before line {1}: {2}".format(bgtype, i, line))
+            band_gaps[bgtype] = {"magnitude": bgvalue, "units": "eV"}
         elif "CONVERGENCE TESTS UNSATISFIED" in line.upper():
             non_terminating_errors.append(line.strip())
         elif line.strip().startswith("MULLIKEN POPULATION ANALYSIS"):
@@ -297,10 +486,18 @@ def split_output(lines):
                 raise IOError("found two lines starting final opt geometry ('FINAL OPTIMIZED GEOMETRY'):"
                               " {0} and {1}".format(final_opt, i))
             final_opt = i
+        elif "TELAPSE" in line:
+            telapse_line = i
+
+    if telapse_line:
+        total_seconds = int(split_numbers(lines[telapse_line].split("TELAPSE")[1])[0])
+        m, s = divmod(total_seconds, 60)
+        h, m = divmod(m, 60)
+        meta["elapsed_time"] = "%d:%02d:%02d" % (h, m, s)
 
     if errors:
         return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
-                mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors)
+                mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors, meta, band_gaps)
 
     if start_line_no is None:
         raise IOError("couldn't find start of program run (denoted *****)")
@@ -316,10 +513,10 @@ def split_output(lines):
         raise IOError("found end of optimisation but not start")
 
     return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
-            mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors)
+            mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors, meta, band_gaps)
 
 
-def read_meta(lines):
+def read_before_run(lines):
     """ read metadata output in the file before the actual program start
 
     Parameters
@@ -335,8 +532,9 @@ def read_meta(lines):
         line = line.strip()
         if fnmatch(line, "date:*"):
             meta["date"] = line.replace("date:", "").strip()
+        #TODO fo this better; perhaps "16 PROCESSORS WORKING" just above start of run
         if fnmatch(line, "resources_used.ncpus =*"):
-            meta["cpus"] = int(line.replace("resources_used.ncpus =", ""))
+            meta["nprocs"] = int(line.replace("resources_used.ncpus =", ""))
     return meta
 
 
@@ -383,6 +581,10 @@ def get_geometry(dct, i, line, lines, startline=0):
                     periodic = [True, False, False]
                 elif fnmatch(lines[i + 1].strip(), "ATOM*X(ANGSTROM)*Y(ANGSTROM)*Z(ANGSTROM)*"):
                     periodic = [False, False, False]
+                    cell_params = dict(zip(['a', 'b', 'c', 'alpha', 'beta', 'gamma'],
+                                           [{"units": "angstrom" if i < 3 else "degrees",
+                                             "magnitude": p} for i, p in enumerate([500., 500., 500., 90., 90., 90.])]))
+                    dct[field] = edict.merge([dct.get(field, {}), {"cell_parameters":  cell_params}])
                 else:
                     raise IOError("was expecting ATOM X Y Z (in units of ANGSTROM or fractional) on line:"
                                   " {0}, got: {1}".format(startline + i + 1, lines[i + 1]))
@@ -406,7 +608,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                 if all(periodic):
                     atom_data['fcoords'].append([float(fields[4]), float(fields[5]), float(fields[6])])
                 elif periodic == [True, True, False] and alpha == 90 and beta == 90:
-                    atom_data['fcoords'].append([float(fields[4]), float(fields[5]), float(fields[6])/c])
+                    atom_data['fcoords'].append([float(fields[4]), float(fields[5]), float(fields[6]) / c])
                 # TODO other periodic types (1D, 0D)
                 nextindx += 1
 
@@ -414,6 +616,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                 atom_data.pop("fcoords")
             dct[field] = edict.merge([dct.get(field, {}), atom_data])
 
+    #TODO These ccoords DON'T work with lattice parameters (at least for final run)
     if fnmatch(line, "CARTESIAN COORDINATES - PRIMITIVE CELL*"):
         if not fnmatch(lines[i + 2].strip(), "*ATOM*X(ANGSTROM)*Y(ANGSTROM)*Z(ANGSTROM)"):
             raise IOError("was expecting ATOM X(ANGSTROM) Y(ANGSTROM) Z(ANGSTROM) on line:"
@@ -425,7 +628,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                      'symbols': [],
                      "ccoords": {"units": "angstrom", "magnitude": []}
                      }
-        while lines[nextindx].strip():
+        while lines[nextindx].strip() and not lines[nextindx][0].isalpha():
             fields = lines[nextindx].strip().split()
             atom_data['ids'].append(fields[0])
             atom_data['atomic_numbers'].append(int(fields[1]))
@@ -470,8 +673,8 @@ def read_init(lines, startline):
         line = line.strip()
         if line.startswith("TYPE OF CALCULATION :"):
             init["calculation"]["type"] = line.replace("TYPE OF CALCULATION :", "").strip().lower()
-            if "HAMILTONIAN" in lines[i+1]:
-                init["calculation"]["hamiltonian"] = lines[i+1].replace("HAMILTONIAN", "").strip().lower()
+            if "HAMILTONIAN" in lines[i + 1]:
+                init["calculation"]["hamiltonian"] = lines[i + 1].replace("HAMILTONIAN", "").strip().lower()
         if "SPIN POLARIZ" in line:
             init["calculation"]["spin"] = True
 
@@ -623,7 +826,7 @@ def read_opt(lines, startline):
             scf_start_no = i
         elif "SCF ENDED" in line:
             if "CONVERGE" not in line:
-                pass#errors.append(line.strip())
+                pass  # errors.append(line.strip())
             opt_cyc["scf"] = read_scf(lines[scf_start_no + 1:i + 1], startline + i + 1)
 
         get_geometry(opt_cyc, i, line, lines, startline)
@@ -635,7 +838,7 @@ def read_opt(lines, startline):
                               " {0}, got: {1}".format(startline + i, line))
             opt_cyc["energy"] = opt_cyc.get("energy", {})
             opt_cyc["energy"]["total_corrected"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
-                                          "units": "eV"}
+                                                    "units": "eV"}
 
         for param in ["MAX GRADIENT", "RMS GRADIENT", "MAX DISPLAC", "RMS DISPLAC"]:
             if fnmatch(line, "{}*CONVERGED*".format(param)):
@@ -684,26 +887,26 @@ def read_mulliken(lines, mulliken_indices):
     mulliken = {}
 
     for i, indx in enumerate(mulliken_indices):
-        name = lines[indx-1].strip().lower()
+        name = lines[indx - 1].strip().lower()
         if not (name == "ALPHA+BETA ELECTRONS".lower() or name == "ALPHA-BETA ELECTRONS".lower()):
             raise IOError("was expecting mulliken to be alpha+beta or alpha-beta on line:"
-                          " {0}, got: {1}".format(indx-1, lines[indx-1]))
+                          " {0}, got: {1}".format(indx - 1, lines[indx - 1]))
 
         mulliken[name.replace(" ", "_")] = {"ids": [], "symbols": [], "atomic_numbers": [], "charges": []}
 
-        if len(mulliken_indices) > i+1:
-            searchlines = lines[indx + 1:mulliken_indices[i+1]]
+        if len(mulliken_indices) > i + 1:
+            searchlines = lines[indx + 1:mulliken_indices[i + 1]]
         else:
             searchlines = lines[indx + 1:]
         charge_line = None
         for j, line in enumerate(searchlines):
             if fnmatch(line.strip(), "*ATOM*Z*CHARGE*SHELL*POPULATION*"):
-                charge_line = j+2
+                charge_line = j + 2
                 break
         if charge_line is None:
             continue
 
-        while searchlines[charge_line].strip():
+        while searchlines[charge_line].strip() and not searchlines[charge_line].strip()[0].isalpha():
             fields = searchlines[charge_line].strip().split()
             # shell population can wrap multiple lines, the one we want has the label in it
             if len(fields) != len(split_numbers(searchlines[charge_line])):
@@ -730,8 +933,8 @@ class CrystalOutputPlugin(object):
 
         lines = file.read().splitlines()
 
-        (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
-         mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors) = split_output(lines)
+        (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no, mulliken_starts, final_opt,
+         run_warnings, non_terminating_errors, errors, meta, band_gaps) = split_output(lines)
 
         if run_warnings:
             logger.warning("the following warnings were noted:\n  {}".format("\n  ".join(run_warnings)))
@@ -755,29 +958,29 @@ class CrystalOutputPlugin(object):
                 initial["scf"] = read_scf(lines[scf_init_start_no + 1:scf_init_end_no + 1], scf_init_start_no + 1)
                 if opt_start_no is not None:
                     initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:opt_start_no],
-                                                        scf_init_start_no + 1)])
+                                                                  scf_init_start_no + 1)])
                 elif final_opt is not None:
                     initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:final_opt],
-                                                        scf_init_start_no + 1)])
+                                                                  scf_init_start_no + 1)])
                 elif mulliken_starts is not None:
                     initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:mulliken_starts[0]],
-                                                        scf_init_start_no + 1)])
+                                                                  scf_init_start_no + 1)])
                 else:
                     initial = edict.merge([initial, read_post_scf(lines[scf_init_end_no + 1:], scf_init_start_no + 1)])
 
         # if errors:
         #     return {"warnings": run_warnings,
         #             "errors": errors_all,
-        #             "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
+        #             "meta": None if start_line_no is None else read_before_run(lines[:start_line_no]),
         #             "initial": initial,
         #             "creator": {"program": "Crystal14"}
         #             }
 
         output = {"warnings": run_warnings,
                   "errors": errors_all,
-                  "meta": None if start_line_no is None else read_meta(lines[:start_line_no]),
+                  "meta": meta if start_line_no is None else edict.merge([meta, read_before_run(lines[:start_line_no])]),
                   "initial": initial,
-                  "creator": {"program": "Crystal14"}
+                  "creator": {"program": "CRYSTAL"}
                   }
 
         if opt_start_no is not None and opt_end_no is not None:
@@ -800,7 +1003,10 @@ class CrystalOutputPlugin(object):
             else:
                 output["final"] = read_final(lines[final_opt:], final_opt)
         else:
-            output["final"] = None
+            output["final"] = {}
+        if band_gaps is not None:
+            output["final"]["band_gaps"] = band_gaps
+        output["final"] = output["final"] if output["final"] else None
 
         if mulliken_starts is not None:
             if errors:
@@ -810,7 +1016,6 @@ class CrystalOutputPlugin(object):
                     pass
             else:
                 output["mulliken"] = read_mulliken(lines, mulliken_starts)
-
 
         return output
 
@@ -842,4 +1047,3 @@ class CrystalSCFLogPlugin(object):
                 scf_start_no = None
 
         return {"optimisation": opt}
-

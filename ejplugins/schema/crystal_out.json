@@ -17,14 +17,13 @@
         "date": {
           "type": "string"
         },
-        "cpus": {
+        "elapsed_time": {
+          "type": "string"
+        },
+        "nprocs": {
           "type": "integer"
         }
-      },
-      "required": [
-        "cpus",
-        "date"
-      ]
+      }
     },
     "initial": {
       "type": "object",

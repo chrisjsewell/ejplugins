@@ -5,7 +5,8 @@
   "errors": [],
   "meta": {
     "date": "Sat 16 Sep 01:37:18 BST 2017",
-    "cpus": 16
+    "nprocs": 16,
+    "elapsed_time": "0:18:54"
   },
   "initial": {
     "calculation": {
@@ -6861,6 +6862,6 @@
     }
   },
   "creator": {
-    "program": "Crystal14"
+    "program": "CRYSTAL"
   }
 }

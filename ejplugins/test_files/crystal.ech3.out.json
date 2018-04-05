@@ -1,6 +1,6 @@
 {
   "creator": {
-    "program": "Crystal14"
+    "program": "CRYSTAL"
   },
   "@module": "pymatgen.core.structure",
   "@class": "Structure",

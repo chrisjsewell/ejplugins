@@ -3,7 +3,8 @@
   "errors": [],
   "meta": {
     "date": "Tue  5 Sep 20:53:50 BST 2017",
-    "cpus": 16
+    "nprocs": 16,
+    "elapsed_time": "0:00:04"
   },
   "initial": {
     "calculation": {
@@ -465,7 +466,7 @@
         "units": "eV"}}
   },
   "creator": {
-    "program": "Crystal14"
+    "program": "CRYSTAL"
   },
   "optimisation": null,
   "final": null,

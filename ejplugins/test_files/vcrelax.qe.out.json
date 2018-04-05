@@ -1,6 +1,10 @@
 {
+  "meta": {
+    "elapsed_time": "0:04:37",
+    "nprocs": 16
+  },
   "warnings": null,
-  "errors": null,
+  "errors": [],
   "initial": {
     "ids": [
       1

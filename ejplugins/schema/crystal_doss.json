@@ -1,0 +1,162 @@
+{
+  "type": "object",
+  "properties": {
+    "energy": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string"
+        },
+        "magnitude": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "magnitude",
+        "units"
+      ]
+    },
+    "system_type": {
+      "type": "string"
+    },
+    "fermi_energy": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string"
+        },
+        "magnitude": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "magnitude",
+        "units"
+      ]
+    },
+    "total_alpha": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "norbitals": {
+          "type": "integer"
+        },
+        "dos": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "dos",
+        "id",
+        "norbitals"
+      ]
+    },
+    "total_beta": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "norbitals": {
+          "type": "integer"
+        },
+        "dos": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "dos",
+        "id",
+        "norbitals"
+      ]
+    },
+    "projections_alpha": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "norbitals": {
+            "type": "integer"
+          },
+          "dos": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "dos",
+          "id",
+          "norbitals"
+        ]
+      }
+    },
+    "projections_beta": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "norbitals": {
+            "type": "integer"
+          },
+          "dos": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "dos",
+          "id",
+          "norbitals"
+        ]
+      }
+    },
+    "creator": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "program"
+      ]
+    }
+  },
+  "required": [
+    "creator",
+    "energy",
+    "fermi_energy",
+    "projections_alpha",
+    "projections_beta",
+    "system_type",
+    "total_alpha",
+    "total_beta"
+  ]
+}
