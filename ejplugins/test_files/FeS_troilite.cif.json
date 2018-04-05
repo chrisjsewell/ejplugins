@@ -112,6 +112,7 @@
     {
       "@module": "pymatgen.core.structure",
       "@class": "Structure",
+      "charge": null,
       "lattice": {
         "matrix": [
           [
