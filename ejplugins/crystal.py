@@ -451,6 +451,14 @@ def split_output(lines):
                 else:
                     second_opt_line = True
             opt_start_no = i
+        elif "CONVERGENCE ON GRADIENTS SATISFIED AFTER THE FIRST OPTIMIZATION CYCLE" in line:
+            if opt_start_no is not None:
+                if second_opt_line:
+                    raise IOError("found two lines starting opt ('STARTING GEOMETRY OPTIMIZATION'):"
+                                  " {0} and {1}".format(opt_start_no, i))
+                else:
+                    second_opt_line = True
+            opt_start_no = i
         elif "OPT END -" in line:
             if opt_end_no is not None:
                 raise IOError("found two lines ending opt ('OPT END -'):"
@@ -599,7 +607,7 @@ def get_geometry(dct, i, line, lines, startline=0):
             nextindx = i + 3
             atom_data = {'ids': [], 'assymetric': [], 'atomic_numbers': [], 'symbols': [], "fcoords": []}
             atom_data["pbc"] = periodic
-            while lines[nextindx].strip():
+            while lines[nextindx].strip() and not lines[nextindx].strip()[0].isalpha():
                 fields = lines[nextindx].strip().split()
                 atom_data['ids'].append(fields[0])
                 atom_data['assymetric'].append(bool(strtobool(fields[1])))
@@ -628,7 +636,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                      'symbols': [],
                      "ccoords": {"units": "angstrom", "magnitude": []}
                      }
-        while lines[nextindx].strip() and not lines[nextindx][0].isalpha():
+        while lines[nextindx].strip() and not lines[nextindx].strip()[0].isalpha():
             fields = lines[nextindx].strip().split()
             atom_data['ids'].append(fields[0])
             atom_data['atomic_numbers'].append(int(fields[1]))
@@ -802,6 +810,15 @@ def read_opt(lines, startline):
     -------
 
     """
+    if "CONVERGENCE ON GRADIENTS SATISFIED AFTER THE FIRST OPTIMIZATION CYCLE" in lines[0]:
+        if "OPT END -" not in lines[-1]:
+            raise IOError("expecting OPT END in line {0}: {1}".format(startline+len(lines), lines[-1]))
+        if not fnmatch(lines[-1], "*E(AU)*"):
+            raise IOError("was expecting units in a.u. on line:"
+                          " {0}, got: {1}".format(startline + len(lines), lines[-1]))
+        return [{"energy": {"total_corrected": {"magnitude": split_numbers(lines[-1])[0] * codata[("Hartree", "eV")],
+                                                "units": "eV"}}}]
+
     opt = []
     opt_cyc = None
     scf_start_no = None
@@ -929,14 +946,14 @@ class CrystalOutputPlugin(object):
     plugin_descript = 'read main crystal output file'
     file_regex = '*crystal.out'
 
-    def read_file(self, file, *args, **kwargs):
+    def read_file(self, file, log_warnings=True, **kwargs):
 
         lines = file.read().splitlines()
 
         (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no, mulliken_starts, final_opt,
          run_warnings, non_terminating_errors, errors, meta, band_gaps) = split_output(lines)
 
-        if run_warnings:
+        if run_warnings and log_warnings:
             logger.warning("the following warnings were noted:\n  {}".format("\n  ".join(run_warnings)))
 
         errors_all = errors + non_terminating_errors
