@@ -2,3 +2,4 @@ jsonextended>=0.6.4
 jsonschema
 pymatgen
 ase
+pint # just for gcube.ejdict_to_gcube
