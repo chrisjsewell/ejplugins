@@ -1,55 +1,49 @@
 {
-  "creator": {
-    "program": "CRYSTAL"
-  },
-  "@module": "pymatgen.core.structure",
-  "@class": "Structure",
-  "charge": null,
-  "lattice": {
-    "matrix": [
-      [
+  "cell_vectors": {
+    "a": {
+      "units": "angstrom",
+      "magnitude": [
         -1.39633,
         1.39633,
         1.39633
-      ],
-      [
+      ]
+    },
+    "b": {
+      "units": "angstrom",
+      "magnitude": [
         1.39633,
         -1.39633,
         1.39633
-      ],
-      [
+      ]
+    },
+    "c": {
+      "units": "angstrom",
+      "magnitude": [
         1.39633,
         1.39633,
         -1.39633
       ]
-    ],
-    "a": 2.4185145041326503,
-    "b": 2.4185145041326503,
-    "c": 2.4185145041326503,
-    "alpha": 109.47122063449069,
-    "beta": 109.47122063449069,
-    "gamma": 109.47122063449069,
-    "volume": 10.88990767979655
-  },
-  "sites": [
-    {
-      "species": [
-        {
-          "element": "Fe",
-          "occu": 1
-        }
-      ],
-      "abc": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "xyz": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "label": "Fe"
     }
-  ]
+  },
+  "atoms": {
+    "ccoords": {
+      "units": "angstrom",
+      "magnitude": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "nuclear_charge": [
+      26.0
+    ],
+    "atomic_number": [
+      26
+    ]
+  },
+  "creator": {
+    "program": "CRYSTAL"
+  }
 }

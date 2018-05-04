@@ -156,6 +156,7 @@ class DOSSPlugin(object):
         return {"projections": doss_segments,
                 "creator": {"program": "CRYSTAL"}}
 
+
 class CrystalDOSPlugin(object):
     """ doss parser plugin for jsonextended
 
@@ -310,59 +311,66 @@ class ECH3OutPlugin(object):
     2   14 SI    4    -0.677    -0.678    -0.677   1.233E-01      14.000
  *******************************************************************************
         """
-        sites, coords = [], []
+        sites, coords, nelect = [], [], []
         line = file_obj.readline()
         while line:
             if line.strip().startswith('DIRECT LATTICE VECTOR COMPONENTS'):
-                a = np.array(file_obj.readline().strip().split(), dtype=float)
-                b = np.array(file_obj.readline().strip().split(), dtype=float)
-                c = np.array(file_obj.readline().strip().split(), dtype=float)
+                avec = np.array(file_obj.readline().strip().split(), dtype=float)
+                bvec = np.array(file_obj.readline().strip().split(), dtype=float)
+                cvec = np.array(file_obj.readline().strip().split(), dtype=float)
             if line.strip().startswith('ATOM N.AT.'):
                 line = file_obj.readline()
                 line = file_obj.readline()
                 while not line.strip().startswith('***'):
                     atom = line.strip().split()
                     sites.append(int(atom[1]))
+                    nelect.append(float(atom[8]))
                     coords.append(np.array(atom[4:7], dtype=float))
                     line = file_obj.readline()
             line = file_obj.readline()
 
-        # TODO add units adn don't use pymatgen, to remove dependancy (can use it in post processing)
-
-        lattice = pym.Lattice([a, b, c])
+        lattice = pym.Lattice([avec, bvec, cvec])
         struct = pym.Structure(lattice, sites, coords,
                                to_unit_cell=True,
-                               coords_are_cartesian=True)
-        dct = struct.as_dict()
-        dct["creator"] = {"program": "CRYSTAL"}
-        return dct
+                               coords_are_cartesian=True,
+                               site_properties={"nelect": nelect})
+
+        return {
+            "cell_vectors": {
+                "a": {"units": "angstrom", "magnitude": avec.tolist()},
+                "b": {"units": "angstrom", "magnitude": bvec.tolist()},
+                "c": {"units": "angstrom", "magnitude": cvec.tolist()}
+            },
+            "atoms": {"ccoords": {"units": "angstrom",
+                                  "magnitude": (struct.cart_coords * codata[("Bohr", "Angstrom")]).tolist()},
+                      "nuclear_charge": struct.site_properties["nelect"],
+                      "atomic_number": struct.atomic_numbers
+                      },
+            "creator": {"program": "CRYSTAL"}
+        }
 
 
 class ECH3CubePlugin(object):
     """ parser plugin for jsonextended
     """
     plugin_name = 'crystal_ech3_cube'
-    plugin_descript = 'read CRYSTAL14 charge density cube data'
+    plugin_descript = 'read CRYSTAL charge density cube data'
     file_regex = '*ech3_dat.prop3d'
 
     def read_file(self, f, **kwargs):
-        dic = {}
 
         na, nb, nc = [int(i) for i in f.readline().strip().split()]
-        dic['na'], dic['nb'], dic['nc'] = na, nb, nc
         origin = [float(i) for i in f.readline().strip().split()]
         da_vec = np.array([float(i) for i in f.readline().strip().split()])
         db_vec = np.array([float(i) for i in f.readline().strip().split()])
         dc_vec = np.array([float(i) for i in f.readline().strip().split()])
         # TODO na - 1 seems to work, but is it right?
-        dic["cell_vectors"] = {"a": {"magnitude": (da_vec * (na - 1) * codata[("Bohr", "Angstrom")]).tolist(),
-                                     "units": "angstrom"},
-                               "b": {"magnitude": (db_vec * (nb - 1) * codata[("Bohr", "Angstrom")]).tolist(),
-                                     "units": "angstrom"},
-                               "c": {"magnitude": (dc_vec * (nc - 1) * codata[("Bohr", "Angstrom")]).tolist(),
-                                     "units": "angstrom"}
-                               }
+        avec = (da_vec * (na - 1) * codata[("Bohr", "Angstrom")]).tolist()
+        bvec = (db_vec * (nb - 1) * codata[("Bohr", "Angstrom")]).tolist()
+        cvec = (dc_vec * (nc - 1) * codata[("Bohr", "Angstrom")]).tolist()
+
         name = f.readline().strip()
+        densities = []
         assert name == 'Charge density'
         charge_density = []
         line = f.readline().strip().split()
@@ -371,19 +379,40 @@ class ECH3CubePlugin(object):
                 break
             charge_density += [float(s) for s in line]
             line = f.readline().strip().split()
-        dense = np.array(charge_density).reshape((na, nb, nc))
-        dic['charge_density'] = dense
+        cdense = np.array(charge_density).reshape((nc, nb, na))
+        densities.append({
+            "type": "charge",
+            "magnitude": cdense
+        })
         spin_density = []
         line = f.readline().strip().split()
         while line:
             spin_density += [float(s) for s in line]
             line = f.readline().strip().split()
         if spin_density:
-            dense = np.array(spin_density).reshape((na, nb, nc))
-            dic['spin_density'] = dense
+            sdense = np.array(spin_density).reshape((nc, nb, na))
+            densities.append({
+                "type": "spin",
+                "magnitude": sdense
+            })
 
-        dic["creator"] = {"program": "CRYSTAL"}
-        return dic
+        return {
+            "title": "CRYSTAL",
+            "na": na, "nb": nb, "nc": nc,
+            "cell_vectors": {
+                "a": {"units": "angstrom", "magnitude": avec},
+                "b": {"units": "angstrom", "magnitude": bvec},
+                "c": {"units": "angstrom", "magnitude": cvec}
+            },
+            #"centre": [0, 0, 0],
+            "densities": densities,
+            # "atoms": {"ccoords": {"units": "angstrom",
+            #                       "magnitude": ccoords},
+            #           #"nuclear_charge": nuclear_charges,
+            #           "nuclear_charge": valence_charges,
+            #           "symbols": symbols, "atomic_number": atomic_numbers},
+            "creator": {"program": "CRYSTAL"}
+        }
 
 
 def split_output(lines):

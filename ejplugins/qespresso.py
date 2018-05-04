@@ -15,8 +15,9 @@ import warnings
 
 import numpy as np
 from jsonextended import edict
+from ase import Atoms
 
-from ejplugins.utils import codata, split_numbers
+from ejplugins.utils import codata, split_numbers, symbol2anum
 
 
 def raise_error(msg, line, i, start_line):
@@ -861,14 +862,12 @@ class QEChargeDensityPlugin(object):
     file_regex = '*.qe.charge'
 
     def read_file(self, f, **kwargs):
-        dic = {}
-        f.readline() # first line blank
+        comment = f.readline().strip() # first line blank
         line = f.readline().strip()
         try:
             na, nb, nc, _, _, _, natoms, ntyp  = [int(i) for i in line.split()]
         except:
             raise IOError("file format incorrect, expected 8 fields; na, nb, nc, _, _, _, natoms, ntyp: {0}".format(line))
-        dic['na'], dic['nb'], dic['nc'] = na, nb, nc
 
         line = f.readline().strip()
         try:
@@ -880,74 +879,96 @@ class QEChargeDensityPlugin(object):
         except:
             raise IOError("file format incorrect, expected ibrav, a, b, c, alpha, beta, gamma: {0}".format(line))
 
-        cell = {}
         if bravais_lattice_index == 0: # free
-            for key in ["a", "b", "c"]:
-                line = f.readline().strip()
                 try:
-                    x, y, z = [float(i) for i in line.split()]
-                    cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
+                    line = f.readline().strip()
+                    avec = [float(i)*alat for i in line.split()]
+                    line = f.readline().strip()
+                    bvec = [float(i)*alat for i in line.split()]
+                    line = f.readline().strip()
+                    cvec = [float(i)*alat for i in line.split()]
                 except:
                     raise IOError("file format incorrect, expected fields; x, y, z: {0}".format(line))
         elif bravais_lattice_index == 1:  # cubic P (sc)
-            cell["a"] = {"units": "angstrom", "magnitude": (alat, 0., 0.)}
-            cell["b"] = {"units": "angstrom", "magnitude": (0., alat, 0.)}
-            cell["c"] = {"units": "angstrom", "magnitude": (0., 0., alat)}
+            avec = (alat, 0., 0.)
+            bvec = (0., alat, 0.)
+            cvec = (0., 0., alat)
         elif bravais_lattice_index == 2:  # cubic F (fcc)
-            cell["a"] = {"units": "angstrom", "magnitude": (-alat/2., 0., alat/2)}
-            cell["b"] = {"units": "angstrom", "magnitude": (0., alat/2., alat/2.)}
-            cell["c"] = {"units": "angstrom", "magnitude": (-alat/2., alat/2., 0.)}
-        # elif bravais_lattice_index == 3:  # cubic I (bcc)
-        #     cell["a"] = {"units": "angstrom", "magnitude": (alat / 2., alat / 2., alat / 2)}
-        #     cell["b"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
-        #     cell["c"] = {"units": "angstrom", "magnitude": (-alat / 2., -alat / 2., alat / 2)}
-        # TODO stated as ibrav=-3 in v6.2 manual, but visually gives a correct answer(ish) answer for scf.qe.charge
-        # (although Fe BCC density appears stretched along some vectors, which isn't the case with Crystal)
+            avec = (-alat/2., 0., alat/2)
+            bvec = (0., alat/2., alat/2.)
+            cvec = (-alat/2., alat/2., 0.)
         elif bravais_lattice_index == 3:  # cubic I (bcc)
-            cell["a"] = {"units": "angstrom", "magnitude": (-alat / 2., alat / 2., alat / 2)}
-            cell["b"] = {"units": "angstrom", "magnitude": (alat / 2., -alat / 2., alat / 2)}
-            cell["c"] = {"units": "angstrom", "magnitude": (alat / 2.,  alat / 2., -alat / 2)}
+            avec = (alat / 2., alat / 2., alat / 2)
+            bvec = (-alat / 2., alat / 2., alat / 2)
+            cvec = (-alat / 2., -alat / 2., alat / 2)
+        elif bravais_lattice_index == -3:  # cubic I (bcc), more symmetric axis
+            avec = (-alat / 2., alat / 2., alat / 2)
+            bvec = (alat / 2., -alat / 2., alat / 2)
+            cvec = (alat / 2.,  alat / 2., -alat / 2)
         else:
             # TODO implemented ibrav > 3
             raise NotImplementedError("haven't yet implemented ibrav > 3")
 
-        dic["cell_vectors"] = cell
-
-        f.readline() # TODO find out what numbers in this line are (third is Ecutoff?)
+        f.readline() # TODO find out what numbers in this line are (third is Ecutoff, fourth is plotnum?)
 
         typ_lookup = {}
         for _ in range(ntyp):
             line = f.readline().strip()
             try:
                 i, symbol, valence_electrons = line.split()
-                typ_lookup[i] = symbol
             except:
                 raise IOError("file format incorrect, expected fields; i, symbol, valence_electrons: {0}".format(line))
+            symbol = "".join([s for s in symbol if s.isalpha()])
+            atomic_number = symbol2anum(symbol)
+            typ_lookup[i] = (symbol, atomic_number, float(valence_electrons))
 
         ccoords = []
         symbols = []
+        atomic_numbers = []
+        valence_charges = []
         for _ in range(natoms):
             line = f.readline().strip()
             try:
                 i, a, b, c, atyp = line.split()
-                ccoords.append([float(a)*alat, float(b)*alat, float(c)*alat])
-                symbols.append(typ_lookup[atyp])
+                ccoord = np.array([a, b, c], dtype=float) * alat
+                ccoords.append(ccoord.tolist())
+                symbols.append(typ_lookup[atyp][0])
+                atomic_numbers.append(typ_lookup[atyp][1])
+                valence_charges.append(typ_lookup[atyp][2])
             except:
                 raise IOError("file format incorrect, expected fields; i, a, b, c, atyp: {0}".format(line))
 
-        dic["ccoords"] = ccoords
-        dic["symbols"] = symbols
+        atoms = Atoms(symbols=symbols, positions=ccoords, cell=[avec, bvec, cvec], pbc=[True, True, True])
+        atoms.wrap()
+        ccoords = atoms.positions.tolist()
 
         charge_density = []
         line = f.readline().strip().split()
         while line:
-            charge_density += [float(s) for s in line]
+            charge_density += line
             line = f.readline().strip().split()
-        dense = np.array(charge_density).reshape((na, nb, nc))
-        dic['charge_density'] = dense
+        dense = np.array(charge_density, dtype=float).reshape((nc, nb, na))#.transpose()
 
-        dic["creator"] = {"program": "Quantum Espresso"}
-        return dic
+        return {
+            "title": "Quantum Espresso " + comment,
+            "na": na, "nb": nb, "nc": nc,
+            "cell_vectors": {
+                "a": {"units": "angstrom", "magnitude": avec},
+                "b": {"units": "angstrom", "magnitude": bvec},
+                "c": {"units": "angstrom", "magnitude": cvec}
+            },
+            #"centre": [0, 0, 0],
+            "densities": [{
+                "type": "charge",
+                "magnitude": dense
+            }],
+            "atoms": {"ccoords": {"units": "angstrom",
+                                  "magnitude": ccoords},
+                      #"nuclear_charge": nuclear_charges,
+                      "nuclear_charge": valence_charges,
+                      "symbols": symbols, "atomic_number": atomic_numbers},
+            "creator": {"program": "Quantum Espresso"}
+        }
 
 
 class QELowdinPlugin(object):
