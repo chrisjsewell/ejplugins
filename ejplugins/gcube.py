@@ -1,6 +1,6 @@
 import numpy as np
-from jsonextended import units, mockpath
-from ejplugins.utils import split_numbers, codata
+from jsonextended import units, mockpath, edict
+from ejplugins.utils import split_numbers, codata, validate_against_schema
 
 try:
     import pathlib
@@ -61,7 +61,7 @@ class GaussianCube(object):
 
         return {
             "title": comments1,
-            "na": int(an), "nb": int(bn), "nc": int(cn),
+            #"na": int(an), "nb": int(bn), "nc": int(cn),
             "cell_vectors": {
                 "a": {"units": "angstrom", "magnitude": avec},
                 "b": {"units": "angstrom", "magnitude": bvec},
@@ -70,7 +70,7 @@ class GaussianCube(object):
             #"centre": [0, 0, 0],
             "densities": [{
                 "type": comments2,
-                "magnitude": np.transpose(np.array(values, dtype=float).reshape((int(an), int(bn), int(cn))))
+                "magnitude": np.array(values, dtype=float).reshape((int(an), int(bn), int(cn)))
             }],
             "atoms": {"ccoords": {"units": "angstrom",
                                   "magnitude": ccoords},
@@ -79,7 +79,8 @@ class GaussianCube(object):
         }
 
 
-def ejdict_to_gcube(data, fpath=None, density=0):
+def ejdict_to_gcube(data, fpath=None, density=0,
+                    include_atoms=True, adata=None, cell_tol=1E-3):
     """
 
     Parameters
@@ -89,12 +90,28 @@ def ejdict_to_gcube(data, fpath=None, density=0):
         output file path or, if None, write to MockPath
     density: int
         take density from data["densities"][density]
+    include_atoms: bool
+        include atoms in gaussian cube
+    adata: dict or None
+        separate atom data (for instance for Crystal output)
+    cell_tol: float or None
+        if not None, raise and error if the data and adata cell vectors are not within this tolerance
 
     Returns
     -------
     fpath: pathlib.Path or jsonextended.mockpath.MockPath
 
     """
+    if include_atoms and adata is not None:
+        if cell_tol:
+            cdiff = edict.diff(data["cell_vectors"], adata["cell_vectors"],
+                               np_allclose=True, rtol=cell_tol, atol=cell_tol)
+            if cdiff:
+                raise ValueError("data and adata have different cell vectors: {}".format(cdiff))
+        data["atoms"] = adata["atoms"]
+
+    validate_against_schema(data, "edensity")
+
     if fpath is None:
         fpath = mockpath.MockPath("test.cube", is_file=True)
     else:
@@ -104,7 +121,7 @@ def ejdict_to_gcube(data, fpath=None, density=0):
         data = units.combine_quantities(data)
         data = units.apply_unitschema(data, {"a": "angstrom", "b": "angstrom", "c": "angstrom", "ccoords": "angstrom"},
                                       as_quantity=False)
-        natoms = 0 if "atoms" not in data else len(data["atoms"]["ccoords"])
+        natoms = 0 if "atoms" not in data or not include_atoms else len(data["atoms"]["ccoords"])
 
         avec = np.asarray(data["cell_vectors"]["a"]) / codata[("Bohr", "Angstrom")]
         bvec = np.asarray(data["cell_vectors"]["b"]) / codata[("Bohr", "Angstrom")]
@@ -114,10 +131,12 @@ def ejdict_to_gcube(data, fpath=None, density=0):
 
         f.write(data["title"] + "\n")
         f.write(data["densities"][density]["type"] + "\n")
+        dense = np.asarray(data["densities"][density]["magnitude"])
+        na, nb, nc = dense.shape
         f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(natoms, *centre_offset.tolist()))
-        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(data["na"], *(avec/data["na"]).tolist()))
-        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(data["nb"], *(bvec/data["nb"]).tolist()))
-        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(data["nc"], *(cvec/data["nc"]).tolist()))
+        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(na, *(avec/na).tolist()))
+        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(nb, *(bvec/nb).tolist()))
+        f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f}\n".format(nc, *(cvec/nc).tolist()))
 
         if data.get("atoms", False):
             for i, c in enumerate(data["atoms"]["ccoords"]):
@@ -127,9 +146,7 @@ def ejdict_to_gcube(data, fpath=None, density=0):
 
                 f.write("{0:6d} {1:10.6f} {2:10.6f} {3:10.6f} {4:10.6f}\n".format(atomic_number, nuclear_charge,
                                                                                   *ccoord.tolist()))
-
-        dense = np.asarray(data["densities"][density]["magnitude"])
-        dense = dense.transpose().flatten().tolist()
+        dense = dense.flatten().tolist()
         dlength = len(dense)
         output = []
         for i in range(int(dlength/6.)+1):

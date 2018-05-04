@@ -947,11 +947,11 @@ class QEChargeDensityPlugin(object):
         while line:
             charge_density += line
             line = f.readline().strip().split()
-        dense = np.array(charge_density, dtype=float).reshape((nc, nb, na))#.transpose()
+        dense = np.array(charge_density, dtype=float).reshape((nc, nb, na)).transpose()
 
         return {
             "title": "Quantum Espresso " + comment,
-            "na": na, "nb": nb, "nc": nc,
+            #"na": na, "nb": nb, "nc": nc,
             "cell_vectors": {
                 "a": {"units": "angstrom", "magnitude": avec},
                 "b": {"units": "angstrom", "magnitude": bvec},

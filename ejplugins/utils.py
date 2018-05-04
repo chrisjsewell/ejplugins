@@ -4,9 +4,15 @@ import os
 import re
 from decimal import Decimal
 
+import numpy as np
 import jsonschema
 from jsonextended import ejson, plugins
 from jsonextended.encoders.ndarray import Encode_NDArray
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 def split_numbers(string, as_decimal=False):
@@ -89,18 +95,74 @@ def _get_all_schema_name():
     return schemas
 
 
-def validate_against_schema(data, sname):
-    """get a validation schema by name (not including extension) and validate the data against it"""
-    schemas = _get_all_schema_name()
-    if sname not in schemas:
-        raise ValueError("{0} not in available schema: {1}\nschema folder: {2}".format(sname, schemas, _schema_folder))
+def nddim_validator(validator, value, instance, schema):
+    """ validators for n-dimensional data shape
 
-    with open(os.path.join(_schema_folder, "{}.json".format(sname))) as f:
-        schema = json.load(f)
+    Parameters
+    ----------
+    validator
+    value
+    instance
+    schema
+
+    Returns
+    -------
+
+    """
+    dim = len(np.asarray(instance).shape)
+    if value != dim:
+        yield jsonschema.ValidationError(
+            "object is of dimension {} not {}".format(dim, value))
+
+
+def ndtype_validator(validator, value, instance, schema):
+    """ validators for n-dimensional data dtype
+
+    Parameters
+    ----------
+    validator
+    value
+    instance
+    schema
+
+    Returns
+    -------
+
+    """
+    try:
+        np.asarray(instance, dtype=value)
+    except (ValueError, TypeError):
+        yield jsonschema.ValidationError(
+            "object cannot be coerced to type %s" % value)
+
+
+def validate_against_schema(data, schema):
+    """ validate json-type data against a schema
+
+    Parameters
+    ----------
+    data: dict
+    schema: str or dict
+        either a reference to a schema in ejplugins.schema (not including extension) or a full schema
+    """
+    if isinstance(schema, basestring):
+        schemas = _get_all_schema_name()
+        if schema not in schemas:
+            raise ValueError("{0} not in available schema: {1}\nschema folder: {2}".format(schema, schemas, _schema_folder))
+
+        with open(os.path.join(_schema_folder, "{}.json".format(schema))) as f:
+            schema = json.load(f)
+
+    # add some validators for n-dimensional data
+    # an example of custom validators: https://lat.sk/2017/03/custom-json-schema-type-validator-format-python/
+    validator = jsonschema.validators.extend(
+        jsonschema.Draft4Validator,
+        validators={
+            'nddim': nddim_validator,
+            'ndtype': ndtype_validator})
 
     # by default, only validates lists
-    validator = jsonschema.Draft4Validator(schema, types={"array": (list, tuple)})
-    validator.validate(data)
+    validator(schema, types={"array": (list, tuple)}).validate(data)
 
 
 _SYM2ANUM = dict(Ac=89, Ag=47, Al=13, Am=95, Ar=18, As=33, At=85, Au=79, B=5, Ba=56, Be=4, Bh=107, Bi=83, Bk=97, Br=35,

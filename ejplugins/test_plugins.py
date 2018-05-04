@@ -28,6 +28,8 @@ schema_folder = os.path.join(os.path.dirname(__file__), "schema")
     (CrystalDOSPlugin, "crystal_pdos_spin.doss.f25"),
     (BANDPlugin, "crystal.band.f25"),
     (ECH3CubePlugin, "crystal.ech3_dat.prop3d"),
+    (ECH3OutPlugin, "multi_atom_bulk.ech3.out"),
+    (ECH3CubePlugin, "multi_atom_bulk.ech3_dat.prop3d"),
     (ECH3OutPlugin, "crystal.ech3.out"),
     (QEmainPlugin, "scf.qe.out"),
     (QEmainPlugin, "scf_with_fermi.qe.out"),
@@ -52,10 +54,10 @@ def test_plugins(testplugin, filename):
     # print(json.dumps(output, indent=2, default=plugins.encode))
     outpath = os.path.join(file_folder, filename + ".json")
 
-    # if "CHG_H2O.cube" in filename:
+    # if "multi_atom_bulk" in filename:
     #     with open(outpath, "w") as f:
-    #         json.dump(output, f, indent=None, default=plugins.encode)
-    print("reading expected")
+    #         json.dump(output, f, indent=1, default=plugins.encode)
+    # print("reading expected")
     expected = ejson.to_dict(outpath)
 
     assert edict.diff(output, expected, np_allclose=True) == {}
@@ -96,7 +98,7 @@ def test_against_schema(fname, sname):
 
 
 def test_get_schema():
-    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_doss', 'crystal_out', 'qe_out']
+    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_doss', 'crystal_out', 'edensity', 'qe_out']
 
 
 def test_ejdict_to_gcube():
@@ -120,4 +122,36 @@ def test_ejdict_to_gcube():
                                         ' 1.19286E-11  1.53229E-11  1.96312E-11  2.51042E-11  3.20622E-11  4.09056E-11']
 
     assert gcube_path.file_content[-1] == " 6.77960E-11  5.61461E-11"
+
+
+def test_ejdict_to_gcube_crystal():
+    plugins.unload_all_plugins()
+    plugins.load_plugin_classes([Encode_NDArray])
+    plugins.load_plugin_classes([ECH3CubePlugin, ECH3OutPlugin], "parsers")
+
+    inpath1 = os.path.join(file_folder, "multi_atom_bulk.ech3_dat.prop3d")
+    data = plugins.parse(inpath1)
+    inpath2 = os.path.join(file_folder, "multi_atom_bulk.ech3.out")
+    adata = plugins.parse(inpath2)
+
+    # expected_path = os.path.join(file_folder, "multi_atom_bulk.ech3.cube")
+    # expected_data = plugins.parse(expected_path)
+
+    gcube_path = ejdict_to_gcube(data, density=0, adata=adata)
+    #new_data = plugins.parse(gcube_path)
+
+    assert gcube_path.file_content[0:10] == ['CRYSTAL', 'charge',
+                                             '    30   5.468942  -6.513792 -10.875708',
+                                             '    65   0.174544   0.100212  -0.000685',
+                                             '    65  -0.174544   0.100212   0.000685',
+                                             '   120  -0.091149   0.000000   0.181262',
+                                             '    16  16.021000  -1.131871   4.830045  -2.704532',
+                                             '    16  16.021000   6.598999   4.830045  -8.171509',
+                                             '    16  16.021000   1.131832  -4.830046   2.704526',
+                                             '    16  16.021000  -6.599038  -4.830046   8.171504']
+
+    assert gcube_path.file_content[-1] == " 2.60932E-02  2.52211E-02  2.43080E-02  2.35170E-02  2.29831E-02  2.27950E-02"
+
+
+
 

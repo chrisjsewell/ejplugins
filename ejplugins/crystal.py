@@ -342,7 +342,7 @@ class ECH3OutPlugin(object):
                 "c": {"units": "angstrom", "magnitude": cvec.tolist()}
             },
             "atoms": {"ccoords": {"units": "angstrom",
-                                  "magnitude": (struct.cart_coords * codata[("Bohr", "Angstrom")]).tolist()},
+                                  "magnitude": struct.cart_coords.tolist()},
                       "nuclear_charge": struct.site_properties["nelect"],
                       "atomic_number": struct.atomic_numbers
                       },
@@ -379,7 +379,7 @@ class ECH3CubePlugin(object):
                 break
             charge_density += [float(s) for s in line]
             line = f.readline().strip().split()
-        cdense = np.array(charge_density).reshape((nc, nb, na))
+        cdense = np.array(charge_density).reshape((nc, nb, na)).transpose()
         densities.append({
             "type": "charge",
             "magnitude": cdense
@@ -390,7 +390,7 @@ class ECH3CubePlugin(object):
             spin_density += [float(s) for s in line]
             line = f.readline().strip().split()
         if spin_density:
-            sdense = np.array(spin_density).reshape((nc, nb, na))
+            sdense = np.array(spin_density).reshape((nc, nb, na)).transpose()
             densities.append({
                 "type": "spin",
                 "magnitude": sdense
@@ -398,7 +398,7 @@ class ECH3CubePlugin(object):
 
         return {
             "title": "CRYSTAL",
-            "na": na, "nb": nb, "nc": nc,
+            #"na": na, "nb": nb, "nc": nc,
             "cell_vectors": {
                 "a": {"units": "angstrom", "magnitude": avec},
                 "b": {"units": "angstrom", "magnitude": bvec},
