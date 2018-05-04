@@ -28,7 +28,7 @@
  },
  "densities": [
   {
-   "type": "charge",
+   "type": "charge (pseudo)",
    "magnitude": {
     "_numpy_ndarray_": {
      "value": [

@@ -9,15 +9,14 @@ Modified work Copyright 2015-2017 Lukasz Mentel
                        Version 3, 29 June 2007
 
 """
+import warnings
 from datetime import datetime
 from fnmatch import fnmatch
-import warnings
 
 import numpy as np
-from jsonextended import edict
 from ase import Atoms
-
 from ejplugins.utils import codata, split_numbers, symbol2anum
+from jsonextended import edict
 
 
 def raise_error(msg, line, i, start_line):
@@ -34,7 +33,7 @@ def raise_error(msg, line, i, start_line):
     -------
 
     """
-    raise IOError("{0}, for line #{1}: {2}".format(msg, i+1+start_line, line.strip()))
+    raise IOError("{0}, for line #{1}: {2}".format(msg, i + 1 + start_line, line.strip()))
 
 
 # TODO separate contributions
@@ -65,12 +64,12 @@ def read_forces(lines, start_line):
             if "Ry/au" not in line:
                 raise_error("expecting forces to be in Ry/au", line, i, start_line)
             in_forces = True
-            if lines[i+1].strip():
-                raise_error("Expecting blank line after initial forces line", lines[i+1], i+1, start_line)
+            if lines[i + 1].strip():
+                raise_error("Expecting blank line after initial forces line", lines[i + 1], i + 1, start_line)
             forces = {"peratom": []}
             j = 2
-            while fnmatch(lines[i+j].strip(), 'atom *'):
-                aid, atype, fx, fy, fz = split_numbers(lines[i+j])
+            while fnmatch(lines[i + j].strip(), 'atom *'):
+                aid, atype, fx, fy, fz = split_numbers(lines[i + j])
                 forces["peratom"].append({"units": 'eV/angstrom',
                                           "magnitude": (fx * units_conv, fy * units_conv, fz * units_conv)})
                 j += 1
@@ -112,23 +111,24 @@ def read_energies(lines, start_line):
         if "The total energy is the sum of the following terms:" in line:
             if contributions:
                 raise_error("already found energy contributions for this section", line, i, start_line)
-            if lines[i+1].strip():
-                raise_error("Expecting blank line after initial energy contributions line", lines[i+1], i+1, start_line)
+            if lines[i + 1].strip():
+                raise_error("Expecting blank line after initial energy contributions line", lines[i + 1], i + 1,
+                            start_line)
             j = 2
-            while lines[i+j].strip():
-                if lines[i+j].strip().startswith("->"):
+            while lines[i + j].strip():
+                if lines[i + j].strip().startswith("->"):
                     # These are sub component contributions, so ignore
                     j += 1
                     continue
-                if not fnmatch(lines[i+j].strip(), "*=*Ry"):
+                if not fnmatch(lines[i + j].strip(), "*=*Ry"):
                     raise_error("Expecting energy contribution to be in the form '*=*Ry'",
-                                lines[i+j], i+j, start_line)
-                name = lines[i+j].strip().split("=")[0]  # type: str
+                                lines[i + j], i + j, start_line)
+                name = lines[i + j].strip().split("=")[0]  # type: str
                 name = name.replace("contribution", "").replace(" contrib.", "").replace("  ", " ").strip()
-                value = split_numbers(lines[i+j])[0] * codata[("Rydberg", "eV")]
+                value = split_numbers(lines[i + j])[0] * codata[("Rydberg", "eV")]
                 if name in contributions:
                     raise_error("Multiple instances of energy contribution {} found in section".format(name),
-                                lines[i+j], i+j, start_line)
+                                lines[i + j], i + j, start_line)
                 contributions[name] = {"units": "eV", "magnitude": value}
                 j += 1
 
@@ -224,7 +224,7 @@ def read_scf(lines, start_line):
             atomic_charges_peratom = []
             spin_density_peratom = []
 
-            nxtline = i+1
+            nxtline = i + 1
             while lines[nxtline].strip():
                 if not fnmatch(lines[nxtline].strip(), "atom:*charge:*magn:*constr:*"):
                     raise_error("was expecting magnetic moment fields; atom:, charge:, magn:, constr:",
@@ -267,8 +267,8 @@ def read_cell(lines, start_line):
     final_coords = False
 
     # additional unit cell information
-    #bli_lines = [line for line in lines if 'bravais-lattice index' in line]
-    #brav_latt_indices = [int(line.split('=')[1].strip()) for line in bli_lines]
+    # bli_lines = [line for line in lines if 'bravais-lattice index' in line]
+    # brav_latt_indices = [int(line.split('=')[1].strip()) for line in bli_lines]
 
     for i, line in enumerate(lines):
         line = line.strip()
@@ -287,7 +287,7 @@ def read_cell(lines, start_line):
                 raise_error("expecting to have found alat before", line, i, start_line)
             for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
                 x, y, z = split_numbers(newline.split('=')[1])
-                cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
+                cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
 
         if "Begin final coordinates" in line:
             final_coords = True
@@ -300,7 +300,7 @@ def read_cell(lines, start_line):
                 new_cell = {}
                 for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
                     x, y, z = split_numbers(newline)
-                    new_cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
+                    new_cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
                 if edict.diff(cell, new_cell, np_allclose=True):
                     raise_error("normal and final cell coordinates are different", line, i, start_line)
             elif cell:
@@ -309,7 +309,7 @@ def read_cell(lines, start_line):
 
                 for key, newline in zip(["a", "b", "c"], lines[i + 1: i + 4]):
                     x, y, z = split_numbers(newline)
-                    cell[key] = {"units": "angstrom", "magnitude": (x*alat, y*alat, z*alat)}
+                    cell[key] = {"units": "angstrom", "magnitude": (x * alat, y * alat, z * alat)}
 
     return cell if cell else None
 
@@ -356,20 +356,20 @@ def read_atoms(lines, start_line, section="n/a"):
             if fcoords and not final_coords:
                 raise_error("already found fractional atomic positions in section ({})".format(section),
                             line, i, start_line)
-            if lines[i+1].strip():
+            if lines[i + 1].strip():
                 raise_error("Expecting blank line after initial Crystallographic axes line",
-                            lines[i + 1], i+1, start_line)
-            if not fnmatch(lines[i+2].strip(), "site*atom*positions*"):
+                            lines[i + 1], i + 1, start_line)
+            if not fnmatch(lines[i + 2].strip(), "site*atom*positions*"):
                 raise_error("Expecting 2nd line after Crystallographic axes to have headers: site, atom and positions",
-                            lines[i + 2], i+2, start_line)
+                            lines[i + 2], i + 2, start_line)
             symbols = []
             ids = []
             fcoords = []
             j = 3
-            while lines[i+j].strip():
-                symbols.append(lines[i+j].strip().split()[1].strip('0123456789'))
-                ids.append(int(split_numbers(lines[i+j])[0]))
-                fcoords.append(split_numbers(lines[i+j])[-3:])
+            while lines[i + j].strip():
+                symbols.append(lines[i + j].strip().split()[1].strip('0123456789'))
+                ids.append(int(split_numbers(lines[i + j])[0]))
+                fcoords.append(split_numbers(lines[i + j])[-3:])
                 j += 1
 
             if not final_symbols:
@@ -387,21 +387,21 @@ def read_atoms(lines, start_line, section="n/a"):
             if ccoords and not final_coords:
                 raise_error("already found cartesian atomic positions in section ({})".format(section),
                             line, i, start_line)
-            if lines[i+1].strip():
+            if lines[i + 1].strip():
                 raise_error("Expecting blank line after initial Cartesian axes line",
-                            lines[i + 1], i+1, start_line)
-            if not fnmatch(lines[i+2].strip(), "site*atom*positions*alat*"):
+                            lines[i + 1], i + 1, start_line)
+            if not fnmatch(lines[i + 2].strip(), "site*atom*positions*alat*"):
                 raise_error("Expecting 2nd line after Crystallographic axes to have "
-                            "headers: site, atom and positions (in alat units)", lines[i+2], i+2, start_line)
+                            "headers: site, atom and positions (in alat units)", lines[i + 2], i + 2, start_line)
             symbols = []
             ids = []
             ccoords = []
             j = 3
-            while split_numbers(lines[i+j]):
-                symbols.append(lines[i+j].strip().split()[1].strip('0123456789'))
-                ids.append(int(split_numbers(lines[i+j])[0]))
-                x, y, z = split_numbers(lines[i+j])[-3:]
-                ccoords.append((x*alat, y*alat, z*alat))
+            while split_numbers(lines[i + j]):
+                symbols.append(lines[i + j].strip().split()[1].strip('0123456789'))
+                ids.append(int(split_numbers(lines[i + j])[0]))
+                x, y, z = split_numbers(lines[i + j])[-3:]
+                ccoords.append((x * alat, y * alat, z * alat))
                 j += 1
 
             if not final_symbols:
@@ -460,14 +460,14 @@ def read_atoms(lines, start_line, section="n/a"):
                                 line, i, start_line)
                 fcoords = coords
             if "alat" in line:
-                coords = [(x*alat, y*alat, z*alat) for x, y, z in coords]
+                coords = [(x * alat, y * alat, z * alat) for x, y, z in coords]
                 if ccoords and ccoords != coords:
                     raise_error("cartesian coordinates already set for this section ({})".format(section),
                                 line, i, start_line)
                 ccoords = coords
             if "bohr" in line:
                 coords = [(x * codata[("Bohr", "Angstrom")], y * codata[("Bohr", "Angstrom")],
-                            z * codata[("Bohr", "Angstrom")]) for x, y, z in coords]
+                           z * codata[("Bohr", "Angstrom")]) for x, y, z in coords]
                 if ccoords and ccoords != coords:
                     raise_error("cartesian coordinates already set for this section ({})".format(section),
                                 line, i, start_line)
@@ -508,7 +508,7 @@ def read_stress(lines, start_line):
                 raise_error("expecting stress in Ry/bohr**3", line, i, start_line)
 
             for nrow, newline in enumerate(lines[i + 1: i + 4]):
-                stress.append([s*conv_factor for s in split_numbers(newline)[:3]])
+                stress.append([s * conv_factor for s in split_numbers(newline)[:3]])
 
     if not stress:
         return None
@@ -540,7 +540,7 @@ def get_band_mapping(lines):
             in_kpoints = True
         if not in_kpoints:
             continue
-        if not line and not fnmatch(lines[i+2], "*k*(*)*=*(*)*wk*=*"):
+        if not line and not fnmatch(lines[i + 2], "*k*(*)*=*(*)*wk*=*"):
             break
         if "cryst. coord." in line:
             in_crystal_coord = True
@@ -589,8 +589,8 @@ def read_bands(lines, start_line, crystal_coord_map=None):
         elif fnmatch(line, "*k*=*PWs*bands*"):
             if "ev" not in line:
                 raise_error("expecting units in ev", line, i, start_line)
-            if not lines[i+1].strip() == "":
-                raise_error("expecting empty line after k-point", lines[i+1], i+1, start_line)
+            if not lines[i + 1].strip() == "":
+                raise_error("expecting empty line after k-point", lines[i + 1], i + 1, start_line)
 
             if not crystal_coord_map:
                 coords = tuple(split_numbers(line)[0:3])
@@ -602,8 +602,8 @@ def read_bands(lines, start_line, crystal_coord_map=None):
 
             j = 2
             energies = []
-            while lines[i+j].strip():
-                energies += split_numbers(lines[i+j])
+            while lines[i + j].strip():
+                energies += split_numbers(lines[i + j])
                 j += 1
             data[key]["energies_per_band"].append(energies)
 
@@ -679,13 +679,13 @@ def first_parse(lines):
             # steps_num = new_step
             steps.append((i, None))
 
-        # Can get:
-         # lsda relaxation :  a final configuration with zero
-         #                    absolute magnetization has been found
-         #
-         # the program is checking if it is really the minimum energy structure
-         # by performing a new scf iteration without any "electronic" history
-         #
+            # Can get:
+            # lsda relaxation :  a final configuration with zero
+            #                    absolute magnetization has been found
+            #
+            # the program is checking if it is really the minimum energy structure
+            # by performing a new scf iteration without any "electronic" history
+            #
         # TODO should this be a separate step?
         if fnmatch(line, '*performing a new scf iteration without any "electronic" history'):
             steps[-1] = (steps[-1][0], i)
@@ -800,17 +800,19 @@ class QEmainPlugin(object):
 
         all = {}
 
-        opt_start, opt_end, opt_steps, scf_start_first, scf_end_last, warnings, non_terminating_errors, meta = first_parse(lines)
+        opt_start, opt_end, opt_steps, scf_start_first, scf_end_last, warnings, non_terminating_errors, meta = first_parse(
+            lines)
 
         all["warnings"] = warnings if warnings else None
-        all["errors"] = non_terminating_errors  # TODO check for more non terminating errors (e.g. reaching max opt steps)
+        all[
+            "errors"] = non_terminating_errors  # TODO check for more non terminating errors (e.g. reaching max opt steps)
         if opt_start:
             crystal_coord_map = get_band_mapping(lines[0:opt_start])
             all["initial"] = get_data_section(lines[0:opt_start], 0, crystal_coord_map, "initial")
             if skip_opt:
                 all["optimisation"] = None
             else:
-                all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map, "opt{}".format(step+1))
+                all["optimisation"] = [get_data_section(lines[i:j], i, crystal_coord_map, "opt{}".format(step + 1))
                                        for step, (i, j) in enumerate(opt_steps)]
             all["final"] = get_data_section(lines[opt_end:], opt_end, crystal_coord_map, "final")
         elif scf_start_first:
@@ -819,7 +821,7 @@ class QEmainPlugin(object):
             if skip_opt:
                 all["optimisation"] = None
             else:
-                all["optimisation"] = [get_data_section(lines[scf_start_first:scf_end_last+1],
+                all["optimisation"] = [get_data_section(lines[scf_start_first:scf_end_last + 1],
                                                         scf_start_first, crystal_coord_map, "opt1")]
             all["final"] = get_data_section(lines[scf_end_last:], scf_end_last, crystal_coord_map, "final")
         else:
@@ -844,12 +846,34 @@ class QEnscfPlugin(QEmainPlugin):
     plugin_descript = 'read quantum espresso output (identical to main)'
     file_regex = '*.qe.nscf.out'
 
+
 class QEbandPlugin(QEmainPlugin):
     """ quantum espresso output parser plugin for jsonextended
     """
     plugin_name = 'quantum_espresso_band_output'
     plugin_descript = 'read quantum espresso output (identical to main)'
     file_regex = '*.qe.band.out'
+
+
+_PNUM2TYPE = {0: "charge (pseudo)",
+              1: "potential (total)",
+              2: "potential (ionic)",
+              3: "states (at specific energy)",
+              4: "electronic entropy",
+              5: "STM",
+              6: "spin",
+              7: "wavefuction contribution",
+              8: "electron localisation function",
+              9: "charge (minus superposition of atomic densities)",
+              10: "states (integrated)",
+              11: "potential (V_bare + V_h)",
+              12: "sawtooth electric field potential",
+              13: "noncollinear magnetization",
+              17: "charge (all-electron valence)",
+              18: "exchange and correlation magnetic field",
+              19: "Reduced density gradient",
+              20: "charge * 2nd eig Hessian",
+              21: "charge (all-electron)"}
 
 
 class QEChargeDensityPlugin(object):
@@ -862,12 +886,13 @@ class QEChargeDensityPlugin(object):
     file_regex = '*.qe.charge'
 
     def read_file(self, f, **kwargs):
-        comment = f.readline().strip() # first line blank
+        comment = f.readline().strip()  # first line blank
         line = f.readline().strip()
         try:
-            na, nb, nc, _, _, _, natoms, ntyp  = [int(i) for i in line.split()]
+            na, nb, nc, _, _, _, natoms, ntyp = [int(i) for i in line.split()]
         except:
-            raise IOError("file format incorrect, expected 8 fields; na, nb, nc, _, _, _, natoms, ntyp: {0}".format(line))
+            raise IOError(
+                "file format incorrect, expected 8 fields; na, nb, nc, _, _, _, natoms, ntyp: {0}".format(line))
 
         line = f.readline().strip()
         try:
@@ -879,24 +904,24 @@ class QEChargeDensityPlugin(object):
         except:
             raise IOError("file format incorrect, expected ibrav, a, b, c, alpha, beta, gamma: {0}".format(line))
 
-        if bravais_lattice_index == 0: # free
-                try:
-                    line = f.readline().strip()
-                    avec = [float(i)*alat for i in line.split()]
-                    line = f.readline().strip()
-                    bvec = [float(i)*alat for i in line.split()]
-                    line = f.readline().strip()
-                    cvec = [float(i)*alat for i in line.split()]
-                except:
-                    raise IOError("file format incorrect, expected fields; x, y, z: {0}".format(line))
+        if bravais_lattice_index == 0:  # free
+            try:
+                line = f.readline().strip()
+                avec = [float(i) * alat for i in line.split()]
+                line = f.readline().strip()
+                bvec = [float(i) * alat for i in line.split()]
+                line = f.readline().strip()
+                cvec = [float(i) * alat for i in line.split()]
+            except:
+                raise IOError("file format incorrect, expected fields; x, y, z: {0}".format(line))
         elif bravais_lattice_index == 1:  # cubic P (sc)
             avec = (alat, 0., 0.)
             bvec = (0., alat, 0.)
             cvec = (0., 0., alat)
         elif bravais_lattice_index == 2:  # cubic F (fcc)
-            avec = (-alat/2., 0., alat/2)
-            bvec = (0., alat/2., alat/2.)
-            cvec = (-alat/2., alat/2., 0.)
+            avec = (-alat / 2., 0., alat / 2)
+            bvec = (0., alat / 2., alat / 2.)
+            cvec = (-alat / 2., alat / 2., 0.)
         elif bravais_lattice_index == 3:  # cubic I (bcc)
             avec = (alat / 2., alat / 2., alat / 2)
             bvec = (-alat / 2., alat / 2., alat / 2)
@@ -904,12 +929,14 @@ class QEChargeDensityPlugin(object):
         elif bravais_lattice_index == -3:  # cubic I (bcc), more symmetric axis
             avec = (-alat / 2., alat / 2., alat / 2)
             bvec = (alat / 2., -alat / 2., alat / 2)
-            cvec = (alat / 2.,  alat / 2., -alat / 2)
+            cvec = (alat / 2., alat / 2., -alat / 2)
         else:
             # TODO implemented ibrav > 3
             raise NotImplementedError("haven't yet implemented ibrav > 3")
 
-        f.readline() # TODO find out what numbers in this line are (third is Ecutoff, fourth is plotnum?)
+        line = f.readline()  # TODO find out what numbers in this line are (third is Ecutoff)
+        plotnum = int(line.strip().split()[3])
+        dtype = _PNUM2TYPE[plotnum]
 
         typ_lookup = {}
         for _ in range(ntyp):
@@ -951,20 +978,20 @@ class QEChargeDensityPlugin(object):
 
         return {
             "title": "Quantum Espresso " + comment,
-            #"na": na, "nb": nb, "nc": nc,
+            # "na": na, "nb": nb, "nc": nc,
             "cell_vectors": {
                 "a": {"units": "angstrom", "magnitude": avec},
                 "b": {"units": "angstrom", "magnitude": bvec},
                 "c": {"units": "angstrom", "magnitude": cvec}
             },
-            #"centre": [0, 0, 0],
+            # "centre": [0, 0, 0],
             "densities": [{
-                "type": "charge",
+                "type": dtype,
                 "magnitude": dense
             }],
             "atoms": {"ccoords": {"units": "angstrom",
                                   "magnitude": ccoords},
-                      #"nuclear_charge": nuclear_charges,
+                      # "nuclear_charge": nuclear_charges,
                       "nuclear_charge": valence_charges,
                       "symbols": symbols, "atomic_number": atomic_numbers},
             "creator": {"program": "Quantum Espresso"}
@@ -1041,6 +1068,4 @@ class QEdosPlugin(object):
             downs.append(float(down))
             line = f.readline().strip()
 
-        return {"tdos":{"energy": {"units": "eV", "magnitude": es}, "up": ups, "down": downs}}
-
-
+        return {"tdos": {"energy": {"units": "eV", "magnitude": es}, "up": ups, "down": downs}}
