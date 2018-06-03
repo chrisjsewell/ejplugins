@@ -2,6 +2,8 @@
 """
 originally written for CRYSTAL14, but also tested against and extended for CRYSTAL17
 """
+import copy
+import re
 from fnmatch import fnmatch
 import logging
 import numpy as np
@@ -427,6 +429,7 @@ def split_output(lines):
 
     """
     start_line_no = None
+    geom_input_end = None
     scf_init_start_no = None
     scf_init_end_no = None
     opt_start_no = None
@@ -455,6 +458,13 @@ def split_output(lines):
             if not mpi_abort:
                 errors.append(line.strip())
                 mpi_abort = True
+        elif line.strip().startswith("* GEOMETRY EDITING"):
+            if geom_input_end is None:
+                geom_input_end = i
+            else:
+                raise IOError("found two lines starting '* GEOMETRY EDITING' in initial data:"
+                              " {0} and {1}".format(geom_input_end, i))
+
         elif "CRYSTAL - SCF - TYPE OF CALCULATION :" in line:
             if opt_start_no is not None:
                 continue
@@ -538,6 +548,8 @@ def split_output(lines):
 
     if start_line_no is None:
         raise IOError("couldn't find start of program run (denoted *****)")
+    if geom_input_end is None:
+        raise IOError("couldn't find end of geometry input (denoted * GEOMETRY EDITING)")
     if scf_init_start_no is None:
         raise IOError("didn't find an SCF (as expected)")
     if scf_init_start_no is not None and scf_init_end_no is None:
@@ -549,7 +561,7 @@ def split_output(lines):
     if opt_end_no is not None and opt_start_no is None:
         raise IOError("found end of optimisation but not start")
 
-    return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
+    return (start_line_no, geom_input_end, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
             mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors, meta, band_gaps)
 
 
@@ -694,7 +706,7 @@ def get_geometry(dct, i, line, lines, startline=0):
 
 
 def read_init(lines, startline):
-    """ read initial setup data
+    """ read initial setup data (starting after intital geometry input)
 
     Parameters
     ----------
@@ -711,7 +723,11 @@ def read_init(lines, startline):
         if line.startswith("TYPE OF CALCULATION :"):
             init["calculation"]["type"] = line.replace("TYPE OF CALCULATION :", "").strip().lower()
             if "HAMILTONIAN" in lines[i + 1]:
-                init["calculation"]["hamiltonian"] = lines[i + 1].replace("HAMILTONIAN", "").strip().lower()
+                regex = r"\(EXCHANGE\)\[CORRELATION\] FUNCTIONAL:\((.*)\)\[(.*)\]"
+                string = lines[i + 3].strip()
+                if re.match(regex, string):
+                    init["calculation"]["functional"] = {"exchange": re.search(regex, string).group(1),
+                                                         "correlation": re.search(regex, string).group(2)}
         if "SPIN POLARIZ" in line:
             init["calculation"]["spin"] = True
 
@@ -800,7 +816,7 @@ def read_scf(lines, startline):
 
 
 def read_post_scf(lines, startline):
-    """ read post scf data
+    """ read post initial scf data
 
     Parameters
     ----------
@@ -979,8 +995,8 @@ class CrystalOutputPlugin(object):
 
         lines = file.read().splitlines()
 
-        (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no, mulliken_starts, final_opt,
-         run_warnings, non_terminating_errors, errors, meta, band_gaps) = split_output(lines)
+        (start_line_no, geom_input_end, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no, mulliken_starts,
+         final_opt, run_warnings, non_terminating_errors, errors, meta, band_gaps) = split_output(lines)
 
         if run_warnings and log_warnings:
             logger.warning("the following warnings were noted:\n  {}".format("\n  ".join(run_warnings)))
@@ -995,7 +1011,7 @@ class CrystalOutputPlugin(object):
         if start_line_no is None or start_line_no is None:
             initial = None
         else:
-            initial = read_init(lines[start_line_no:scf_init_start_no], start_line_no)
+            initial = read_init(lines[geom_input_end:scf_init_start_no], geom_input_end)
             if scf_init_start_no is None or scf_init_end_no is None:
                 initial["scf"] = None
 
@@ -1052,7 +1068,18 @@ class CrystalOutputPlugin(object):
             output["final"] = {}
         if band_gaps is not None:
             output["final"]["band_gaps"] = band_gaps
-        output["final"] = output["final"] if output["final"] else None
+        #output["final"] = output["final"] if output["final"] else None
+
+        if "primitive_cell" not in output["final"]:
+            if output["optimisation"] is not None:
+                output["final"]["primitive_cell"] = copy.deepcopy(output["optimisation"][-1].get("primitive_cell", None))
+            else:
+                output["final"]["primitive_cell"] = copy.deepcopy(output["initial"].get("primitive_cell", None))
+        if "energy" not in output["final"]:
+            if output["optimisation"] is not None:
+                output["final"]["energy"] = copy.deepcopy(output["optimisation"][-1].get("energy", None))
+            else:
+                output["final"]["energy"] = copy.deepcopy(output["initial"].get("energy", None))
 
         if mulliken_starts is not None:
             if errors:

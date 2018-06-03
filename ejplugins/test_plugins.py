@@ -54,10 +54,10 @@ def test_plugins(testplugin, filename):
     # print(json.dumps(output, indent=2, default=plugins.encode))
     outpath = os.path.join(file_folder, filename + ".json")
 
-    # if "multi_atom_bulk" in filename:
+    # if ".crystal.out" in filename:
     #     with open(outpath, "w") as f:
     #         json.dump(output, f, indent=1, default=plugins.encode)
-    # print("reading expected")
+    print("reading expected")
     expected = ejson.to_dict(outpath)
 
     assert edict.diff(output, expected, np_allclose=True) == {}
@@ -68,6 +68,9 @@ def test_opt_scflog_merge():
     opt = plugins.parse(os.path.join(file_folder, "scf_and_opt.crystal.out"))
     scflog = plugins.parse(os.path.join(file_folder, "scf_and_opt.crystal.scflog"))
     opt_all = edict.merge([opt, scflog], list_of_dicts=True)
+    # with open(os.path.join(file_folder, "opt_merge_scflog.crystal.out.json"), "w") as f:
+    #     json.dump(opt_all, f, indent=1, default=plugins.encode)
+
     expected = ejson.to_dict(os.path.join(file_folder, "opt_merge_scflog.crystal.out.json"))
     assert edict.diff(opt_all, expected, np_allclose=True) == {}
 

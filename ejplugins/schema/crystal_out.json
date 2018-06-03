@@ -37,12 +37,15 @@
             "type": {
               "type": "string"
             },
-            "hamiltonian": {
-              "type": "string"
+            "functional": {
+              "type": "object",
+              "required": [
+                "exchange",
+                "correlation"
+              ]
             }
           },
           "required": [
-            "hamiltonian",
             "spin",
             "type"
           ]
@@ -493,7 +496,6 @@
               "atomic_charges_peratom",
               "charge_normalization_factor",
               "energy",
-              "spin_density_absolute",
               "spin_density_peratom",
               "spin_density_total"
             ]
@@ -962,7 +964,6 @@
                 "atomic_charges_peratom",
                 "charge_normalization_factor",
                 "energy",
-                "spin_density_absolute",
                 "spin_density_peratom",
                 "spin_density_total"
               ]
@@ -978,7 +979,6 @@
     },
     "final": {
       "type": [
-        "null",
         "object"
       ],
       "properties": {
@@ -1373,11 +1373,34 @@
           "required": [
             "cell_vectors"
           ]
-        }
+        },
+        "energy": {
+                  "type": "object",
+                  "properties": {
+                    "total_corrected": {
+                      "type": "object",
+                      "properties": {
+                        "magnitude": {
+                          "type": "number"
+                        },
+                        "units": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "magnitude",
+                        "units"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "total_corrected"
+                  ]
+                }
       },
       "required": [
-        "crystallographic_cell",
-        "primitive_cell"
+        "primitive_cell",
+        "energy"
       ]
     },
     "mulliken": {
