@@ -495,9 +495,7 @@
             "required": [
               "atomic_charges_peratom",
               "charge_normalization_factor",
-              "energy",
-              "spin_density_peratom",
-              "spin_density_total"
+              "energy"
             ]
           }
         },
@@ -1478,8 +1476,7 @@
         }
       },
       "required": [
-        "alpha+beta_electrons",
-        "alpha-beta_electrons"
+        "alpha+beta_electrons"
       ]
     }
   },
