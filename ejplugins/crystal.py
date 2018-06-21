@@ -543,7 +543,7 @@ def split_output(lines):
         meta["elapsed_time"] = "%d:%02d:%02d" % (h, m, s)
 
     if errors:
-        return (start_line_no, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
+        return (start_line_no, geom_input_end, scf_init_start_no, scf_init_end_no, opt_start_no, opt_end_no,
                 mulliken_starts, final_opt, run_warnings, non_terminating_errors, errors, meta, band_gaps)
 
     if start_line_no is None:
@@ -753,6 +753,7 @@ def read_scf(lines, startline):
     last_cyc_num = None
     for i, line in enumerate(lines):
         line = line.strip()
+
         if fnmatch(line, "CYC*"):
 
             # start new cycle
@@ -777,6 +778,7 @@ def read_scf(lines, startline):
                     scf[-1]["energy"] = scf[-1].get("energy", {})
                     scf[-1]["energy"]["total"] = {"magnitude": split_numbers(line)[1] * codata[("Hartree", "eV")],
                                                   "units": "eV"}
+
         elif scf_cyc is None:
             continue
 
@@ -867,16 +869,18 @@ def read_opt(lines, startline):
     opt = []
     opt_cyc = None
     scf_start_no = None
+    failed_opt_step = False
 
     for i, line in enumerate(lines):
         if i == 0:
             continue
         line = line.strip()
         if fnmatch(line, "*OPTIMIZATION*POINT*"):
-            if opt_cyc is not None:
+            if opt_cyc is not None and not failed_opt_step:
                 opt.append(opt_cyc)
             opt_cyc = {}
             scf_start_no = None
+            failed_opt_step = False
         elif opt_cyc is None:
             continue
 
@@ -908,7 +912,12 @@ def read_opt(lines, startline):
                     opt_cyc["convergence"] = {}
                 opt_cyc["convergence"][param.lower().replace(" ", "_")] = bool(strtobool(line.split()[-1]))
 
-    if opt_cyc:
+        if fnmatch(line, "*SCF DID NOT CONVERGE. RETRYING WITH A SMALLER OPT STEP*"):
+            # TODO add failed optimisation steps with dummy energy and extra parameter?
+            # for now discard this optimisation step
+            failed_opt_step = True
+
+    if opt_cyc and not failed_opt_step:
         opt.append(opt_cyc)
 
     return opt
