@@ -1,6 +1,5 @@
 import warnings
-# from pymatgen.core.structure import Structure
-# from pymatgen.core.lattice import Lattice
+
 with warnings.catch_warnings(record=True):
     warnings.filterwarnings("ignore", category=ImportWarning)
     import pymatgen as pym
@@ -28,5 +27,23 @@ class Encode_Pymatgen(object):
         return obj.as_dict()
 
     def from_json(self, obj):
-        return pym.Structure.from_dict(obj)
+
+        modname = obj["@module"]
+        classname = obj["@class"]
+        mod = __import__(modname, globals(), locals(), [classname], 0)
+        if hasattr(mod, classname):
+            cls_ = getattr(mod, classname)
+            data = {k: v for k, v in obj.items()
+                    if k not in ["@module", "@class"]}
+            if hasattr(cls_, "from_dict"):
+                return cls_.from_dict(data)
+            else:
+                raise ValueError("the class {0}.{1} does not have a from_dict method".format(modname, classname))
+        else:
+            raise ValueError("the module {0} does not have the required class {1}".format(modname, classname))
+
+    def to_str(self, obj):
+        name = obj.__class__.__name__
+        return "{0}({1}, Comp={2}, SpGrp={3})".format(name,
+            obj.formula.replace(" ", ""), obj.composition.reduced_formula, obj.get_space_group_info()[1])
 
