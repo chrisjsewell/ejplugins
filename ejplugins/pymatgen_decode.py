@@ -68,7 +68,7 @@ class Encode_SymmOp(object):
     """
     plugin_name = 'pymatgen.SymmOp'
     plugin_descript = 'encode/decode pymatgen.SymmOp'
-    objclass = pym.Structure
+    objclass = pym.SymmOp
     dict_signature = ['@class', '@module', 'matrix']
     allow_other_keys = True
 
