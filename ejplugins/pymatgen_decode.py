@@ -22,6 +22,7 @@ class Encode_Pymatgen(object):
     plugin_descript = 'encode/decode pymatgen.Structure'
     objclass = pym.Structure
     dict_signature = ['@class', '@module', 'lattice', 'sites']
+    allow_other_keys = True
 
     def to_json(self, obj):
         return obj.as_dict()
