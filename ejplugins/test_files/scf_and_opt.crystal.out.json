@@ -69,6 +69,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      -1.433,
+      1.433,
+      1.433
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      1.433,
+      -1.433,
+      1.433
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      1.433,
+      1.433,
+      -1.433
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [
@@ -130,33 +156,7 @@
     true,
     true,
     true
-   ],
-   "cell_vectors": {
-    "a": {
-     "units": "angstrom",
-     "magnitude": [
-      -1.433,
-      1.433,
-      1.433
-     ]
-    },
-    "b": {
-     "units": "angstrom",
-     "magnitude": [
-      1.433,
-      -1.433,
-      1.433
-     ]
-    },
-    "c": {
-     "units": "angstrom",
-     "magnitude": [
-      1.433,
-      1.433,
-      -1.433
-     ]
-    }
-   }
+   ]
   },
   "scf": [
    {
@@ -2385,6 +2385,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      -1.39664802344,
+      1.39664802344,
+      1.39664802344
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      1.39664802344,
+      -1.39664802344,
+      1.39664802344
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      1.39664802344,
+      1.39664802344,
+      -1.39664802344
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [
@@ -2446,33 +2472,7 @@
     true,
     true,
     true
-   ],
-   "cell_vectors": {
-    "a": {
-     "units": "angstrom",
-     "magnitude": [
-      -1.39664802344,
-      1.39664802344,
-      1.39664802344
-     ]
-    },
-    "b": {
-     "units": "angstrom",
-     "magnitude": [
-      1.39664802344,
-      -1.39664802344,
-      1.39664802344
-     ]
-    },
-    "c": {
-     "units": "angstrom",
-     "magnitude": [
-      1.39664802344,
-      1.39664802344,
-      -1.39664802344
-     ]
-    }
-   }
+   ]
   },
   "energy": {
    "total_corrected": {

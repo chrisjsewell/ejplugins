@@ -66,6 +66,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      -1.4345,
+      1.4345,
+      1.4345
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      1.4345,
+      -1.4345,
+      1.4345
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      1.4345,
+      1.4345,
+      -1.4345
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [
@@ -127,33 +153,7 @@
     true,
     true,
     true
-   ],
-   "cell_vectors": {
-    "a": {
-     "units": "angstrom",
-     "magnitude": [
-      -1.4345,
-      1.4345,
-      1.4345
-     ]
-    },
-    "b": {
-     "units": "angstrom",
-     "magnitude": [
-      1.4345,
-      -1.4345,
-      1.4345
-     ]
-    },
-    "c": {
-     "units": "angstrom",
-     "magnitude": [
-      1.4345,
-      1.4345,
-      -1.4345
-     ]
-    }
-   }
+   ]
   },
   "scf": [
    {
@@ -526,6 +526,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      -1.4345,
+      1.4345,
+      1.4345
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      1.4345,
+      -1.4345,
+      1.4345
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      1.4345,
+      1.4345,
+      -1.4345
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [

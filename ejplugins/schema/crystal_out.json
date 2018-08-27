@@ -437,10 +437,7 @@
                 "c"
               ]
             }
-          },
-          "required": [
-            "cell_vectors"
-          ]
+          }
         },
         "scf": {
           "type": "array",
@@ -1367,10 +1364,7 @@
                 "c"
               ]
             }
-          },
-          "required": [
-            "cell_vectors"
-          ]
+          }
         },
         "energy": {
                   "type": "object",

@@ -92,6 +92,7 @@ class Encode_SymmOp(object):
             raise ValueError("the module {0} does not have the required class {1}".format(modname, classname))
 
     def to_str(self, obj):
-        return "SymOp({})".format(
-            str(obj).replace("\n", " ").replace("Rot: ", "R=").replace(" tau ", ", T=").replace("]  [", "],["))
+        outstr = str(obj).replace("\n", " ").replace("Rot: ", "R=").replace(" tau ", ", T=").replace("]  [", "],[")
+        outstr = outstr.replace("  ", " ").replace("[ ", "[")
+        return "SymOp({})".format(outstr)
 

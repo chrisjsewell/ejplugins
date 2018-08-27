@@ -61,6 +61,7 @@ codata = {
     ("Rydberg", "eV"): 13.605693012183622,
     ("Hartree", "eV"): 27.21138602,
     ("Bohr", "Angstrom"): 0.5291772105638411,
+    ("Debye", "C.m"): 3.33564E-30
 }
 
 _test_file_folder = os.path.join(os.path.dirname(__file__), "test_files")

@@ -95,6 +95,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      3.55114561,
+      0.0,
+      0.0
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      0.0,
+      3.55114561,
+      0.0
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      0.0,
+      0.0,
+      5.35521437
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [
@@ -121,34 +147,7 @@
     ]
    }
   },
-  "crystallographic_cell": {
-   "cell_vectors": {
-    "a": {
-     "units": "angstrom",
-     "magnitude": [
-      3.55114561,
-      0.0,
-      0.0
-     ]
-    },
-    "b": {
-     "units": "angstrom",
-     "magnitude": [
-      0.0,
-      3.55114561,
-      0.0
-     ]
-    },
-    "c": {
-     "units": "angstrom",
-     "magnitude": [
-      0.0,
-      0.0,
-      5.35521437
-     ]
-    }
-   }
-  },
+  "crystallographic_cell": {},
   "scf": [
    {
     "charge_normalization_factor": 1.0,
@@ -2516,6 +2515,32 @@
     true,
     true
    ],
+   "cell_vectors": {
+    "a": {
+     "units": "angstrom",
+     "magnitude": [
+      3.99860745533,
+      0.0,
+      0.0
+     ]
+    },
+    "b": {
+     "units": "angstrom",
+     "magnitude": [
+      0.0,
+      3.99860745533,
+      0.0
+     ]
+    },
+    "c": {
+     "units": "angstrom",
+     "magnitude": [
+      0.0,
+      0.0,
+      4.62794929904
+     ]
+    }
+   },
    "ccoords": {
     "units": "angstrom",
     "magnitude": [
@@ -2542,34 +2567,7 @@
     ]
    }
   },
-  "crystallographic_cell": {
-   "cell_vectors": {
-    "a": {
-     "units": "angstrom",
-     "magnitude": [
-      3.99860745533,
-      0.0,
-      0.0
-     ]
-    },
-    "b": {
-     "units": "angstrom",
-     "magnitude": [
-      0.0,
-      3.99860745533,
-      0.0
-     ]
-    },
-    "c": {
-     "units": "angstrom",
-     "magnitude": [
-      0.0,
-      0.0,
-      4.62794929904
-     ]
-    }
-   }
-  },
+  "crystallographic_cell": {},
   "band_gaps": {
    "alpha": {
     "magnitude": 2.4142,

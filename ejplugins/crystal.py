@@ -702,7 +702,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                    "b": {"units": "angstrom", "magnitude": split_numbers(lines[i + 3])},
                    "c": {"units": "angstrom", "magnitude": split_numbers(lines[i + 4])}}
 
-        dct["crystallographic_cell"]["cell_vectors"] = vectors
+        dct["primitive_cell"]["cell_vectors"] = vectors
 
 
 def read_init(lines, startline):

@@ -86,28 +86,6 @@
     true,
     false
    ],
-   "ccoords": {
-    "units": "angstrom",
-    "magnitude": [
-     [
-      1.42425,
-      1.42425,
-      1.42425
-     ],
-     [
-      0.0,
-      0.0,
-      0.0
-     ],
-     [
-      1.42425,
-      1.42425,
-      -1.42425
-     ]
-    ]
-   }
-  },
-  "crystallographic_cell": {
    "cell_vectors": {
     "a": {
      "units": "angstrom",
@@ -133,8 +111,29 @@
       500.0
      ]
     }
+   },
+   "ccoords": {
+    "units": "angstrom",
+    "magnitude": [
+     [
+      1.42425,
+      1.42425,
+      1.42425
+     ],
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     [
+      1.42425,
+      1.42425,
+      -1.42425
+     ]
+    ]
    }
   },
+  "crystallographic_cell": {},
   "scf": [
    {
     "charge_normalization_factor": 0.99979972,
@@ -6771,28 +6770,6 @@
     true,
     false
    ],
-   "ccoords": {
-    "units": "angstrom",
-    "magnitude": [
-     [
-      1.42425,
-      1.42425,
-      1.319490701006
-     ],
-     [
-      0.0,
-      0.0,
-      0.0
-     ],
-     [
-      1.42425,
-      1.42425,
-      -1.319490701006
-     ]
-    ]
-   }
-  },
-  "crystallographic_cell": {
    "cell_vectors": {
     "a": {
      "units": "angstrom",
@@ -6818,8 +6795,29 @@
       500.0
      ]
     }
+   },
+   "ccoords": {
+    "units": "angstrom",
+    "magnitude": [
+     [
+      1.42425,
+      1.42425,
+      1.319490701006
+     ],
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     [
+      1.42425,
+      1.42425,
+      -1.319490701006
+     ]
+    ]
    }
   },
+  "crystallographic_cell": {},
   "energy": {
    "total_corrected": {
     "magnitude": -103144.1762014968,
