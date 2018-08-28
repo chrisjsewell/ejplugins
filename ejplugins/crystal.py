@@ -3,12 +3,12 @@
 originally written for CRYSTAL14, but also tested against and extended for CRYSTAL17
 """
 import copy
-import re
-from fnmatch import fnmatch
 import logging
-import numpy as np
+import re
 import warnings
-import math
+from fnmatch import fnmatch
+
+import numpy as np
 from jsonextended import edict
 
 with warnings.catch_warnings(record=True):
@@ -400,13 +400,13 @@ class ECH3CubePlugin(object):
 
         return {
             "title": "CRYSTAL",
-            #"na": na, "nb": nb, "nc": nc,
+            # "na": na, "nb": nb, "nc": nc,
             "cell_vectors": {
                 "a": {"units": "angstrom", "magnitude": avec},
                 "b": {"units": "angstrom", "magnitude": bvec},
                 "c": {"units": "angstrom", "magnitude": cvec}
             },
-            #"centre": [0, 0, 0],
+            # "centre": [0, 0, 0],
             "densities": densities,
             # "atoms": {"ccoords": {"units": "angstrom",
             #                       "magnitude": ccoords},
@@ -481,7 +481,7 @@ def split_output(lines):
                 raise IOError("found two lines ending scf ('SCF ENDED') in initial data:"
                               " {0} and {1}".format(scf_init_end_no, i))
             scf_init_end_no = i
-        #elif "STARTING GEOMETRY OPTIMIZATION" in line: #not the same in CRYSTAL17
+        # elif "STARTING GEOMETRY OPTIMIZATION" in line: #not the same in CRYSTAL17
         elif "OPTOPTOPTOPT" in line:
             if opt_start_no is not None:
                 if second_opt_line:
@@ -581,7 +581,7 @@ def read_before_run(lines):
         line = line.strip()
         if fnmatch(line, "date:*"):
             meta["date"] = line.replace("date:", "").strip()
-        #TODO fo this better; perhaps "16 PROCESSORS WORKING" just above start of run
+        # TODO fo this better; perhaps "16 PROCESSORS WORKING" just above start of run
         if fnmatch(line, "resources_used.ncpus =*"):
             meta["nprocs"] = int(line.replace("resources_used.ncpus =", ""))
     return meta
@@ -633,7 +633,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                     cell_params = dict(zip(['a', 'b', 'c', 'alpha', 'beta', 'gamma'],
                                            [{"units": "angstrom" if i < 3 else "degrees",
                                              "magnitude": p} for i, p in enumerate([500., 500., 500., 90., 90., 90.])]))
-                    dct[field] = edict.merge([dct.get(field, {}), {"cell_parameters":  cell_params}])
+                    dct[field] = edict.merge([dct.get(field, {}), {"cell_parameters": cell_params}])
                 else:
                     raise IOError("was expecting ATOM X Y Z (in units of ANGSTROM or fractional) on line:"
                                   " {0}, got: {1}".format(startline + i + 1, lines[i + 1]))
@@ -665,7 +665,7 @@ def get_geometry(dct, i, line, lines, startline=0):
                 atom_data.pop("fcoords")
             dct[field] = edict.merge([dct.get(field, {}), atom_data])
 
-    #TODO These ccoords DON'T work with lattice parameters (at least for final run)
+    # TODO These ccoords DON'T work with lattice parameters (at least for final run)
     if fnmatch(line, "CARTESIAN COORDINATES - PRIMITIVE CELL*"):
         if not fnmatch(lines[i + 2].strip(), "*ATOM*X(ANGSTROM)*Y(ANGSTROM)*Z(ANGSTROM)"):
             raise IOError("was expecting ATOM X(ANGSTROM) Y(ANGSTROM) Z(ANGSTROM) on line:"
@@ -705,6 +705,43 @@ def get_geometry(dct, i, line, lines, startline=0):
         dct["primitive_cell"]["cell_vectors"] = vectors
 
 
+def get_symmetry(dct, i, line, lines, startline=0):
+    """ update dict with symmetry related variables
+
+    Parameters
+    ----------
+    dct
+    i
+    line
+    lines
+    startline: int
+
+    Returns
+    -------
+
+    """
+    if fnmatch(line, "*SYMMOPS - TRANSLATORS IN FRACTIONAL UNITS*"):
+        nums = split_numbers(line)
+        if not len(nums) == 1:
+            raise IOError("was expecting a single number, representing the number of symmops, on this line:"
+                          " {0}, got: {1}".format(startline + i, line))
+        nsymmops = int(nums[0])
+        if not fnmatch(lines[i + 1], "*MATRICES AND TRANSLATORS IN THE CRYSTALLOGRAPHIC REFERENCE FRAME*"):
+            raise IOError("was expecting CRYSTALLOGRAPHIC REFERENCE FRAME on this line"
+                          " {0}, got: {1}".format(startline + i + 1, lines[i + 1].strip()))
+        if not fnmatch(lines[i + 2], "*V*INV*ROTATION MATRICES*TRANSLATORS*"):
+            raise IOError("was expecting symmetry headers on this line"
+                          " {0}, got: {1}".format(startline + i + 2, lines[i + 2].strip()))
+        symmops = []
+        for j in range(nsymmops):
+            values = split_numbers(lines[i + 3 + j])
+            if not len(values) == 14:
+                raise IOError("was expecting 14 values for symmetry data on this line"
+                              " {0}, got: {1}".format(startline + i + 3 + j, lines[i + 3 + j].strip()))
+            symmops.append(values[2:14])
+        dct["primitive_symmops"] = symmops
+
+
 def read_init(lines, startline):
     """ read initial setup data (starting after intital geometry input)
 
@@ -732,6 +769,7 @@ def read_init(lines, startline):
             init["calculation"]["spin"] = True
 
         get_geometry(init, i, line, lines, startline)
+        get_symmetry(init, i, line, lines, startline)
 
     return init
 
@@ -859,7 +897,7 @@ def read_opt(lines, startline):
     """
     if "CONVERGENCE ON GRADIENTS SATISFIED AFTER THE FIRST OPTIMIZATION CYCLE" in lines[0]:
         if "OPT END -" not in lines[-1]:
-            raise IOError("expecting OPT END in line {0}: {1}".format(startline+len(lines), lines[-1]))
+            raise IOError("expecting OPT END in line {0}: {1}".format(startline + len(lines), lines[-1]))
         if not fnmatch(lines[-1], "*E(AU)*"):
             raise IOError("was expecting units in a.u. on line:"
                           " {0}, got: {1}".format(startline + len(lines), lines[-1]))
@@ -939,6 +977,7 @@ def read_final(lines, startline):
     for i, line in enumerate(lines):
         line = line.strip()
         get_geometry(final, i, line, lines, startline)
+        get_symmetry(final, i, line, lines, startline)
 
     return final
 
@@ -1049,7 +1088,8 @@ class CrystalOutputPlugin(object):
 
         output = {"warnings": run_warnings,
                   "errors": errors_all,
-                  "meta": meta if start_line_no is None else edict.merge([meta, read_before_run(lines[:start_line_no])]),
+                  "meta": meta if start_line_no is None else edict.merge(
+                      [meta, read_before_run(lines[:start_line_no])]),
                   "initial": initial,
                   "creator": {"program": "CRYSTAL"}
                   }
@@ -1077,11 +1117,13 @@ class CrystalOutputPlugin(object):
             output["final"] = {}
         if band_gaps is not None:
             output["final"]["band_gaps"] = band_gaps
-        #output["final"] = output["final"] if output["final"] else None
+        # output["final"] = output["final"] if output["final"] else None
 
+        # we make sure that the final section holds the final energy and primitive geometry
         if "primitive_cell" not in output["final"]:
             if output["optimisation"] is not None:
-                output["final"]["primitive_cell"] = copy.deepcopy(output["optimisation"][-1].get("primitive_cell", None))
+                output["final"]["primitive_cell"] = copy.deepcopy(
+                    output["optimisation"][-1].get("primitive_cell", None))
             else:
                 output["final"]["primitive_cell"] = copy.deepcopy(output["initial"].get("primitive_cell", None))
         if "energy" not in output["final"]:
@@ -1089,6 +1131,10 @@ class CrystalOutputPlugin(object):
                 output["final"]["energy"] = copy.deepcopy(output["optimisation"][-1].get("energy", None))
             else:
                 output["final"]["energy"] = copy.deepcopy(output["initial"].get("energy", None))
+
+        if "primitive_symmops" not in output["final"]:
+            if "primitive_symmops" in output["initial"] and output["optimisation"] is None:
+                output["final"]["primitive_symmops"] = copy.deepcopy(output["initial"]["primitive_symmops"])
 
         if mulliken_starts is not None:
             if errors:
