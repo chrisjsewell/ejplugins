@@ -1,22 +1,4 @@
-from jsonextended import plugins
-
-from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin, BANDPlugin,
-                               ECH3CubePlugin, ECH3OutPlugin)
-from ejplugins.qespresso import (QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin,
-                                 QELowdinPlugin, QEnscfPlugin, QEdosPlugin)
-from ejplugins.gulp import GULPOutPlugin
-from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
-
-# optional dependencies
-try:
-    from ejplugins.pymatgen_decode import Encode_Pymatgen
-    from ejplugins.ase_decode import Encode_ASE
-    from ejplugins.cif import CIFPlugin
-except ImportError:
-    pass
-
-from ejplugins.utils import load_test_file, validate_against_schema
-
+__version__ = "0.11.0"
 
 def load_all_parsers():
     """ load all parsers
@@ -26,6 +8,16 @@ def load_all_parsers():
     errors: list
 
     """
+    from jsonextended import plugins
+    from ejplugins.crystal import (
+        CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin,
+        BANDPlugin, ECH3CubePlugin, ECH3OutPlugin)
+    from ejplugins.qespresso import (
+        QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin,
+        QELowdinPlugin, QEnscfPlugin, QEdosPlugin)
+    from ejplugins.gulp import GULPOutPlugin
+    from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
+
     parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin,
                BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
                QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin,
@@ -41,6 +33,7 @@ def load_all_parsers():
 
 
 def load_all_encoders():
+    from jsonextended import plugins
     try:
         from ejplugins.pymatgen_decode import Encode_Pymatgen
         from ejplugins.ase_decode import Encode_ASE
@@ -48,5 +41,3 @@ def load_all_encoders():
         raise ImportError("pymatgen and/or ase not installed")
     return plugins.load_plugin_classes([Encode_Pymatgen, Encode_ASE])
 
-
-__version__ = "0.10.0"

@@ -1,4 +1,10 @@
 {
     "python.pythonPath": "/anaconda/envs/lsr/bin/python",
-    "restructuredtext.confPath": ""
+    "restructuredtext.confPath": "",
+    "python.unitTest.pyTestArgs": [
+        "ejplugins"
+    ],
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.pyTestEnabled": true
 }
