@@ -4,13 +4,14 @@ from ejplugins.crystal import (CrystalOutputPlugin, CrystalSCFLogPlugin, Crystal
                                ECH3CubePlugin, ECH3OutPlugin)
 from ejplugins.qespresso import (QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin,
                                  QELowdinPlugin, QEnscfPlugin, QEdosPlugin)
-from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
 
+# optional dependencies
 try:
     from ejplugins.pymatgen_decode import Encode_Pymatgen
     from ejplugins.ase_decode import Encode_ASE
+    from ejplugins.cif import CIFPlugin
 except ImportError:
     pass
 
@@ -28,9 +29,13 @@ def load_all_parsers():
     parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin,
                BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
                QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin,
-               CIFPlugin,
                GULPOutPlugin,
                LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin]
+    try:
+        from ejplugins.cif import CIFPlugin
+        parsers.append(CIFPlugin)
+    except ImportError:
+        pass
 
     return plugins.load_plugin_classes(parsers, "parsers")
 

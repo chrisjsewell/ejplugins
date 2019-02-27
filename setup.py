@@ -24,9 +24,8 @@ with io.open('README.md') as readme:
         extras_require={
             "science": [
                 "pymatgen",
-                "ase",
-                "pint"
-            ]
+                "ase"
+                ]
         },
         license='MIT',
         author='Chris Sewell',

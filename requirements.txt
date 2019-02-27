@@ -1,3 +1,4 @@
 jsonextended>=0.6.4
 pathlib2
 jsonschema
+pint

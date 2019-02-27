@@ -14,7 +14,6 @@ from datetime import datetime
 from fnmatch import fnmatch
 
 import numpy as np
-from ase import Atoms
 from ejplugins.utils import codata, split_numbers, symbol2anum
 from jsonextended import edict
 
@@ -886,6 +885,7 @@ class QEChargeDensityPlugin(object):
     file_regex = '*.qe.charge'
 
     def read_file(self, f, **kwargs):
+        from ase import Atoms  # optional dependency
         comment = f.readline().strip()  # first line blank
         line = f.readline().strip()
         try:
