@@ -69,7 +69,7 @@ class GULPOutPlugin(object):
                 etype = 'initial'
                 if 'initial' in data:
                     if 'lattice_energy' in data['initial']:
-                        if not 'final' in etype:
+                        if not 'final' in data:
                             data['final'] = {}
                         etype = 'final'
                 else:
