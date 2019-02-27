@@ -59,8 +59,8 @@ def test_plugins(testplugin, filename):
     #         json.dump(output, f, indent=1, default=plugins.encode)
     print("reading expected")
     expected = ejson.to_dict(outpath)
-
-    assert edict.diff(output, expected, np_allclose=True) == {}
+    
+    assert edict.diff(output, expected, np_allclose=True, atol=1e-3) == {}
 
 
 def test_opt_scflog_merge():
@@ -101,7 +101,8 @@ def test_against_schema(fname, sname):
 
 
 def test_get_schema():
-    assert _get_all_schema_name() == ['cif', 'crystal_band', 'crystal_doss', 'crystal_out', 'edensity', 'qe_out']
+    assert sorted(_get_all_schema_name()) == sorted(
+        ['cif', 'crystal_band', 'crystal_doss', 'crystal_out', 'edensity', 'qe_out'])
 
 
 def test_ejdict_to_gcube():
