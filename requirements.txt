@@ -1,6 +1,3 @@
 jsonextended>=0.6.4
 pathlib2
 jsonschema
-pymatgen
-ase
-pint # just for gcube.ejdict_to_gcube

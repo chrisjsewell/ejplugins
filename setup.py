@@ -12,14 +12,22 @@ with open('requirements.txt') as f:
 with open('test_requirements.txt') as f:
     test_requirements = f.read().splitlines()
 
-with io.open('README.rst') as readme:
+with io.open('README.md') as readme:
     setup(
         name='ejplugins',
         version=import_module('ejplugins').__version__,
         description='parser plugins for jsonextended',
         long_description=readme.read(),
+        long_description_content_type='text/markdown',
         install_requires=requirements,
         tests_require=test_requirements,
+        extras_require={
+            "science": [
+                "pymatgen",
+                "ase",
+                "pint"
+            ]
+        },
         license='MIT',
         author='Chris Sewell',
         author_email='chrisj_sewell@hotmail.com',

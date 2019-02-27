@@ -10,10 +10,6 @@ from fnmatch import fnmatch
 
 import numpy as np
 from jsonextended import edict
-
-with warnings.catch_warnings(record=True):
-    warnings.filterwarnings("ignore", category=ImportWarning)
-    import pymatgen as pym
 from ejplugins.utils import codata, split_numbers
 
 try:
@@ -313,6 +309,8 @@ class ECH3OutPlugin(object):
     2   14 SI    4    -0.677    -0.678    -0.677   1.233E-01      14.000
  *******************************************************************************
         """
+        import pymatgen  # optional dependency
+
         sites, coords, nelect = [], [], []
         line = file_obj.readline()
         while line:
@@ -331,8 +329,8 @@ class ECH3OutPlugin(object):
                     line = file_obj.readline()
             line = file_obj.readline()
 
-        lattice = pym.Lattice([avec, bvec, cvec])
-        struct = pym.Structure(lattice, sites, coords,
+        lattice = pymatgen.Lattice([avec, bvec, cvec])
+        struct = pymatgen.Structure(lattice, sites, coords,
                                to_unit_cell=True,
                                coords_are_cartesian=True,
                                site_properties={"nelect": nelect})

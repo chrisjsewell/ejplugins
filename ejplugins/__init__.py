@@ -8,8 +8,11 @@ from ejplugins.cif import CIFPlugin
 from ejplugins.gulp import GULPOutPlugin
 from ejplugins.lammps import LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin
 
-from ejplugins.pymatgen_decode import Encode_Pymatgen
-from ejplugins.ase_decode import Encode_ASE
+try:
+    from ejplugins.pymatgen_decode import Encode_Pymatgen
+    from ejplugins.ase_decode import Encode_ASE
+except ImportError:
+    pass
 
 from ejplugins.utils import load_test_file, validate_against_schema
 
@@ -22,15 +25,23 @@ def load_all_parsers():
     errors: list
 
     """
-    parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin, BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
-               QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin, CIFPlugin, GULPOutPlugin,
+    parsers = [CrystalOutputPlugin, CrystalSCFLogPlugin, CrystalDOSPlugin,
+               BANDPlugin, ECH3CubePlugin, ECH3OutPlugin,
+               QEmainPlugin, QEbandPlugin, QEChargeDensityPlugin, QELowdinPlugin,
+               CIFPlugin,
+               GULPOutPlugin,
                LAMMPSAtomDumpPlugin, LAMMPSSysDumpPlugin]
 
     return plugins.load_plugin_classes(parsers, "parsers")
 
 
 def load_all_encoders():
+    try:
+        from ejplugins.pymatgen_decode import Encode_Pymatgen
+        from ejplugins.ase_decode import Encode_ASE
+    except ImportError:
+        raise ImportError("pymatgen and/or ase not installed")
     return plugins.load_plugin_classes([Encode_Pymatgen, Encode_ASE])
 
 
-__version__ = "0.9.8"
+__version__ = "0.10.0"
