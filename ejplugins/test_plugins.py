@@ -60,7 +60,7 @@ def test_plugins(testplugin, filename):
     print("reading expected")
     expected = ejson.to_dict(outpath)
     
-    assert edict.diff(output, expected, np_allclose=True, atol=1e-3) == {}
+    assert edict.diff(output, expected, np_allclose=True, atol=1e-5) == {}
 
 
 def test_opt_scflog_merge():
