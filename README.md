@@ -2,11 +2,18 @@
 
 [![Build_Status](https://travis-ci.org/chrisjsewell/ejplugins.svg?branch=master)](https://travis-ci.org/chrisjsewell/ejplugins)
 [![PyPI](https://img.shields.io/pypi/v/ejplugins.svg)](https://pypi.python.org/pypi/ejplugins/)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/ejplugins/badges/version.svg)](https://anaconda.org/conda-forge/ejplugins)
 
 Parser plugins for the [jsonextended package](https://jsonextended.readthedocs.io) and validation schema, to convert
 output files from materials simulation packages to a JSON format.
 
 ## Usage
+
+### Conda (recommended)
+
+    >> conda install -c conda-forge ejplugins
+
+### Pip
 
     >> pip install ejplugins
 
